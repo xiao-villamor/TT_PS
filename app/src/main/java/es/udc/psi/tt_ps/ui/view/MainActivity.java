@@ -1,8 +1,10 @@
-package es.udc.psi.tt_ps;
+package es.udc.psi.tt_ps.ui.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import es.udc.psi.tt_ps.R;
 
 public class MainActivity extends AppCompatActivity {
 
