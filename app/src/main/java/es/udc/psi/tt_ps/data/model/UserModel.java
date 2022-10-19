@@ -12,13 +12,13 @@ public class UserModel {
     private String email;
     private String phone;
     private String profilePic;
-    private List<String> sc;
+    private List<String> rrss;
     private List<Float> rating;
     private List<String> interests;
 
     public UserModel(String uuid, String password, String name,
                      String surname, Date birthDate, String email,
-                     String phone, String profilePic, List<String> sc,
+                     String phone, String profilePic, List<String> rrss,
                      List<Float> rating, List<String> interests) {
         this.uuid = uuid;
         this.password = password;
@@ -28,7 +28,7 @@ public class UserModel {
         this.email = email;
         this.phone = phone;
         this.profilePic = profilePic;
-        this.sc = sc;
+        this.rrss = rrss;
         this.rating = rating;
         this.interests = interests;
     }
@@ -66,8 +66,8 @@ public class UserModel {
         return profilePic;
     }
 
-    public List<String> getSc() {
-        return sc;
+    public List<String> getrrss() {
+        return rrss;
     }
 
     public List<Float> getRating() {
