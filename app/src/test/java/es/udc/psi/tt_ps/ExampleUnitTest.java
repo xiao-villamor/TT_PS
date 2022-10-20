@@ -25,12 +25,5 @@ public class ExampleUnitTest {
     @Test
     public void createUser() {
 
-        userRepository r;
-        UserModel u;
-        r = new userRepository();
-
-        u = new UserModel("12345", "Pepe", "Perez", Date.valueOf("1999-01-01"), "dev@mail.com",
-                "666666666", "profilePic", null, null, null);
-        r.createUser(u);
     }
 }

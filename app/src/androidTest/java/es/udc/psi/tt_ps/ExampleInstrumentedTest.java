@@ -24,12 +24,6 @@ import es.udc.psi.tt_ps.data.userRepository;
 public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() {
-        userRepository r;
-        UserModel u;
-        r = new userRepository();
 
-        u = new UserModel("12345", "Pepe", "Perez", Date.valueOf("1999-01-01"), "dev@mail.com",
-                "666666666", "profilePic", null, null, null);
-        r.createUser(u);
     }
 }
