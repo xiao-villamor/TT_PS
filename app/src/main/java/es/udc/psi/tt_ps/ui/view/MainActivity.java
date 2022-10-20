@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.TimeUnit;
 
@@ -23,11 +25,13 @@ import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseAuth mAuth;
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        es.udc.psi.tt_ps.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
         FirebaseApp.initializeApp(this);
@@ -38,15 +42,34 @@ public class MainActivity extends AppCompatActivity {
         userRepository r;
         r = new userRepository(mAuth,db);
         UserModel u;
-        u = new UserModel("pakirrin1234", "Pepe", "Perez", Date.valueOf("1999-01-01"), "2313dasda@gmail.com",
-                "666666666", "profilePic", null, null, null);
+        List<String> tag = new ArrayList<String>();
+        tag.add("tag1");
+        List<String> rss = new ArrayList<String>();
+        rss.add("das");
+        List<Float> ca = new ArrayList<Float>();
+        ca.add(2.0f);
 
-        r.createUser(u);
+
+
+        u = new UserModel("pakirrin1234", "Pepe", "Perez", Date.valueOf("1999-01-01"), "2313dasda@gmail.com",
+                "666666666", "profilePic", rss, ca, tag);
+        try{
+            r.createUser(u);
+
+        }catch (Exception e){
+            Log.d("TAG","Error");
+        }
 
         binding.button.setOnClickListener(v -> {
-            r.deleteUser();
+            if(r.getUser() != null){
+                updateText(r.getUser().getEmail());
+            }
         });
 
+    }
+
+    public void updateText(String text){
+        binding.textView.setText(text);
     }
 
 }

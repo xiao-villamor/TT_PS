@@ -1,5 +1,7 @@
 package es.udc.psi.tt_ps.data.model;
 
+import com.google.firebase.firestore.auth.User;
+
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class UserModel {
                      String surname, Date birthDate, String email,
                      String phone, String profilePic, List<String> rrss,
                      List<Float> rating, List<String> interests) {
+
         this.password = password;
         this.name = name;
         this.surname = surname;
@@ -29,6 +32,9 @@ public class UserModel {
         this.rrss = rrss;
         this.rating = rating;
         this.interests = interests;
+    }
+
+    public UserModel() {
     }
 
 
@@ -71,4 +77,6 @@ public class UserModel {
     public List<String> getInterests() {
         return interests;
     }
+
+
 }

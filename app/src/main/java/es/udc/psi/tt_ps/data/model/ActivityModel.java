@@ -20,6 +20,7 @@ public class ActivityModel {
                          Timestamp start_date, Timestamp end_date,
                          Point location, String adminId,
                          List<String> participants, List<String> tags) {
+
         this.id = id;
         this.title = title;
         this.description = description;
