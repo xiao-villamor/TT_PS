@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 public class UserModel {
-    private String uuid;
     private String password;
     private String name;
     private String surname;
@@ -16,11 +15,10 @@ public class UserModel {
     private List<Float> rating;
     private List<String> interests;
 
-    public UserModel(String uuid, String password, String name,
+    public UserModel( String password, String name,
                      String surname, Date birthDate, String email,
                      String phone, String profilePic, List<String> rrss,
                      List<Float> rating, List<String> interests) {
-        this.uuid = uuid;
         this.password = password;
         this.name = name;
         this.surname = surname;
@@ -33,10 +31,6 @@ public class UserModel {
         this.interests = interests;
     }
 
-
-    public String getUuid() {
-        return uuid;
-    }
 
     public String getPassword() {
         return password;

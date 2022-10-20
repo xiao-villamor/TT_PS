@@ -1,39 +1,42 @@
 package es.udc.psi.tt_ps.data;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.concurrent.Executor;
 
 import es.udc.psi.tt_ps.data.model.UserModel;
 
 public class userRepository {
+    private FirebaseAuth mAuth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    public String createUser( UserModel user){
+        mAuth = FirebaseAuth.getInstance();
 
-    public String createUser(UserModel user) {
+        mAuth.createUserWithEmailAndPassword("dev@gmail.com", "pass12345").addOnCompleteListener( task -> {
+            if (task.isSuccessful()) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d("TAG", "signInWithEmail:success");
+                db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
 
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
-                .addOnSuccessListener((Executor) this, new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        db.collection("users").document(authResult.getUser().getUid()).set(user)
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("TAG", "Error adding document", e);
-                                    }
-                                });
-                    }
-                });
-         return mAuth.getCurrentUser().getUid();
+            } else {
+                // If sign in fails, display a message to the user.
+                Log.w("TAG", "signInWithEmail:failure", task.getException());
+
+            }
+        });
+         return "mAuth.getCurrentUser().getDisplayName()";
     }
 }
