@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "965703762980",
+    "project_id": "tt-ps-f0782",
+    "storage_bucket": "tt-ps-f0782.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965703762980:android:e4d6df24737a7972e144b1",
+        "android_client_info": {
+          "package_name": "es.udc.psi.tt_ps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965703762980-jthpost1l2ptocskri3fs62kmr705opa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4-4lJZbN9ATdJIrNiUW4-Bkzbnxa91XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965703762980-jthpost1l2ptocskri3fs62kmr705opa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
