@@ -11,8 +11,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -38,7 +42,7 @@ public class userRepository {
                 db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
             } else {
                 // If sign in fails, display a message to the user.
-                Log.w("TAG", "signInWithEmail:failure", task.getException());
+                //Log.w("TAG", "signInWithEmail:failure", task.getException());
             }
         });
     }
@@ -53,23 +57,22 @@ public class userRepository {
         mAuth.getCurrentUser().delete();
     }
 
-    public UserModel getUser(){
-        db.collection("User_Info").document(mAuth.getUid()).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            this.user = (document.toObject(UserModel.class));
-                        } else {
-                            this.user = (null);
-                        }
-                    } else {
-                        this.user = (null);
+    public UserModel getUser(String uuid){
+        Log.d("TAG","get start");
+        db.collection("User_Info").document(uuid).get()
+                .addOnSuccessListener(task -> {
+                    Log.d("TAG", "get success");
+                    if (task.exists()) {
+                        Log.d("TAG", "DocumentSnapshot data: " + task.getData());
+                        this.user = (task.toObject(UserModel.class));
+                        Log.d("TAG", "user: " + this.user.getEmail());
+                    }else {
+                        Log.d("TAG", "No such document");
+                        this.user = null;
                     }
+                    Log.d("TAG", "get end" );
                 });
-        return user;
+        return this.user;
     }
-
-
 
 }

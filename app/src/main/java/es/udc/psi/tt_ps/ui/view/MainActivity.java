@@ -10,11 +10,14 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import es.udc.psi.tt_ps.R;
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         userRepository r;
-        r = new userRepository(mAuth,db);
+        r = new userRepository(mAuth, db);
         UserModel u;
         List<String> tag = new ArrayList<String>();
         tag.add("tag1");
@@ -50,21 +53,23 @@ public class MainActivity extends AppCompatActivity {
         ca.add(2.0f);
 
 
-
-        u = new UserModel("pakirrin1234", "Pepe", "Perez", Date.valueOf("1999-01-01"), "2313dasda@gmail.com",
+        u = new UserModel("pakirrin1234", "Paco", "Perez", Date.valueOf("1999-01-01"), "2313dasda@gmail.com",
                 "666666666", "profilePic", rss, ca, tag);
-        try{
-            r.createUser(u);
 
-        }catch (Exception e){
-            Log.d("TAG","Error");
-        }
+        r.createUser(u);
+
 
         binding.button.setOnClickListener(v -> {
-            if(r.getUser() != null){
-                updateText(r.getUser().getEmail());
-            }
-        });
+            //execute a async function and when it finishes, do something with the value returned
+            CompletableFuture<UserModel> userModel = CompletableFuture.supplyAsync(() -> r.getUser(mAuth.getUid()));
+            userModel.thenAccept(user -> {
+                Log.d("TAG", user.getEmail());
+                updateText(user.getEmail());
+            });
+       });
+
+
+
 
     }
 
