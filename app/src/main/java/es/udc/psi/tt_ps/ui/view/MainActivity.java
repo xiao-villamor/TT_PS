@@ -30,7 +30,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import es.udc.psi.tt_ps.data.model.UserModel;
-import es.udc.psi.tt_ps.data.userRepository;
+import es.udc.psi.tt_ps.data.repository.userRepository;
 import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        File path  = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS); ;
+        File path  = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path,"04em0x0gb1t61.jpg");
 
         binding.button.setOnClickListener(v -> {

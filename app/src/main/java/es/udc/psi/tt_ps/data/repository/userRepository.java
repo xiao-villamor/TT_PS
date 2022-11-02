@@ -1,4 +1,4 @@
-package es.udc.psi.tt_ps.data;
+package es.udc.psi.tt_ps.data.repository;
 
 import android.util.Log;
 
@@ -40,6 +40,8 @@ public class userRepository {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser() );
+                // Sbir imagen
+
                 db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
             } else {
                 // If sign in fails, display a message to the user.
@@ -48,6 +50,7 @@ public class userRepository {
     }
 
     public void loginUser(String email, String password){
+
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
                 Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser() );
@@ -60,8 +63,6 @@ public class userRepository {
     public void updateUser(UserModel user) {
         db.collection("User_Info").document(mAuth.getUid()).set(user);
     }
-
-
 
     public UserModel getUser(String uuid) throws ExecutionException, InterruptedException, TimeoutException {
         Log.d("TAG", "getUser start");
@@ -117,11 +118,6 @@ public class userRepository {
         }
         return uri;
     }
-
-
-
-
-
 
 }
     
