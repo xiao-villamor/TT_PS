@@ -34,17 +34,30 @@ public class userRepository {
         this.storage = storage;
     }
 
-    public void createUser(UserModel user){
+    public void createUser(String email , String password ,UserModel user,File pic){
         Log.d("TAG","create start");
-        mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener( task -> {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser() );
-                // Sbir imagen
-
+                //default value
+                String url = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/users_profile_pic%2F40jG2SBbIySEzfCNaDvBE7I4yJ42.jpg?alt=media&token=99f24552-7d6c-4b9d-8ea1-484f76fa258f";
+                if(pic != null) {
+                    Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                String url = uploadProfilePic(mAuth.getUid(), pic);
+                            } catch (InterruptedException | TimeoutException | ExecutionException | FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                }
+                user.profilePic(url);
                 db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
             } else {
-                // If sign in fails, display a message to the user.
+
            }
         });
     }

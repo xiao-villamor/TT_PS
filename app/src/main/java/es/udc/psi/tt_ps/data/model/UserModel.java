@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 public class UserModel {
-    private String password;
     private String name;
     private String surname;
     private Date birthDate;
@@ -17,12 +16,11 @@ public class UserModel {
     private List<Float> rating;
     private List<String> interests;
 
-    public UserModel( String password, String name,
+    public UserModel( String name,
                      String surname, Date birthDate, String email,
                      String phone, String profilePic, List<String> rrss,
                      List<Float> rating, List<String> interests) {
 
-        this.password = password;
         this.name = name;
         this.surname = surname;
         this.birthDate = birthDate;
@@ -37,10 +35,6 @@ public class UserModel {
     public UserModel() {
     }
 
-
-    public String getPassword() {
-        return password;
-    }
 
     public String getName() {
         return name;
@@ -78,5 +72,8 @@ public class UserModel {
         return interests;
     }
 
+    public void profilePic(String image){
+        this.profilePic = image;
+    }
 
 }

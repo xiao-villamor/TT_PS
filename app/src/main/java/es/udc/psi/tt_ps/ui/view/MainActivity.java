@@ -1,13 +1,10 @@
 package es.udc.psi.tt_ps.ui.view;
 
-import static java.lang.Thread.sleep;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -21,7 +18,6 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,11 +60,15 @@ public class MainActivity extends AppCompatActivity {
         List<Float> ca = new ArrayList<Float>();
         ca.add(2.0f);
 
+        File path  = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path,"04em0x0gb1t61.jpg");
+
+         u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
 
         Thread t = new Thread(){
             @Override
             public void run(){
-                r.loginUser("dev3@devmail.com","123456");
+                r.createUser("dev@mail.com","123456",new UserModel(),file);
             }
         };
         t.start();
@@ -79,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        File path  = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path,"04em0x0gb1t61.jpg");
+
 
         binding.button.setOnClickListener(v -> {
             AtomicReference<String> uri = new AtomicReference<>();
@@ -130,19 +129,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             updateText(user.get().getEmail());
-
              */
+
         });
 
 
         }
 
-
-
-
-
-    public void updateText(String text){
-        binding.textView.setText(text);
-    }
 
 }
