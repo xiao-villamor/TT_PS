@@ -4,24 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center" >
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
-
-    <TextView
-        android:id="@+id/textView"
+        android:text="Login" />
+    <Button
+        android:id="@+id/button_register"
         android:layout_width="match_parent"
-        android:layout_height="215dp"
-        android:text="TextView" />
+        android:layout_height="wrap_content"
+        android:text="Register" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="195dp"
-        tools:src="@tools:sample/avatars" />
 
 </LinearLayout>
