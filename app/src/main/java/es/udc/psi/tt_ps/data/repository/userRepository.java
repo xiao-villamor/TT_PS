@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import es.udc.psi.tt_ps.data.model.UserModel;
 
@@ -41,20 +42,22 @@ public class userRepository {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser() );
                 //default value
-                String url = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/users_profile_pic%2F40jG2SBbIySEzfCNaDvBE7I4yJ42.jpg?alt=media&token=99f24552-7d6c-4b9d-8ea1-484f76fa258f";
+                AtomicReference<String> url = new AtomicReference<>( "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/users_profile_pic%2F40jG2SBbIySEzfCNaDvBE7I4yJ42.jpg?alt=media&token=99f24552-7d6c-4b9d-8ea1-484f76fa258f");
+
                 if(pic != null) {
                     Thread thread = new Thread() {
                         @Override
                         public void run() {
                             try {
-                                String url = uploadProfilePic(mAuth.getUid(), pic);
+                                url.set(uploadProfilePic(mAuth.getUid(), pic));
                             } catch (InterruptedException | TimeoutException | ExecutionException | FileNotFoundException e) {
                                 e.printStackTrace();
                             }
                         }
                     };
+                    thread.start();
                 }
-                user.profilePic(url);
+                user.profilePic(url.get());
                 db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
             } else {
 

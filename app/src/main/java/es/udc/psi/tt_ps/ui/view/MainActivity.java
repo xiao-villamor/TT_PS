@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(){
             @Override
             public void run(){
-                r.createUser("dev@mail.com","123456",new UserModel(),file);
+                r.loginUser("dev3@mail.com","123456");
             }
         };
         t.start();
@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         binding.button.setOnClickListener(v -> {
+
             AtomicReference<String> uri = new AtomicReference<>();
 
             Log.d("TAG", "button " + mAuth.getCurrentUser().getUid());
