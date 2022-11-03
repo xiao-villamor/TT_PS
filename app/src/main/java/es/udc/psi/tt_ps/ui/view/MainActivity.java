@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +28,7 @@ import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
 import es.udc.psi.tt_ps.data.repository.userRepository;
 import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
+import es.udc.psi.tt_ps.domain.user.createUserUseCase;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
@@ -64,20 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
         u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
         a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,timestamp,null,"as",null,null);
-        Thread t = new Thread(){
-            @Override
-            public void run() {
-                r.loginUser("dev3@mail.com", "123456");
-                //for 10 times
-            }
-        };
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
+        createUserUseCase c = new createUserUseCase();
+        try {
+            c.createUser("name","dev@mail.com","123456","sur",
+                    Date.valueOf("2021-01-01"),"",file,null,null);
+        } catch (InterruptedException e) {
+            Log.d("User already exists",e.getMessage());
+        }
 
 
         binding.button.setOnClickListener(v -> {

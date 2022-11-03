@@ -15,6 +15,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InvalidClassException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ public class userService implements userServiceInterface{
     private UserModel user = null;
 
 
-    public void createUser(String email , String password , UserModel user, File pic){
+    public void createUser(String email , String password , UserModel user, File pic)  {
         Log.d("TAG","create start");
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
@@ -56,7 +57,8 @@ public class userService implements userServiceInterface{
                 user.profilePic(url.get());
                 db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
             } else {
-
+                // If sign in fails, display a message to the user.
+                Log.w("TAG", "signInWithEmail:failure", task.getException());
             }
         });
     }
