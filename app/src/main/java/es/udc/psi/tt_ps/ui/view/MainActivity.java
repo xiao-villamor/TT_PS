@@ -42,9 +42,7 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         FirebaseApp.initializeApp(this);
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        storage = FirebaseStorage.getInstance();
+
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
@@ -52,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         userRepository r;
         activityRepository ar;
 
-        r = new userRepository(mAuth, db, storage);
-        ar = new activityRepository(mAuth, db, storage);
+        r = new userRepository();
+        ar = new activityRepository();
 
         UserModel u;
         ActivityModel a;
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         File file = new File(path,"04em0x0gb1t61.jpg");
 
         u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
-        a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,timestamp,null,mAuth.getUid(),null,null);
+        a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,timestamp,null,"as",null,null);
         Thread t = new Thread(){
             @Override
             public void run() {
