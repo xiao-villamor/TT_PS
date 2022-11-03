@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class ActivityModel {
-    private String id;
     private String title;
     private String description;
     private Timestamp start_date;
@@ -16,12 +15,11 @@ public class ActivityModel {
     private List<String> participants;
     private List<String> tags;
 
-    public ActivityModel(String id, String title, String description,
+    public ActivityModel(String title, String description,
                          Timestamp start_date, Timestamp end_date,
                          Point location, String adminId,
                          List<String> participants, List<String> tags) {
 
-        this.id = id;
         this.title = title;
         this.description = description;
         this.start_date = start_date;
@@ -30,10 +28,6 @@ public class ActivityModel {
         this.adminId = adminId;
         this.participants = participants;
         this.tags = tags;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getTitle() {

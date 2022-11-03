@@ -1,6 +1,5 @@
 package es.udc.psi.tt_ps.data.model;
 
-import com.google.firebase.firestore.auth.User;
 
 import java.util.Date;
 import java.util.List;

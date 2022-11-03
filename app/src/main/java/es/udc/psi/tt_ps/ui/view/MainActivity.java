@@ -6,26 +6,23 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.View;
+import android.os.Environment;import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.UserModel;
+import es.udc.psi.tt_ps.data.repository.activityRepository;
 import es.udc.psi.tt_ps.data.repository.userRepository;
 import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
 
@@ -51,20 +48,21 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
 
         userRepository r;
+        activityRepository ar;
+
         r = new userRepository(mAuth, db, storage);
+        ar = new activityRepository(mAuth, db, storage);
+
         UserModel u;
-        List<String> tag = new ArrayList<String>();
-        tag.add("tag1");
-        List<String> rss = new ArrayList<String>();
-        rss.add("das");
-        List<Float> ca = new ArrayList<Float>();
-        ca.add(2.0f);
+        ActivityModel a;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         File path  = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path,"04em0x0gb1t61.jpg");
 
-         u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
-
+        u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
+        a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,null,mAuth.getUid(),null,null);
         Thread t = new Thread(){
             @Override
             public void run(){
@@ -72,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         t.start();
-
         try {
             t.join();
         } catch (InterruptedException e) {
@@ -82,7 +79,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         binding.button.setOnClickListener(v -> {
+            AtomicReference<String> data = new AtomicReference<>();
 
+            Thread thread = new Thread(){
+                @Override
+                public void run(){
+                    try {
+                        data.set(ar.getActivity("8FUdkyXK7hphCiK2DILh").toString());
+                    } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+
+
+            /*
             AtomicReference<String> uri = new AtomicReference<>();
 
             Log.d("TAG", "button " + mAuth.getCurrentUser().getUid());
