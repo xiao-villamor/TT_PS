@@ -81,12 +81,10 @@ public class userRepository {
     }
 
     public UserModel getUser(String uuid) throws ExecutionException, InterruptedException, TimeoutException {
-        Log.d("TAG", "getUser start");
         DocumentReference userDocument = (db.collection("User_Info").document(uuid));
         DocumentSnapshot res =  Tasks.await(userDocument.get(), 5, TimeUnit.SECONDS);
         if(res.exists()) {
             user = res.toObject(UserModel.class);
-            Log.d("TAG", "getUser success");
         }
         return user;
     }

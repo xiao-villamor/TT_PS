@@ -6,7 +6,8 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.os.Environment;import android.view.View;
+import android.os.Environment;
+import android.view.View;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.io.File;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -62,11 +64,12 @@ public class MainActivity extends AppCompatActivity {
         File file = new File(path,"04em0x0gb1t61.jpg");
 
         u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
-        a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,null,mAuth.getUid(),null,null);
+        a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,timestamp,null,mAuth.getUid(),null,null);
         Thread t = new Thread(){
             @Override
-            public void run(){
-                r.loginUser("dev3@mail.com","123456");
+            public void run() {
+                r.loginUser("dev3@mail.com", "123456");
+                //for 10 times
             }
         };
         t.start();
@@ -79,18 +82,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         binding.button.setOnClickListener(v -> {
-            AtomicReference<String> data = new AtomicReference<>();
+            AtomicReference<List<ActivityModel>> data = new AtomicReference<>();
 
             Thread thread = new Thread(){
                 @Override
                 public void run(){
                     try {
-                        data.set(ar.getActivity("8FUdkyXK7hphCiK2DILh").toString());
-                    } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                        data.set(ar.getActivities());
+                    } catch (TimeoutException | ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             };
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            AtomicReference<String> res = new AtomicReference<>();
+            data.get().forEach(activityModel -> res.set(res.get()+activityModel.getDescription()+"\n"));
+
+            binding.textView.setText(res.get());
 
 
 
@@ -144,6 +157,30 @@ public class MainActivity extends AppCompatActivity {
             updateText(user.get().getEmail());
              */
 
+        });
+        binding.next.setOnClickListener(v -> {
+            AtomicReference<List<ActivityModel>> data = new AtomicReference<>();
+
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        data.set(ar.getNextActivities());
+                    } catch (TimeoutException | ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            AtomicReference<String> res = new AtomicReference<>();
+            data.get().forEach(activityModel -> res.set(res.get() + activityModel.getDescription() + "\n"));
+
+            binding.textView.setText(res.get());
         });
 
 
