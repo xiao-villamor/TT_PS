@@ -21,7 +21,7 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
     final ListActivitiesAdapter.OnItemClickListener listener;
 
     public interface OnItemClickListener{
-        void onItemClick(ListActivities ListActivities);
+        void onItemClick(es.udc.psi.tt_ps.ui.viewmodel.ListActivities ListActivities);
     }
 
     public ListActivitiesAdapter(List<ListActivities> mData, Context context) {
