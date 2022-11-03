@@ -28,6 +28,7 @@ public class activityRepository {
         this.mAuth = mAuth;
         this.db = db;
     }
+
     private DocumentSnapshot prevDocSnap = null;
 
     public void createActivity(ActivityModel activity){
@@ -79,6 +80,7 @@ public class activityRepository {
 
         return data;
     }
+
     public List<ActivityModel> getNextActivities() throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
         Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnap).limit(5);
