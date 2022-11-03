@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -22,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import es.udc.psi.tt_ps.core.firebaseConnection;
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        FirebaseApp.initializeApp(this);
+        firebaseConnection connection = new firebaseConnection();
+        connection.connect(this);
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
