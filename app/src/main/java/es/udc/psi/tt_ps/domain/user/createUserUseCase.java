@@ -17,16 +17,9 @@ public class createUserUseCase {
 
         UserModel user = new UserModel(name,surname,birthDate,email,phone,null,rsss,null,interests);
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                repository.createUser(email,password,user,pic);
-            }
-        });
+        Thread thread = new Thread(() -> repository.createUser(email,password,user,pic));
         thread.start();
         thread.join();
     }
-
-
 
 }
