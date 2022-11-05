@@ -63,7 +63,7 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
 
     public static class ActivitiesHolder extends  RecyclerView.ViewHolder{
         ImageView activity_image;
-        TextView title, location, end_date;
+        TextView title, location, end_date, description;
 
         ActivitiesHolder(View itemView){
             super(itemView);
@@ -71,13 +71,22 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
             title = itemView.findViewById(R.id.activityName);
             location = itemView.findViewById(R.id.coordenadasXY);
             end_date = itemView.findViewById(R.id.endDate);
+            description = itemView.findViewById(R.id.Descrip);
         }
 
         void bindData(final ListActivities item){
             activity_image.setImageResource(item.getActivityImage());
             title.setText(item.getTitle());
             location.setText(item.getLocation().toString());
-            end_date.setText(item.getEnd_date().toString());
+            if (item.getEnd_date()==null)
+            {
+                end_date.setText("null");
+            }
+            else
+            {
+                end_date.setText(item.getEnd_date().toString());
+            }
+            description.setText(item.getDescription());
 
         }
 

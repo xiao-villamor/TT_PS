@@ -16,6 +16,7 @@
         android:orientation="vertical"
         android:animateLayoutChanges="true">
 
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,15 +30,15 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 app:srcCompat="@drawable/bike_kick_push_scooter_svgrepo_com" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="2dp"
                 android:layout_toEndOf="@+id/activity_image"
@@ -51,12 +52,37 @@
                     android:text="Ruta en monopatín"
                     android:textSize="14sp"
                     android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/TitleDes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Comienzo actividad:"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/Descrip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="descripcion actividad"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/TittleXY"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Localización :"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/coordenadasXY"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="43.332985543794194, -8.410946219056214"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/TitleEndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Comienzo actividad:"
                     android:textSize="12sp" />
 
                 <TextView

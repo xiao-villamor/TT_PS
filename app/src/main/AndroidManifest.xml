@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TT_PS"
         tools:targetApi="31">
+        <activity android:name=".ui.view.ActivityListActivities"
+            android:parentActivityName=".ui.view.MainActivity"/>
         <activity
             android:name=".ui.view.MainActivity"
             android:exported="true">
@@ -25,6 +27,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
     </application>
 
 </manifest>
