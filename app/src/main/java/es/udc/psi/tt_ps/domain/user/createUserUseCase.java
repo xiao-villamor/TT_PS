@@ -12,7 +12,7 @@ import es.udc.psi.tt_ps.data.repository.userRepository;
 
 public class createUserUseCase {
 
-    public Result createUser (String name, String email, String password,
+    public static Result createUser (String name, String email, String password,
                               String surname, Date birthDate, String phone,
                               File pic, List<String> rsss, List<String> interests) throws InterruptedException {
 
