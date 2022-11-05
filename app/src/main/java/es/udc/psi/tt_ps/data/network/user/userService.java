@@ -2,8 +2,14 @@ package es.udc.psi.tt_ps.data.network.user;
 
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 
 public class userService implements userServiceInterface{
@@ -63,17 +70,23 @@ public class userService implements userServiceInterface{
         });
     }
 
-    public void loginUser(String email, String password){
+    public void loginUser(String email, String password) throws ExecutionException, InterruptedException, TimeoutException {
+        AtomicReference<Result> result = new AtomicReference<>();
+        Tasks.await(mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+                Result<FirebaseUser, Exception> dataOrException = new Result<>();
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser());
+                    dataOrException.data = task.getResult().getUser();
+                } else {
+                    Log.d("TAG", "signInWithEmail:failure " + task.getException());
+                    dataOrException.exception = task.getException();
+                }
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
-            if (task.isSuccessful()) {
-                Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser() );
-            } else {
+                result.set(dataOrException);
+            }), 10, TimeUnit.SECONDS);
 
-            }
-        });
     }
-
     public void updateUser(UserModel user) {
         db.collection("User_Info").document(mAuth.getUid()).set(user);
     }
