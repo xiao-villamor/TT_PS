@@ -1,6 +1,7 @@
 package es.udc.psi.tt_ps.ui.view;
 
 
+
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import es.udc.psi.tt_ps.R;
+import es.udc.psi.tt_ps.data.network.user.userService;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivitiesAdapter;
@@ -18,7 +20,8 @@ public class ActivityListActivities extends AppCompatActivity {
     String ACTIVITY = "MainActivity2";
     List<ListActivities> activitiesList;
     ActivityListsPres presenter = new ActivityListsPres();
-    RecyclerView recyclerView;
+    RecyclerView recyclerView ;
+    //userService user = new userService();
 
 
     @Override
@@ -26,6 +29,7 @@ public class ActivityListActivities extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_activities);
         Log.d(TAG,ACTIVITY+" onCreate");
+        //user.loginUser("dev@mail.com","123456");
         initRecycledView();
 
     }
@@ -43,6 +47,7 @@ public class ActivityListActivities extends AppCompatActivity {
         Log.d(TAG,ACTIVITY+" end init");
 
     }
+
 
 
     @Override

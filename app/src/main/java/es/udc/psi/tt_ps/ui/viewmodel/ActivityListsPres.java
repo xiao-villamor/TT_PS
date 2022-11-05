@@ -2,7 +2,10 @@ package es.udc.psi.tt_ps.ui.viewmodel;
 
 import android.graphics.PointF;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -12,7 +15,8 @@ import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
 
-public class ActivityListsPres extends AppCompatActivity {
+public class ActivityListsPres extends RecyclerView.OnScrollListener {
+    activityRepository ar = new activityRepository();
 
     public static void moreActivityInfo(ListActivities ListActivities){
         //Metodo para ir a la vista detallada de actividades
@@ -24,7 +28,7 @@ public class ActivityListsPres extends AppCompatActivity {
 
     public void setRecycledData(List<ListActivities> listActivities){
         Log.d("_TAG","Presenter "+" start init");
-        activityRepository ar = new activityRepository();
+
         AtomicReference<List<ActivityModel>> data = new AtomicReference<>();
 
         Thread thread = new Thread(){
@@ -54,11 +58,9 @@ public class ActivityListsPres extends AppCompatActivity {
         }
     }
 
-
     //función para it2, se usará para actualizar los datos del recycled view
-    /*public void updateRecycledData(RecyclerView recyclerView){
+    public void updateRecycledData(RecyclerView recyclerView){
         Log.d("_TAG","Presenter "+" start init");
-        activityRepository ar = new activityRepository();
         AtomicReference<List<ActivityModel>> data = new AtomicReference<>();
 
         Thread thread = new Thread(){
@@ -89,9 +91,20 @@ public class ActivityListsPres extends AppCompatActivity {
                     new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
                     res.get(i).getDescription()));
         }
-        setRecycledData(listActivities);
-    }*/
+        adapter.setItems(listActivities);
+        recyclerView.setAdapter(adapter);
+    }
 
+    //listeners para poder mirar el estado del scroll
+    @Override
+    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        Log.d("TAG","pasa por aqui joder");
+        updateRecycledData(recyclerView);
+    }
 
-
+    @Override
+    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+    }
 }
