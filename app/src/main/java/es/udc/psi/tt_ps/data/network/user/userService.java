@@ -71,19 +71,13 @@ public class userService implements userServiceInterface{
     }
 
     public void loginUser(String email, String password) throws ExecutionException, InterruptedException, TimeoutException {
-        AtomicReference<Result> result = new AtomicReference<>();
         Tasks.await(mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                Result<FirebaseUser, Exception> dataOrException = new Result<>();
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser());
-                    dataOrException.data = task.getResult().getUser();
                 } else {
                     Log.d("TAG", "signInWithEmail:failure " + task.getException());
-                    dataOrException.exception = task.getException();
                 }
-
-                result.set(dataOrException);
             }), 10, TimeUnit.SECONDS);
 
     }
