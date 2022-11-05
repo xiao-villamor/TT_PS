@@ -17,6 +17,12 @@
         android:layout_height="wrap_content"
         android:text="Button" />
 
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LogIn" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
         a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,timestamp,null,"as",null,null);
 
+        /*
         createUserUseCase c = new createUserUseCase();
         try {
             c.createUser("name","dev@mail.com","123456","sur",
@@ -75,6 +77,15 @@ public class MainActivity extends AppCompatActivity {
             Log.d("User already exists",e.getMessage());
         }
 
+
+         */
+
+        binding.login.setOnClickListener(v -> {
+
+                    FirebaseAuth.getInstance().signOut();
+                    Intent userProfileIntent = new Intent(this, LogInActivity.class);
+                    startActivity(userProfileIntent);
+        });
 
         binding.button.setOnClickListener(v -> {
             AtomicReference<List<ActivityModel>> data = new AtomicReference<>();
