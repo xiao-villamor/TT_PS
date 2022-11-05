@@ -18,7 +18,7 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
     private List<ListActivities> mData;
     private final LayoutInflater mInflater;
     private final Context context;
-    final ListActivitiesAdapter.OnItemClickListener listener;
+    static ListActivitiesAdapter.OnItemClickListener listener = null;
 
     public interface OnItemClickListener{
         void onItemClick(es.udc.psi.tt_ps.ui.viewmodel.ListActivities ListActivities);
@@ -50,6 +50,10 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
         holder.bindData(mData.get(position));
     }
 
+    public List<ListActivities> getmData() {
+        return mData;
+    }
+
     @Override
     public int getItemCount() {
         return mData.size();
@@ -78,15 +82,10 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
             activity_image.setImageResource(item.getActivityImage());
             title.setText(item.getTitle());
             location.setText(item.getLocation().toString());
-            if (item.getEnd_date()==null)
-            {
-                end_date.setText("null");
-            }
-            else
-            {
-                end_date.setText(item.getEnd_date().toString());
-            }
+            end_date.setText(item.getEnd_date().toString());
+
             description.setText(item.getDescription());
+            itemView.setOnClickListener(view -> listener.onItemClick(item));
 
         }
 
