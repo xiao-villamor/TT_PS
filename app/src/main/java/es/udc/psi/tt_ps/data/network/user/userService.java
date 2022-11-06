@@ -1,7 +1,9 @@
 package es.udc.psi.tt_ps.data.network.user;
 
+import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Tasks;
@@ -18,6 +20,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.checkerframework.common.returnsreceiver.qual.This;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,12 +35,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 
-public class userService implements userServiceInterface{
+public class userService implements userServiceInterface,FirebaseAuth.AuthStateListener{
 
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private UserModel user = null;
+    OnAuthStateChangeListener onAuthStateChangeListener;
 
 
     public void createUser(String email , String password , UserModel user, File pic)  {
@@ -135,6 +140,41 @@ public class userService implements userServiceInterface{
             Log.d("TAG",uri);
         }
         return uri;
+    }
+
+    public void setListener(OnAuthStateChangeListener listener){
+        onAuthStateChangeListener = listener;
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        Log.d("TAG", "onAuthStateChanged: "+ onAuthStateChangeListener );
+        if(firebaseUser == null){
+            onAuthStateChangeListener.onAuthStateChanged(true);
+        }
+    }
+
+    public void addFirebaseAuthListener() {
+        mAuth.addAuthStateListener(this);
+    }
+
+    public void removeFirebaseAuthListener() {
+        mAuth.removeAuthStateListener(this);
+    }
+
+    private void firebaseSignOut(){
+        mAuth.signOut();
+    }
+
+    public MutableLiveData<Boolean> signOut() {
+        MutableLiveData<Boolean> mutableLiveData = new MutableLiveData<>();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            firebaseSignOut();
+            mutableLiveData.setValue(true);
+        }
+        return mutableLiveData;
     }
 
 }
