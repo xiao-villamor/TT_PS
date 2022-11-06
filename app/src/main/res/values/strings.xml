@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TT_PS</string>
+    <string-array name="tags">
+        <item>Sports</item>
+        <item>Tourist visits</item>
+        <item>Walking route</item>
+        <item>Party</item>
+        <item>Shopping</item>
+    </string-array>
 </resources>
