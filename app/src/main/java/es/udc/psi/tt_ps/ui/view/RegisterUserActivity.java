@@ -5,12 +5,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.icu.text.UnicodeSetIterator;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,8 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
@@ -48,6 +52,8 @@ public class RegisterUserActivity extends AppCompatActivity {
 
             if(validate()){
                 try {
+                    Log.d("TAG", "Imagen PostValidacion: " + file.getPath());
+
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString() , binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), Date.valueOf(binding.birthDateReg.getText().toString()), binding.phoneReg.getText().toString(),
@@ -177,6 +183,32 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     }
 
+    public static String getRealPathFromDocumentUri(Context context, Uri uri){
+        String filePath = "";
+
+        Pattern p = Pattern.compile("(\\d+)$");
+        Matcher m = p.matcher(uri.toString());
+        if (!m.find()) {
+            return filePath;
+        }
+        String imgId = m.group();
+
+        String[] column = { MediaStore.Images.Media.DATA };
+        String sel = MediaStore.Images.Media._ID + "=?";
+
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                column, sel, new String[]{ imgId }, null);
+
+        int columnIndex = cursor.getColumnIndex(column[0]);
+
+        if (cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
+        }
+        cursor.close();
+
+        return filePath;
+    }
+
 
 
 
@@ -208,8 +240,9 @@ public class RegisterUserActivity extends AppCompatActivity {
                         file= new File(picturePath);
 
                          */
-                        file= new File(String.valueOf(imgUri));
-                        Log.d("TAG", "Imagen seleccionada: " + String.valueOf(imgUri));
+                        file= new File(getRealPathFromDocumentUri(this,imgUri));
+                        Log.d("TAG", "Imagen seleccionada: " + file.getPath());
+                        Log.d("TAG", "Imagen Sin subString: " + imgUri.getPath());
                         //binding.imageViewReg.setImageURI(imgUri);
                     }
                 }
