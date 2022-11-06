@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         u = new UserModel("name","surname",Date.valueOf("2021-01-01"),"dev@mail.com","66666666","",null,null,null);
         a = new ActivityModel("amusement park","Going to an amusement park", timestamp, timestamp,timestamp,null,"as",null,null);
 
-        /*
+
         createUserUseCase c = new createUserUseCase();
         try {
             c.createUser("name","dev@mail.com","123456","sur",
@@ -78,12 +78,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-         */
-        FirebaseAuth.getInstance().signOut();
+        //Se comprueba si existe un usuario loggeado
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser()!=null){
+            Log.d("TAG", "Usuario: "+ mAuth.getCurrentUser().getEmail());
+        }else{
+            Log.d("TAG", "No existe usuario registrado");
+            Intent userProfileIntent = new Intent(this, LogInActivity.class);
+            startActivity(userProfileIntent);
+        }
 
+        //Boton para inciar sesion con otra cuenta
         binding.login.setOnClickListener(v -> {
-                    Intent userProfileIntent = new Intent(this, LogInActivity.class);
-                    startActivity(userProfileIntent);
+            FirebaseAuth.getInstance().signOut();
+            Intent userProfileIntent = new Intent(this, LogInActivity.class);
+            startActivity(userProfileIntent);
         });
 
         binding.button.setOnClickListener(v -> {
@@ -189,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        }
+    }
 
 
 }

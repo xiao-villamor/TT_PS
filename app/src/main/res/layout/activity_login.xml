@@ -14,7 +14,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="email" />
+        android:text="dev_m@mail.com" />
 
     <EditText
         android:id="@+id/password"
@@ -23,7 +23,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="pasword" />
+        android:text="123456" />
 
     <Button
         android:id="@+id/button2"
