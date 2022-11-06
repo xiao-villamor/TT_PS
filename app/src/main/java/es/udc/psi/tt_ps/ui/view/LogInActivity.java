@@ -27,9 +27,6 @@ public class LogInActivity extends AppCompatActivity {
 
             try {
                 Result<FirebaseUser, Exception> res = loginUserUseCase.loginUser(binding.email.getText().toString(), binding.password.getText().toString());
-                //c.loginUser("fg@ffver.com", "sdf");
-                //Result res= c.loginUser("dev_m@mail.com", "123456");
-                //Log.d("TAG", res.data.toString());
                 if(res.exception != null){
                     Log.d("TAG", res.exception.toString());
                 }
@@ -37,11 +34,8 @@ public class LogInActivity extends AppCompatActivity {
                     Log.d("TAG", "login correcto");
                 }
 
-
-                //Log.d("TAG","se inicio sesion correctamente ");
             } catch (InterruptedException e) {
-                Log.d("User does not exists", e.getMessage());
-                Log.d("TAG", "Imposible inciar sesion");
+                e.printStackTrace();
             }
 
         });
