@@ -1,6 +1,8 @@
 package es.udc.psi.tt_ps.ui.view;
 
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -10,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -117,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             AtomicReference<String> res = new AtomicReference<>();
             data.get().forEach(activityModel -> res.set(res.get()+activityModel.getDescription()+"\n"));
 
+
             binding.textView.setText(res.get());
 
 
@@ -197,8 +202,12 @@ public class MainActivity extends AppCompatActivity {
             binding.textView.setText(res.get());
         });
 
+        binding.show.setOnClickListener(v->{
+            Intent intentSend = new Intent(MainActivity.this, ActivityListActivities.class);
+            startActivity(intentSend);
+        });
+
 
     }
-
 
 }
