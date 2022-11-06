@@ -16,7 +16,7 @@ import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 
 public interface userServiceInterface {
-    public void createUser(String email , String password , UserModel user, File pic);
+    public void createUser(String email , String password , UserModel user, File pic) throws ExecutionException, InterruptedException, TimeoutException;
     public void loginUser(String email, String password) throws ExecutionException, InterruptedException, TimeoutException;
     public void updateUser(UserModel user);
     public UserModel getUser(String uuid) throws ExecutionException, InterruptedException, TimeoutException;

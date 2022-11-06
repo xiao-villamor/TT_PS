@@ -32,7 +32,7 @@ import es.udc.psi.tt_ps.data.network.user.userService;
 public class userRepository {
     private final userService api = new userService();
 
-    public void createUser(String email , String password ,UserModel user,File pic) {
+    public void createUser(String email , String password ,UserModel user,File pic) throws ExecutionException, InterruptedException, TimeoutException {
         api.createUser(email,password,user,pic);
     }
 
