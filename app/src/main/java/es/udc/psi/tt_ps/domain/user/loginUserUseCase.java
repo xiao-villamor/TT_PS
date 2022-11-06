@@ -14,7 +14,7 @@ import es.udc.psi.tt_ps.data.repository.userRepository;
 public class loginUserUseCase {
 
 
-    public static Result loginUser(String username, String password) throws InterruptedException {
+    public static Result<FirebaseUser, Exception> loginUser(String username, String password) throws InterruptedException {
         Result<FirebaseUser, Exception> res = new Result<>();
         final userRepository repository = new userRepository();
         Thread t = new Thread(() -> {

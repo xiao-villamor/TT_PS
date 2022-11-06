@@ -39,11 +39,8 @@ public class LogInActivity extends AppCompatActivity {
                     startActivity(userProfileIntent);
                 }
 
-
-                //Log.d("TAG","se inicio sesion correctamente ");
             } catch (InterruptedException e) {
-                Log.d("User does not exists", e.getMessage());
-                Log.d("TAG", "Imposible inciar sesion");
+                e.printStackTrace();
             }
 
         });
