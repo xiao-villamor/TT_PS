@@ -31,6 +31,7 @@ import es.udc.psi.tt_ps.data.repository.userRepository;
 import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
 import es.udc.psi.tt_ps.domain.user.createUserUseCase;
 
+
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseAuth mAuth;
