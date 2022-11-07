@@ -44,14 +44,14 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
     OnAuthStateChangeListener onAuthStateChangeListener;
 
 
-    public void createUser(String email , String password , UserModel user, File pic)  {
+    public void createUser(String email , String password , UserModel user, File pic) throws ExecutionException, InterruptedException, TimeoutException {
         Log.d("TAG","create start");
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
+        Tasks.await(mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
-                Log.d("TAG", "signInWithEmail:success " + task.getResult().getUser() );
+                Log.d("TAG", "signInWithEmail:success " + pic.toString());
                 //default value
-                AtomicReference<String> url = new AtomicReference<>( "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/users_profile_pic%2F40jG2SBbIySEzfCNaDvBE7I4yJ42.jpg?alt=media&token=99f24552-7d6c-4b9d-8ea1-484f76fa258f");
+                AtomicReference<String> url = new AtomicReference<>("");
 
                 if(pic != null) {
                     Thread thread = new Thread() {
@@ -65,14 +65,21 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
                         }
                     };
                     thread.start();
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                Log.d("TAG","create end " +  url.get());
                 user.profilePic(url.get());
                 db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w("TAG", "signInWithEmail:failure", task.getException());
+                throw new RuntimeException(task.getException());
             }
-        });
+        }), 10, TimeUnit.SECONDS);
     }
 
     public void loginUser(String email, String password) throws ExecutionException, InterruptedException, TimeoutException {
@@ -133,6 +140,7 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
         StorageReference storageRef = storage.getReference();
         StorageReference profilePicRef = storageRef.child("users_profile_pic/"+uuid+".jpg");
         String uri = null;
+        Log.d("TAG","image to upload in" + image.getAbsolutePath());
 
         UploadTask.TaskSnapshot res = Tasks.await(profilePicRef.putStream(new FileInputStream(image)), 10, TimeUnit.SECONDS);
         if(res != null){

@@ -1,5 +1,7 @@
 package es.udc.psi.tt_ps.domain.user;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
@@ -12,7 +14,7 @@ import es.udc.psi.tt_ps.data.repository.userRepository;
 
 public class createUserUseCase {
 
-    public static Result createUser (String name, String email, String password,
+    public static Result<FirebaseUser, Exception> createUser (String name, String email, String password,
                               String surname, Date birthDate, String phone,
                               File pic, List<String> rsss, List<String> interests) throws InterruptedException {
 
@@ -20,7 +22,6 @@ public class createUserUseCase {
         Result<FirebaseUser, Exception> res = new Result<>();
 
         UserModel user = new UserModel(name,surname,birthDate,email,phone,null,rsss,null,interests);
-
         Thread thread = new Thread(() -> {
             try{
                 repository.createUser(email,password,user,pic);
