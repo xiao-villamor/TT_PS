@@ -52,8 +52,9 @@ public class RegisterUserActivity extends AppCompatActivity {
 
             if(validate()){
                 try {
-                    Log.d("TAG", "Imagen PostValidacion: " + file.getPath());
+                    //Log.d("TAG", "Imagen PostValidacion: " + file.getPath());
 
+                    file=new File("");
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString() , binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), Date.valueOf(binding.birthDateReg.getText().toString()), binding.phoneReg.getText().toString(),
@@ -61,11 +62,8 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                     if(res.exception != null){
                         Log.d("TAG", res.exception.toString());
-                    }
-                    else{
+                    } else{
                         Log.d("TAG", "Usuario creado correctamente");
-                        Intent userProfileIntent = new Intent(this, MainActivity.class);
-                        startActivity(userProfileIntent);
                     }
 
                 } catch (InterruptedException e) {
@@ -213,11 +211,6 @@ public class RegisterUserActivity extends AppCompatActivity {
 
 
     private void chooseImg(){
-        /*
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        my_startActivityForResult.launch(i);
-
-         */
 
         Intent i = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         my_startActivityForResult.launch(i);
@@ -229,7 +222,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                 if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
                     Intent data = result.getData();
                     if(data!=null){
-                        Uri imgUri=data.getData();
+                        //DE MOMENTO NO SE CARGAR LA IMAGEN SELECCIONADA
+                        //Uri imgUri=data.getData();
                         /*
                         String[] filePathColumn = { MediaStore.Images.Media.DATA };
                         Cursor cursor = getContentResolver().query(imgUri,
@@ -240,10 +234,14 @@ public class RegisterUserActivity extends AppCompatActivity {
                         file= new File(picturePath);
 
                          */
+                        /*
                         file= new File(getRealPathFromDocumentUri(this,imgUri));
                         Log.d("TAG", "Imagen seleccionada: " + file.getPath());
                         Log.d("TAG", "Imagen Sin subString: " + imgUri.getPath());
                         //binding.imageViewReg.setImageURI(imgUri);
+
+
+                         */
                     }
                 }
             }
