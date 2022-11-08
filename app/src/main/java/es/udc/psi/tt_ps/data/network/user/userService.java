@@ -42,18 +42,31 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private UserModel user = null;
     OnAuthStateChangeListener onAuthStateChangeListener;
-
+     public void auxCreateUser(String User, String pass) throws InterruptedException {
+         Thread thread = new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 try {
+                     mAuth.createUserWithEmailAndPassword(User, pass);
+                 } catch (Exception e) {
+                     e.printStackTrace();
+                 }
+             }
+         });
+         thread.start();
+         thread.join();
+         thread.interrupt();
+     }
 
     public void createUser(String email , String password , UserModel user, File pic) throws ExecutionException, InterruptedException, TimeoutException {
         Log.d("TAG","create start");
         Tasks.await(mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
-                Log.d("TAG", "signInWithEmail:success " + pic.toString());
                 //default value
                 AtomicReference<String> url = new AtomicReference<>("");
-
-                if(pic != null) {
+                Log.d("PIC", pic.getPath());
+                if(pic.getTotalSpace() != 0){
                     Thread thread = new Thread() {
                         @Override
                         public void run() {
@@ -63,6 +76,7 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
                                 e.printStackTrace();
                             }
                         }
+
                     };
                     thread.start();
                     try {
@@ -70,10 +84,30 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    thread.interrupt();
                 }
+
                 Log.d("TAG","create end " +  url.get());
                 user.profilePic(url.get());
-                db.collection("User_Info").document(task.getResult().getUser().getUid()).set(user);
+                Thread t = new Thread(() -> {
+                    try {
+                        db.collection("User_Info").document(mAuth.getUid()).set(user);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                t.interrupt();
+                try {
+                    auxCreateUser(email, password);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w("TAG", "signInWithEmail:failure", task.getException());

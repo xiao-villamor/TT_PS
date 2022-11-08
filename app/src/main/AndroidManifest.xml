@@ -20,6 +20,9 @@
             android:name=".ui.view.RegisterUserActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.UserInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.ActivityListActivities"
             android:parentActivityName=".ui.view.MainActivity" />
         <activity

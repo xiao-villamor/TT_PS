@@ -32,6 +32,7 @@ import es.udc.psi.tt_ps.data.network.user.OnAuthStateChangeListener;
 import es.udc.psi.tt_ps.data.repository.authRepository;
 import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
 import es.udc.psi.tt_ps.ui.viewmodel.MainViewModel;
+import es.udc.psi.tt_ps.ui.view.UserInfoActivity;
 
 
 public class MainActivity extends AppCompatActivity implements OnAuthStateChangeListener {
@@ -67,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
         binding.show.setOnClickListener(v->{
             Intent intentSend = new Intent(MainActivity.this, ActivityListActivities.class);
+            startActivity(intentSend);
+        });
+
+        binding.userInfo.setOnClickListener(v->{
+            Intent intentSend = new Intent(MainActivity.this, UserInfoActivity.class);
             startActivity(intentSend);
         });
 
