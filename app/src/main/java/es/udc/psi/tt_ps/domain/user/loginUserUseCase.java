@@ -27,6 +27,7 @@ public class loginUserUseCase {
         });
         t.start();
         t.join();
+        t.interrupt();
 
         return res;
 

@@ -31,6 +31,7 @@ public class createUserUseCase {
         });
         thread.start();
         thread.join();
+        thread.interrupt();
 
         return res;
     }
