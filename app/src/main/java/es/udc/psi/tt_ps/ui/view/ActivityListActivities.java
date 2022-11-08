@@ -37,7 +37,11 @@ public class ActivityListActivities extends AppCompatActivity {
     public void initRecycledView(){
         Log.d(TAG,ACTIVITY+" start init");
         activitiesList = new ArrayList<>();
-        presenter.setRecycledData(activitiesList);
+        try {
+            presenter.setRecycledData(activitiesList);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, ActivityListsPres::moreActivityInfo);
         recyclerView = findViewById(R.id.listRecycledView);

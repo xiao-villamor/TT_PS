@@ -12,7 +12,7 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 public class getUserActivitiesUseCase {
 
-    public static Result<List<ActivityModel>, Exception> getActivities(String uuid) throws InterruptedException{
+    public static Result<List<ActivityModel>, Exception> getActivitiesByAdmin(String uuid) throws InterruptedException{
 
         Result<List<ActivityModel>, Exception> res = new Result<>();
         final activityRepository repository = new activityRepository();

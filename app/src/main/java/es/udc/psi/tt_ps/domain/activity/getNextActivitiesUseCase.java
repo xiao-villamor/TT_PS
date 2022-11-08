@@ -10,7 +10,7 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 public class getNextActivitiesUseCase {
 
-    public static Result<List<ActivityModel>, Exception> getActivities() throws InterruptedException{
+    public static Result<List<ActivityModel>, Exception> getNextActivities() throws InterruptedException{
 
         Result<List<ActivityModel>, Exception> res = new Result<>();
         final activityRepository repository = new activityRepository();

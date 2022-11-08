@@ -1,5 +1,8 @@
 package es.udc.psi.tt_ps.ui.viewmodel;
 
+import static es.udc.psi.tt_ps.domain.activity.getFirstActivitiesUseCase.getActivities;
+import static es.udc.psi.tt_ps.domain.activity.getNextActivitiesUseCase.getNextActivities;
+
 import android.graphics.PointF;
 import android.util.Log;
 
@@ -13,7 +16,10 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.ActivityModel;
+import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
+import es.udc.psi.tt_ps.domain.activity.getFirstActivitiesUseCase;
+import es.udc.psi.tt_ps.domain.activity.getNextActivitiesUseCase;
 
 public class ActivityListsPres extends RecyclerView.OnScrollListener {
     activityRepository ar = new activityRepository();
@@ -26,30 +32,14 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         //startActivity(intent);
     }
 
-    public void setRecycledData(List<ListActivities> listActivities){
+    public void setRecycledData(List<ListActivities> listActivities) throws InterruptedException {
         Log.d("_TAG","Presenter "+" start init");
 
-        AtomicReference<List<ActivityModel>> data = new AtomicReference<>();
+        Result<List<ActivityModel>, Exception> data ;
 
-        Thread thread = new Thread(){
-            @Override
-            public void run(){
-                try {
-                    data.set(ar.getActivities());
-                } catch (TimeoutException | ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        data = getActivities();
 
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        List<ActivityModel> res = new ArrayList<>(data.get());
+        List<ActivityModel> res = new ArrayList<>(data.data);
 
         for (int i=0; i<res.size();i++){
             listActivities.add(new ListActivities(R.drawable.bike_kick_push_scooter_svgrepo_com,res.get(i).getTitle(),
@@ -59,29 +49,14 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     }
 
     //función para it2, se usará para actualizar los datos del recycled view
-    public void updateRecycledData(RecyclerView recyclerView){
+    public void updateRecycledData(RecyclerView recyclerView) throws InterruptedException {
         Log.d("_TAG","Presenter "+" start init");
-        AtomicReference<List<ActivityModel>> data = new AtomicReference<>();
 
-        Thread thread = new Thread(){
-            @Override
-            public void run(){
-                try {
-                    data.set(ar.getNextActivities());
-                } catch (TimeoutException | ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        Result<List<ActivityModel>, Exception> data ;
 
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        data = getNextActivities();
 
-        List<ActivityModel> res = new ArrayList<>(data.get());
+        List<ActivityModel> res = new ArrayList<>(data.data);
         ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
         assert adapter != null;
         List<ListActivities> listActivities = adapter.getmData();
@@ -100,7 +75,11 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         Log.d("TAG","pasa por aqui joder");
-        updateRecycledData(recyclerView);
+        try {
+            updateRecycledData(recyclerView);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
