@@ -64,6 +64,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                         Log.d("TAG", res.exception.toString());
                     } else{
                         Log.d("TAG", "Usuario creado correctamente");
+                        Intent userProfileIntent = new Intent(this, MainActivity.class);
+                        startActivity(userProfileIntent);
                     }
 
                 } catch (InterruptedException e) {
