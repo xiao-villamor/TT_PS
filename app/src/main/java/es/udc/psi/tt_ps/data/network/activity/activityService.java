@@ -61,7 +61,7 @@ public class activityService implements activityServiceInterface {
 
     public List<ActivityModel> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).limit(5);
+        Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).limit(10);
         Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
                 data.add(document.toObject(ActivityModel.class));
