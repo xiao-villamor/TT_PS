@@ -5,9 +5,12 @@
     <string-array
         name="interests_array">
         <item>Sports</item>
-        <item>Parties</item>
-        <item>Cultural</item>
-        <item>Bars</item>
+        <item>Walking route</item>
+        <item>Tourist visits</item>
+        <item>Party</item>
+        <item>Cultural and art</item>
+        <item>Shopping</item>
+        <item>Bar and coffee</item>
         <item>Conversations</item>
     </string-array>
 </resources>
