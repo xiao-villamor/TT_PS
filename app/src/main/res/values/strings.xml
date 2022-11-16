@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">TT_PS</string>
+
+
+    <string-array
+        name="interests_array">
+        <item>Sports</item>
+        <item>Parties</item>
+        <item>Cultural</item>
+        <item>Bars</item>
+        <item>Conversations</item>
+    </string-array>
 </resources>

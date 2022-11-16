@@ -69,6 +69,12 @@
         android:text="Select user image" />
 
     <Button
+        android:id="@+id/interests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select interests" />
+
+    <Button
         android:id="@+id/signup_reg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

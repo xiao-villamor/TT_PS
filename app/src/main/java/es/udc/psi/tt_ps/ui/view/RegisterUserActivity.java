@@ -5,8 +5,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.icu.text.UnicodeSetIterator;
 import android.net.Uri;
@@ -25,6 +28,8 @@ import java.io.File;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +44,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private ActivityRegisterUserBinding binding;
     private File file=null;
+    private List<String> selectedItems=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +52,6 @@ public class RegisterUserActivity extends AppCompatActivity {
         binding = ActivityRegisterUserBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
 
         binding.signupReg.setOnClickListener(v -> {
 
@@ -58,7 +63,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString() , binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), Date.valueOf(binding.birthDateReg.getText().toString()), binding.phoneReg.getText().toString(),
-                            file, null, null);
+                            file, null, selectedItems);
 
                     if(res.exception != null){
                         Log.d("TAG", res.exception.toString());
@@ -73,7 +78,6 @@ public class RegisterUserActivity extends AppCompatActivity {
                 }
             }
 
-
         });
 
 
@@ -81,7 +85,57 @@ public class RegisterUserActivity extends AppCompatActivity {
             chooseImg();
         });
 
+        binding.interests.setOnClickListener(v -> {
+            selectedItems = new ArrayList();
+            mostrarDialogo();
+        });
 
+
+    }
+
+    private void mostrarDialogo(){
+        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        dialogo.setTitle("Choose the interests");
+        //Array con los posibles intereses
+        String[] interests=getResources().getStringArray(R.array.interests_array);
+
+
+        dialogo.setMultiChoiceItems(interests, null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                           selectedItems.add(interests[which]);
+
+                        } else if (selectedItems.contains(interests[which])) {
+                            // Else, if the item is already in the array, remove it
+                            selectedItems.remove(interests[which]);
+                        }
+                        Log.d("_TAG", selectedItems.toString());
+                    }
+                }
+        );
+
+        dialogo.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d("_TAG", "Dialogo aceptado");
+                if(selectedItems.isEmpty()){
+                    selectedItems=null;
+                }
+            }
+        });
+        dialogo.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d("_TAG", "Dialogo cancelado");
+                selectedItems=null;
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog alert = dialogo.create();
+        alert.show();
     }
 
     private boolean validate(){
