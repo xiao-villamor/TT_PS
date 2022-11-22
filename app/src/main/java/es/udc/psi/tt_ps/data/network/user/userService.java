@@ -133,10 +133,15 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
 
     public UserModel getUser(String uuid) throws ExecutionException, InterruptedException, TimeoutException {
         DocumentReference userDocument = (db.collection("User_Info").document(uuid));
-        DocumentSnapshot res =  Tasks.await(userDocument.get(), 5, TimeUnit.SECONDS);
+        DocumentSnapshot res =  Tasks.await(userDocument.get(), 20, TimeUnit.SECONDS);
         if(res.exists()) {
+            Log.d("TAG", "user send: " + res.getData());
             user = res.toObject(UserModel.class);
+            Log.d("TAG", "end");
+
         }
+
+
         return user;
     }
 

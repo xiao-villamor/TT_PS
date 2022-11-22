@@ -14,6 +14,7 @@ import es.udc.psi.tt_ps.core.firebaseConnection;
 import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.databinding.ActivityUserInfoBinding;
 import es.udc.psi.tt_ps.domain.user.getUserInfoUseCase;
+import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
 
 public class UserInfoActivity extends AppCompatActivity {
 
@@ -26,21 +27,25 @@ public class UserInfoActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         UserModel u = null;
+        Log.d("_TAG",firebaseConnection.getUser().toString());
         try {
              u = getUserInfoUseCase.getInfo(firebaseConnection.getUser()).data;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        Log.d("_TAG","set user info");
+
         if(u.getProfilePic() != null){
             Glide.with(this)
                     .load(u.getProfilePic())
-                    .into(binding.imageView1);
+                    .into(binding.profilePic);
         }
 
-        binding.userName.setText(u.getName());
-        binding.userSurname.setText(u.getSurname());
-        binding.userEmail.setText(u.getEmail());
-        binding.userPhone.setText(u.getPhone());
-        binding.userBirthdate.setText(u.getBirthDate().toString());
+        binding.Name.setText(u.getName());
+        binding.rating.setRating(u.getRating().get(0));
+        tagAdapter tagAdapter = new tagAdapter(u.getInterests().toArray(new String[0]));
+        binding.simpleGridView.setAdapter(tagAdapter);
+        binding.desc.setText(u.getDescription());
     }
 }

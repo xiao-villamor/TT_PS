@@ -14,6 +14,7 @@ public class UserModel {
     private List<String> rrss;
     private List<Float> rating;
     private List<String> interests;
+    private String description;
 
     public UserModel( String name,
                      String surname, Date birthDate, String email,
@@ -34,6 +35,12 @@ public class UserModel {
     public UserModel() {
     }
 
+    public String getDescription() {
+        return description;
+    }
+    public String setDescription(String description) {
+        return this.description = description;
+    }
 
     public String getName() {
         return name;

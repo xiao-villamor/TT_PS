@@ -1,5 +1,7 @@
 package es.udc.psi.tt_ps.domain.user;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
@@ -25,7 +27,6 @@ public class getUserInfoUseCase {
         thread.start();
         thread.join();
         thread.interrupt();
-
         return res;
     }
 }

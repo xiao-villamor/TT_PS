@@ -1,6 +1,5 @@
 package es.udc.psi.tt_ps.domain.user;
 
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
 
