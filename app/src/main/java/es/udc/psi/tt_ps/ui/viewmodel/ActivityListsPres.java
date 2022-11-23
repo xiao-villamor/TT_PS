@@ -42,7 +42,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         List<ActivityModel> res = new ArrayList<>(data.data);
 
         for (int i=0; i<res.size();i++){
-            listActivities.add(new ListActivities(R.drawable.bike_kick_push_scooter_svgrepo_com,res.get(i).getTitle(),
+            listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),
                     new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
                     res.get(i).getDescription()));
         }
@@ -62,7 +62,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         List<ListActivities> listActivities = adapter.getmData();
 
         for (int i=0; i<res.size();i++){
-            listActivities.add(new ListActivities(R.drawable.bike_kick_push_scooter_svgrepo_com,res.get(i).getTitle(),
+            listActivities.add(new ListActivities(res.get(0).getImage(),res.get(i).getTitle(),
                     new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
                     res.get(i).getDescription()));
         }

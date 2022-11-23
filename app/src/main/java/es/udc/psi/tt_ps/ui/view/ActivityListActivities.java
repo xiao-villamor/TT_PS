@@ -4,6 +4,8 @@ package es.udc.psi.tt_ps.ui.view;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +31,6 @@ public class ActivityListActivities extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_activities);
         Log.d(TAG,ACTIVITY+" onCreate");
-        //user.loginUser("dev@mail.com","123456");
         initRecycledView();
 
     }
@@ -48,6 +49,7 @@ public class ActivityListActivities extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listActivitiesAdapter);
+
         Log.d(TAG,ACTIVITY+" end init");
 
     }

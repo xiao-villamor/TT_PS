@@ -15,11 +15,12 @@ public class ActivityModel {
     private String adminId;
     private List<String> participants;
     private List<String> tags;
+    private String image;
 
     public ActivityModel(String title, String description,
                          Date start_date, Date end_date,Date creation_date,
                          Point location, String adminId,
-                         List<String> participants, List<String> tags) {
+                         List<String> participants, List<String> tags, String image) {
 
         this.title = title;
         this.description = description;
@@ -30,12 +31,16 @@ public class ActivityModel {
         this.adminId = adminId;
         this.participants = participants;
         this.tags = tags;
+        this.image = image;
     }
     public ActivityModel() {
     }
 
     public Date getCreation_date() {
         return creation_date;
+    }
+    public String getImage() {
+        return image;
     }
     public String getTitle() {
         return title;
@@ -67,5 +72,9 @@ public class ActivityModel {
 
     public List<String> getTags() {
         return tags;
+    }
+
+    public void setImg(String img) {
+         this.image = img;
     }
 }

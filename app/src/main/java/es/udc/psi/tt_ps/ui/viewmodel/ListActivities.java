@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class ListActivities implements Serializable {
-    public int activityImage;
+    public String activityImage;
     public String title;
     public PointF location;
     public Date end_date;
@@ -17,7 +17,7 @@ public class ListActivities implements Serializable {
     public ListActivities() {
     }
 
-    public ListActivities(int activityImage, String title, PointF location, Date end_date, String description) {
+    public ListActivities(String activityImage, String title, PointF location, Date end_date, String description) {
         this.activityImage = activityImage;
         this.title = title;
         this.location = location;
@@ -26,11 +26,11 @@ public class ListActivities implements Serializable {
 
     }
 
-    public int getActivityImage() {
+    public String getActivityImage() {
         return activityImage;
     }
 
-    public void setActivityImage(int activityImage) {
+    public void setActivityImage(String activityImage) {
         this.activityImage = activityImage;
     }
 

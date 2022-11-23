@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import es.udc.psi.tt_ps.R;
@@ -67,24 +69,25 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
 
     public static class ActivitiesHolder extends  RecyclerView.ViewHolder{
         ImageView activity_image;
-        TextView title, location, end_date, description;
+        TextView title, location, end_date;
 
         ActivitiesHolder(View itemView){
             super(itemView);
-            activity_image = itemView.findViewById(R.id.activity_image);
-            title = itemView.findViewById(R.id.activityName);
-            location = itemView.findViewById(R.id.coordenadasXY);
-            end_date = itemView.findViewById(R.id.endDate);
-            description = itemView.findViewById(R.id.Descrip);
+            activity_image = itemView.findViewById(R.id.card_media);
+            title = itemView.findViewById(R.id.card_title);
+            location = itemView.findViewById(R.id.card_location);
+            end_date = itemView.findViewById(R.id.card_date);
         }
 
         void bindData(final ListActivities item){
-            activity_image.setImageResource(item.getActivityImage());
+            if(item.getActivityImage() != null){
+                Glide.with(activity_image.getContext())
+                        .load(item.getActivityImage())
+                        .into(activity_image);
+            }
             title.setText(item.getTitle());
             location.setText(item.getLocation().toString());
             end_date.setText(item.getEnd_date().toString());
-
-            description.setText(item.getDescription());
             itemView.setOnClickListener(view -> listener.onItemClick(item));
 
         }

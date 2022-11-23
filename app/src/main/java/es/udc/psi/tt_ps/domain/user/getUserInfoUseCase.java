@@ -20,6 +20,10 @@ public class getUserInfoUseCase {
         Thread thread = new Thread(() -> {
             try{
                 res.data = repository.getUser(uuid);
+                Log.d("_TAG",res.data.toString());
+                res.exception = null;
+
+
             }catch (Exception e){
                 res.exception = e;
             }

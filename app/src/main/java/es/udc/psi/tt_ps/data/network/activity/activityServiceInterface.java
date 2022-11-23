@@ -11,7 +11,7 @@ public interface activityServiceInterface {
     public void updateActivity(ActivityModel activity, String id);
     public void deleteActivity(String id);
     public ActivityModel getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException;
-    public List<ActivityModel> getActivitiesByAdminId(String adminId) throws ExecutionException, InterruptedException, TimeoutException;
+    public List<ActivityModel> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException;
     public List<ActivityModel> getActivities() throws ExecutionException, InterruptedException, TimeoutException;
     public List<ActivityModel> getNextActivities() throws ExecutionException, InterruptedException, TimeoutException;
 }
