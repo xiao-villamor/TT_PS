@@ -14,8 +14,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
@@ -38,25 +40,27 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
         binding.createActivity.setOnClickListener(v -> {
 
+            if(validate()){
+                try {
+                    Result<Object, Exception> res = createActivityUseCase.createAcyivity(
+                            binding.activityTitle.getText().toString(), binding.activityDescription.getText().toString(),
+                            Date.valueOf(binding.activityStart.getText().toString()), Date.valueOf(binding.activityEnd.getText().toString()),
+                            user.getUid(), selectedTags);
 
-            try {
-                Result<Object, Exception> res = createActivityUseCase.createAcyivity(
-                        binding.activityTitle.getText().toString(), binding.activityDescription.getText().toString(),
-                        Date.valueOf(binding.activityStart.getText().toString()), Date.valueOf(binding.activityEnd.getText().toString()),
-                        user.getUid(), selectedTags);
-
-                if(res.exception!=null){
-                    Log.d("TAG", res.exception.toString());
-                    Toast.makeText(getApplicationContext(), "Activity cannot be created", Toast.LENGTH_SHORT).show();
-                }else{
-                    Log.d("TAG", "Actividad creada correctamente");
-                    Toast.makeText(getApplicationContext(), "activity created successfully", Toast.LENGTH_SHORT).show();
-                    Intent userProfileIntent = new Intent(this, MainActivity.class);
-                    startActivity(userProfileIntent);
+                    if(res.exception!=null){
+                        Log.d("TAG", res.exception.toString());
+                        Toast.makeText(getApplicationContext(), "Activity cannot be created", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Log.d("TAG", "Actividad creada correctamente");
+                        Toast.makeText(getApplicationContext(), "activity created successfully", Toast.LENGTH_SHORT).show();
+                        Intent userProfileIntent = new Intent(this, MainActivity.class);
+                        startActivity(userProfileIntent);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+
         });
 
 
@@ -113,6 +117,120 @@ public class ActivityCreateActivity extends AppCompatActivity {
         alert.show();
     }
 
+
+
+    private boolean validate(){
+        return val_title() && val_description() && val_startDate() && val_endDate() && val_duration() && val_tags();
+
+    }
+
+
+    private boolean val_title(){
+        String titulo = binding.activityTitle.getText().toString();
+        if(titulo.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por titulo no indicado");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean val_description(){
+        String description = binding.activityDescription.getText().toString();
+        if(description.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por description no indicada");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean val_startDate(){
+
+        String date = binding.activityStart.getText().toString();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+        if(date.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Start date cannot be empty", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por fecha de inicio no indicada");
+            return false;
+        }
+
+        try{
+            java.util.Date d = formatter.parse(date);
+            return true;
+
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Incorret start date", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por fecha de inicio incorrecta " + e.getMessage());
+            return false;
+        }
+
+
+    }
+
+
+    private boolean val_endDate(){
+
+        String date = binding.activityEnd.getText().toString();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+        if(date.isEmpty()){
+            Toast.makeText(getApplicationContext(), "End date cannot be empty", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por fecha de fin no indicada");
+            return false;
+        }
+
+        try{
+            java.util.Date d = formatter.parse(date);
+            return true;
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Incorret end date", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por fecha de fin incorrecta " + e.getMessage());
+            return false;
+        }
+
+    }
+
+
+    private boolean val_duration(){
+        String startDate = binding.activityStart.getText().toString();
+        String endDate = binding.activityEnd.getText().toString();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+        try{
+            java.util.Date start_d = formatter.parse(startDate);
+            java.util.Date end_d = formatter.parse(endDate);
+
+            if(!start_d.before(end_d)){
+                Toast.makeText(getApplicationContext(), "Start date has to ve previous to the end date", Toast.LENGTH_SHORT).show();
+                Log.d("TAG", "Actividad no creada por fechas no coherentes");
+                return false;
+            }else{
+                return true;
+            }
+
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Incorret end or start date format", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por mal formato de fechas " + e.getMessage());
+            return false;
+        }
+
+    }
+
+
+    private boolean val_tags(){
+
+        if(selectedTags==null || selectedTags.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Activity has to be tagged", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por tener tags asociados ");
+            return false;
+        }else{
+            return true;
+        }
+    }
 
 
 }
