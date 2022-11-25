@@ -1,5 +1,8 @@
 package es.udc.psi.tt_ps.domain.activity;
 
+import android.graphics.Point;
+import android.graphics.PointF;
+
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
@@ -15,12 +18,13 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 public class createActivityUseCase {
 
     public static Result<Object, Exception> createAcyivity (String title, String description, Date startDate,
-                                                                  Date endDate, String adminId , List<String> interests) throws InterruptedException {
+                                                                  Date endDate, String adminId , PointF location, List<String> interests) throws InterruptedException {
 
         final activityRepository repository = new activityRepository();
         Result<Object, Exception> res = new Result<>();
 
-        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),null, adminId,null, interests);
+
+        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),location, adminId,null, interests);
         Thread thread = new Thread(() -> {
             try{
                 repository.createActivity(activity);

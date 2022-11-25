@@ -68,6 +68,12 @@
             android:text="Choose tag" />
 
         <Button
+            android:id="@+id/newActivityMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose the place" />
+
+        <Button
             android:id="@+id/createActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,6 +82,11 @@
             android:textColor="#fff"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="5dp"/>
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </LinearLayout>

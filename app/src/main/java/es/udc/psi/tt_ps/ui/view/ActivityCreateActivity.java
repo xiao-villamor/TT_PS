@@ -1,10 +1,13 @@
 package es.udc.psi.tt_ps.ui.view;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +32,10 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
     private ActivityCreateBinding binding;
     private List<String> selectedTags=null;
+    private double latitude;
+    private double longitude;
+    String LAT_KEY = "latitud_mapa";
+    String LON_KEY = "longitud_mapa";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,8 @@ public class ActivityCreateActivity extends AppCompatActivity {
         setContentView(view);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        latitude=0;
+        longitude=0;
         binding.createActivity.setOnClickListener(v -> {
 
             if(validate()){
@@ -45,7 +54,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                     Result<Object, Exception> res = createActivityUseCase.createAcyivity(
                             binding.activityTitle.getText().toString(), binding.activityDescription.getText().toString(),
                             Date.valueOf(binding.activityStart.getText().toString()), Date.valueOf(binding.activityEnd.getText().toString()),
-                            user.getUid(), selectedTags);
+                            user.getUid(), new PointF((float)latitude, (float) longitude), selectedTags);
 
                     if(res.exception!=null){
                         Log.d("TAG", res.exception.toString());
@@ -68,6 +77,13 @@ public class ActivityCreateActivity extends AppCompatActivity {
             selectedTags = new ArrayList();
             showTagsChooser();
         });
+
+        binding.newActivityMap.setOnClickListener(v -> {
+            Intent mapIntent = new Intent(this, CreateActivityMap.class);
+            startMapForCoordinates.launch(mapIntent);
+            //startActivity(mapIntent);
+        });
+
 
     }
 
@@ -118,9 +134,25 @@ public class ActivityCreateActivity extends AppCompatActivity {
     }
 
 
+    ActivityResultLauncher<Intent> startMapForCoordinates = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Bundle bundle = data.getExtras();
+                    if (bundle!= null) {
+
+                        latitude = bundle.getDouble(LAT_KEY, 0);
+                        longitude = bundle.getDouble(LON_KEY, 0);
+                        Log.d("TAG", "Coordenadas recividas " +  latitude + " : " + longitude);
+                    }
+                }
+            }
+    );
+
 
     private boolean validate(){
-        return val_title() && val_description() && val_startDate() && val_endDate() && val_duration() && val_tags();
+        return val_title() && val_description() && val_startDate() && val_endDate() && val_duration() && val_tags() && val_location();
 
     }
 
@@ -226,6 +258,17 @@ public class ActivityCreateActivity extends AppCompatActivity {
         if(selectedTags==null || selectedTags.isEmpty()){
             Toast.makeText(getApplicationContext(), "Activity has to be tagged", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por tener tags asociados ");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    private boolean val_location(){
+
+        if(latitude==0 && longitude==0){
+            Toast.makeText(getApplicationContext(), "Activity has to have a location", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por no tener una localizacion asociada ");
             return false;
         }else{
             return true;

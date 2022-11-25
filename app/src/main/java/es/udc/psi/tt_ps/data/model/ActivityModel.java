@@ -1,6 +1,7 @@
 package es.udc.psi.tt_ps.data.model;
 
 import android.graphics.Point;
+import android.graphics.PointF;
 
 import java.util.Date;
 import java.util.List;
@@ -11,14 +12,14 @@ public class ActivityModel {
     private Date start_date;
     private Date end_date;
     private Date creation_date;
-    private Point location;
+    private PointF location;
     private String adminId;
     private List<String> participants;
     private List<String> tags;
 
     public ActivityModel(String title, String description,
                          Date start_date, Date end_date,Date creation_date,
-                         Point location, String adminId,
+                         PointF location, String adminId,
                          List<String> participants, List<String> tags) {
 
         this.title = title;
@@ -53,7 +54,7 @@ public class ActivityModel {
         return end_date;
     }
 
-    public Point getLocation() {
+    public PointF getLocation() {
         return location;
     }
 
