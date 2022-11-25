@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="#fff"
     android:padding="20dp">
 
 
@@ -17,8 +16,7 @@
         android:hint="Register your activity"
         android:textSize="30sp"
         android:layout_marginTop="20dp"
-        android:transitionName="logo_text"
-        android:textColor="#000"/>
+        android:transitionName="logo_text"/>
     <TextView
         android:id="@+id/slogan_name"
         android:layout_width="wrap_content"
