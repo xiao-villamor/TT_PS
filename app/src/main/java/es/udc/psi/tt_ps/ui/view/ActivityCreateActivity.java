@@ -5,12 +5,16 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,6 +39,8 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private List<String> selectedTags=null;
     private double latitude;
     private double longitude;
+    private java.util.Date startDate;
+    private java.util.Date endDate;
     String LAT_KEY = "latitud_mapa";
     String LON_KEY = "longitud_mapa";
 
@@ -47,13 +54,15 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
         latitude=0;
         longitude=0;
+        startDate=null;
+        endDate=null;
         binding.createActivity.setOnClickListener(v -> {
 
             if(validate()){
                 try {
                     Result<Object, Exception> res = createActivityUseCase.createAcyivity(
                             binding.activityTitle.getText().toString(), binding.activityDescription.getText().toString(),
-                            Date.valueOf(binding.activityStart.getText().toString()), Date.valueOf(binding.activityEnd.getText().toString()),
+                            startDate, endDate,
                             user.getUid(), new PointF((float)latitude, (float) longitude), selectedTags);
 
                     if(res.exception!=null){
@@ -72,6 +81,14 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
         });
 
+        binding.buttonStart.setOnClickListener(v -> {
+            showStartDateDialog();
+        });
+
+        binding.buttonEnd.setOnClickListener(v -> {
+            showEndDateDialog();
+        });
+
 
         binding.activityTag.setOnClickListener(v -> {
             selectedTags = new ArrayList();
@@ -87,6 +104,65 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
     }
 
+    private void showStartDateDialog(){
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog.OnDateSetListener dateSetListener=new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                TimePickerDialog.OnTimeSetListener timeSetListener=new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        startDate=calendar.getTime();
+                        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy  mm:ss");
+                        binding.activityStart.setText(simpleDateFormat.format(startDate));
+                        Log.d("TAG", "Fecha seleccionada: " + startDate.toString());
+                    }
+                };
+                TimePickerDialog t = new TimePickerDialog(ActivityCreateActivity.this, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+                t.show();
+
+
+            }
+        };
+        DatePickerDialog d = new DatePickerDialog(ActivityCreateActivity.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        d.show();
+    }
+
+    private void showEndDateDialog(){
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog.OnDateSetListener dateSetListener=new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                TimePickerDialog.OnTimeSetListener timeSetListener=new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        endDate=calendar.getTime();
+                        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy  mm:ss");
+                        binding.activityEnd.setText(simpleDateFormat.format(endDate));
+                        Log.d("TAG", "Fecha seleccionada: " + endDate.toString());
+                    }
+                };
+                TimePickerDialog t = new TimePickerDialog(ActivityCreateActivity.this, timeSetListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+                t.show();
+
+
+            }
+        };
+        DatePickerDialog d = new DatePickerDialog(ActivityCreateActivity.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        d.show();
+    }
 
     private void showTagsChooser(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
@@ -177,26 +253,15 @@ public class ActivityCreateActivity extends AppCompatActivity {
         return true;
     }
 
+
     private boolean val_startDate(){
 
-        String date = binding.activityStart.getText().toString();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
-        if(date.isEmpty()){
+        if(startDate==null){
             Toast.makeText(getApplicationContext(), "Start date cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por fecha de inicio no indicada");
             return false;
-        }
-
-        try{
-            java.util.Date d = formatter.parse(date);
+        }else{
             return true;
-
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Incorret start date", Toast.LENGTH_SHORT).show();
-            Log.d("TAG", "Actividad no creada por fecha de inicio incorrecta " + e.getMessage());
-            return false;
         }
 
 
@@ -205,49 +270,25 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
     private boolean val_endDate(){
 
-        String date = binding.activityEnd.getText().toString();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
-        if(date.isEmpty()){
+        if(endDate==null){
             Toast.makeText(getApplicationContext(), "End date cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por fecha de fin no indicada");
             return false;
-        }
-
-        try{
-            java.util.Date d = formatter.parse(date);
+        }else{
             return true;
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Incorret end date", Toast.LENGTH_SHORT).show();
-            Log.d("TAG", "Actividad no creada por fecha de fin incorrecta " + e.getMessage());
-            return false;
         }
 
     }
 
 
     private boolean val_duration(){
-        String startDate = binding.activityStart.getText().toString();
-        String endDate = binding.activityEnd.getText().toString();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-        try{
-            java.util.Date start_d = formatter.parse(startDate);
-            java.util.Date end_d = formatter.parse(endDate);
-
-            if(!start_d.before(end_d)){
-                Toast.makeText(getApplicationContext(), "Start date has to ve previous to the end date", Toast.LENGTH_SHORT).show();
-                Log.d("TAG", "Actividad no creada por fechas no coherentes");
-                return false;
-            }else{
-                return true;
-            }
-
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Incorret end or start date format", Toast.LENGTH_SHORT).show();
-            Log.d("TAG", "Actividad no creada por mal formato de fechas " + e.getMessage());
+        if(!startDate.before(endDate)){
+            Toast.makeText(getApplicationContext(), "Start date has to ve previous to the end date", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por fechas no coherentes");
             return false;
+        }else{
+            return true;
         }
 
     }
