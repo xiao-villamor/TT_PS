@@ -6,6 +6,10 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,6 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TT_PS"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAG5bI3zDlHWyEJGS5ZPx7r4NYonOypyc8" />
+        <activity
+            android:name=".ui.view.CreateActivityMap"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.ActivityCreateActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.view.RegisterUserActivity"
             android:exported="false" />

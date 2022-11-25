@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         setContentView(view);
         mainViewModel.setAuthStateChangeListener(this);
 
+
         firebaseConnection connection = new firebaseConnection();
         connection.connect(this);
 
@@ -73,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
         binding.userInfo.setOnClickListener(v->{
             Intent intentSend = new Intent(MainActivity.this, UserInfoActivity.class);
+            startActivity(intentSend);
+        });
+
+        binding.newActivity.setOnClickListener(v->{
+            Intent intentSend = new Intent(MainActivity.this, ActivityCreateActivity.class);
             startActivity(intentSend);
         });
 
