@@ -24,7 +24,7 @@ public class createActivityUseCase {
         Result<Object, Exception> res = new Result<>();
 
 
-        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),location, adminId,null, interests);
+        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),location, adminId,null, interests, "");
         Thread thread = new Thread(() -> {
             try{
                 repository.createActivity(activity);
