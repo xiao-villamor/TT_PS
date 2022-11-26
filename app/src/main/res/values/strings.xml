@@ -2,8 +2,7 @@
     <string name="app_name">TT_PS</string>
 
 
-    <string-array
-        name="interests_array">
+    <string-array name="interests_array">
         <item>Sports</item>
         <item>Walking route</item>
         <item>Tourist visits</item>
@@ -12,5 +11,7 @@
         <item>Shopping</item>
         <item>Bar and coffee</item>
         <item>Conversations</item>
+        <item>Otros</item>
     </string-array>
+
 </resources>
