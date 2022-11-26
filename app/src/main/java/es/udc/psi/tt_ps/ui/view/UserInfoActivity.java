@@ -1,28 +1,31 @@
 package es.udc.psi.tt_ps.ui.view;
 
-import android.content.Intent;
-
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-
+import com.bumptech.glide.annotation.GlideModule;
+import com.google.firebase.firestore.auth.User;
 
 
 import java.util.ArrayList;
 import java.util.List;
+
+import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.core.firebaseConnection;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.databinding.ActivityUserInfoBinding;
 import es.udc.psi.tt_ps.domain.user.getUserInfoUseCase;
 import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
+import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivitiesAdapter;
 import es.udc.psi.tt_ps.ui.viewmodel.UserActivityListPres;
@@ -87,7 +90,7 @@ public class UserInfoActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, this::moreActivityInfo);
+        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, UserActivityListPres::moreActivityInfo);
         recyclerView = binding.userAct;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -95,12 +98,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         Log.d(TAG,ACTIVITY+" end init");
 
-    }
-    public  void moreActivityInfo(ListActivities ListActivities){
-        //Metodo para ir a la vista detallada de actividades
-        Log.d("TAG", "Mostrar en detalle" );
-        Intent intent = new Intent(this, ActivityListActivities.class);
-        intent.putExtra("events", ListActivities);
-        startActivity(intent);
+
+
     }
 }

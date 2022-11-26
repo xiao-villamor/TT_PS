@@ -2,53 +2,65 @@ package es.udc.psi.tt_ps.ui.view;
 
 
 
-import android.content.Intent;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 import es.udc.psi.tt_ps.R;
+import es.udc.psi.tt_ps.data.network.user.userService;
+import es.udc.psi.tt_ps.databinding.ActivityShowActivitiesBinding;
+import es.udc.psi.tt_ps.databinding.ActivityUserInfoBinding;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivitiesAdapter;
-
 
 public class ActivityListActivities extends AppCompatActivity {
     String TAG = "_TAG";
     String ACTIVITY = "MainActivity2";
     List<ListActivities> activitiesList;
     ActivityListsPres presenter = new ActivityListsPres();
-    RecyclerView recyclerView;
-    FloatingActionButton fab;
-
+    RecyclerView recyclerView ;
+    ActivityShowActivitiesBinding binding;
+    //userService user = new userService();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_activities);
+        binding = ActivityShowActivitiesBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
         Log.d(TAG,ACTIVITY+" onCreate");
-        fab =findViewById(R.id.recycled_button);
         initRecycledView();
-        activateupdate();
-
-    }
-    public void activateupdate(){
-        fab.setOnClickListener(view -> {
-            try {
-                presenter.updateRecycledData(recyclerView);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        binding.filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,ACTIVITY+" onClick");
+                showFilterDialog();
             }
         });
+
+    }
+
+    private void showFilterDialog(){
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(R.layout.filter_dialog);
+        bottomSheetDialog.show();
+
+
     }
 
     public void initRecycledView(){
@@ -60,26 +72,36 @@ public class ActivityListActivities extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, this::moreActivityInfo);
-        recyclerView = findViewById(R.id.listRecycledView);
+        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, ActivityListsPres::moreActivityInfo);
+        recyclerView = binding.listRecycledView;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listActivitiesAdapter);
 
         Log.d(TAG,ACTIVITY+" end init");
 
-    }
-    public void moreActivityInfo(ListActivities ListActivities){
-        //Metodo para ir a la vista detallada de actividades
-        Log.d("TAG", "Mostrar en detalle" );
-        Intent intent = new Intent(this,DetailsActivity.class);
-        intent.putExtra("events", ListActivities);
-        startActivity(intent);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    int totalItems = recyclerView.getAdapter().getItemCount();
+                    int lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                    if (lastVisibleItem == totalItems - 1) {
+                        Log.d(TAG,ACTIVITY+" onScrollStateChanged");
+                        try {
+                            presenter.updateRecycledData(recyclerView);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        listActivitiesAdapter.notifyItemInserted(activitiesList.size());
+                    }
+
+                }
+            }
+        });
 
     }
-
-
-
 
 
 
