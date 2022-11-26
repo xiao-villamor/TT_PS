@@ -43,7 +43,11 @@ public class activityRepository {
         return api.getNextActivities(prevDocSnap);
     }
 
-
-
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange) throws ExecutionException, InterruptedException, TimeoutException {
+        return api.getActivitiesFiltered(tags,distanceRange);
+    }
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException{
+        return api.getActivitiesFilteredNext(tags,distanceRange,prevDocSnaprec);
+    }
 
 }

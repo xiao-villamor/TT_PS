@@ -2,27 +2,27 @@ package es.udc.psi.tt_ps.ui.view;
 
 
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.LinearLayout;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.slider.RangeSlider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+
 import es.udc.psi.tt_ps.R;
-import es.udc.psi.tt_ps.data.network.user.userService;
 import es.udc.psi.tt_ps.databinding.ActivityShowActivitiesBinding;
-import es.udc.psi.tt_ps.databinding.ActivityUserInfoBinding;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivitiesAdapter;
@@ -34,23 +34,26 @@ public class ActivityListActivities extends AppCompatActivity {
     ActivityListsPres presenter = new ActivityListsPres();
     RecyclerView recyclerView ;
     ActivityShowActivitiesBinding binding;
-    //userService user = new userService();
+    ListActivitiesAdapter listActivitiesAdapter;
+    List<String> tags = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        tags = Arrays.asList(getResources().getStringArray(R.array.interests_array));
+
+        Log.d(TAG, "_TAG: " + tags);
+
         super.onCreate(savedInstanceState);
         binding = ActivityShowActivitiesBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
         Log.d(TAG,ACTIVITY+" onCreate");
         initRecycledView();
-        binding.filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG,ACTIVITY+" onClick");
-                showFilterDialog();
-            }
+        binding.filterButton.setOnClickListener(v -> {
+            Log.d(TAG,ACTIVITY+" onClick");
+            showFilterDialog();
+
         });
 
     }
@@ -58,7 +61,43 @@ public class ActivityListActivities extends AppCompatActivity {
     private void showFilterDialog(){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.filter_dialog);
+        ChipGroup cg = bottomSheetDialog.findViewById(R.id.chip_group);
+        for (int i = 0; i < cg.getChildCount(); i++) {
+            Chip chip = (Chip)cg.getChildAt(i);
+            if (tags.contains(chip.getText().toString().toLowerCase(Locale.ROOT))){
+                chip.setChecked(true);
+            }
+        }
+
         bottomSheetDialog.show();
+        Button button = bottomSheetDialog.findViewById(R.id.button_save);
+        button.setOnClickListener(v -> {
+
+            ChipGroup chipGroup = bottomSheetDialog.findViewById(R.id.chip_group);
+            List<String> filter_tags = new ArrayList<>();
+            for (int i = 0; i < chipGroup.getChildCount(); i++) {
+                Chip chip = (Chip)chipGroup.getChildAt(i);
+                if (chip.isChecked()) {
+                    filter_tags.add(chip.getText().toString().toLowerCase(Locale.ROOT));
+                }
+            }
+            RangeSlider slider = bottomSheetDialog.findViewById(R.id.range_slider);
+            List<Float> values = slider.getValues();
+            tags = filter_tags;
+
+            Log.d(TAG,ACTIVITY+" tags: "+tags);
+            try {
+                presenter.setRecycledDataFiltered(tags,values,recyclerView);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            listActivitiesAdapter.notifyDataSetChanged();
+
+            bottomSheetDialog.dismiss();
+
+
+        });
+
 
 
     }
@@ -67,12 +106,12 @@ public class ActivityListActivities extends AppCompatActivity {
         Log.d(TAG,ACTIVITY+" start init");
         activitiesList = new ArrayList<>();
         try {
-            presenter.setRecycledData(activitiesList);
+            presenter.setRecycledDataFiltered(tags, activitiesList);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, ActivityListsPres::moreActivityInfo);
+        listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, ActivityListsPres::moreActivityInfo);
         recyclerView = binding.listRecycledView;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -87,13 +126,14 @@ public class ActivityListActivities extends AppCompatActivity {
                 if (!recyclerView.canScrollVertically(1)) {
                     int totalItems = recyclerView.getAdapter().getItemCount();
                     int lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                    Log.d(TAG,ACTIVITY+" totalItems: "+totalItems+" lastVisibleItem: "+lastVisibleItem);
                     if (lastVisibleItem == totalItems - 1) {
-                        Log.d(TAG,ACTIVITY+" onScrollStateChanged");
                         try {
-                            presenter.updateRecycledData(recyclerView);
+                            presenter.updateRecycledDataFiltered(tags,recyclerView);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+
                         listActivitiesAdapter.notifyItemInserted(activitiesList.size());
                     }
 

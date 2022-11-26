@@ -10,6 +10,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -76,6 +78,53 @@ public class activityService implements activityServiceInterface {
         });
 
         Log.d("_TAG", "DocumentSnapshot data: " + prevDocSnap);
+        result.data = data;
+        result.cursor = prevDocSnap;
+
+        return result;
+    }
+
+    @Override
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange) throws ExecutionException, InterruptedException, TimeoutException {
+        List<ActivityModel> data = new ArrayList<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).limit(5).whereArrayContainsAny("tags", tags);
+        Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if(document != null) {
+                Log.d("_TAG", "DocumentSnapshot data: " + document.toObject(ActivityModel.class));
+
+                data.add(document.toObject(ActivityModel.class));
+                prevDocSnap = document;
+            }else{
+                Log.d("TAG", "No such document");
+            }
+        });
+
+
+
+        result.data = data;
+        result.cursor = prevDocSnap;
+
+        return result;
+    }
+
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
+        List<ActivityModel> data = new ArrayList<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(5).whereArrayContainsAny("tags", tags);
+        Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if(document != null) {
+                Log.d("_TAG", "DocumentSnapshot data: " + document.toObject(ActivityModel.class));
+
+                data.add(document.toObject(ActivityModel.class));
+                prevDocSnap = document;
+            }else{
+                Log.d("TAG", "No such document");
+            }
+        });
+
+
+
         result.data = data;
         result.cursor = prevDocSnap;
 
