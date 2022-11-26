@@ -2,12 +2,9 @@ package es.udc.psi.tt_ps.ui.viewmodel;
 
 import static es.udc.psi.tt_ps.domain.activity.getUserActivitiesUseCase.getActivitiesByAdmin;
 
+
 import android.graphics.PointF;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,17 +13,11 @@ import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
 
+
 public class UserActivityListPres {
 
     activityRepository ar = new activityRepository();
 
-    public static void moreActivityInfo(ListActivities ListActivities){
-        //Metodo para ir a la vista detallada de actividades
-        Log.d("TAG", "Mostrar en detalle" );
-        //Intent intent = new Intent(this,ActivityListActivities.class);
-        //intent.putExtra("events", ListActivities);
-        //startActivity(intent);
-    }
 
     public void setRecycledData(List<ListActivities> listActivities) throws InterruptedException {
         Log.d("_TAG","Presenter "+" start init");

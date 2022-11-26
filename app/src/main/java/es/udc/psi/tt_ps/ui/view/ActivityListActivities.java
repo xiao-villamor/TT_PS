@@ -2,28 +2,33 @@ package es.udc.psi.tt_ps.ui.view;
 
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import es.udc.psi.tt_ps.R;
-import es.udc.psi.tt_ps.data.network.user.userService;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivitiesAdapter;
+
 
 public class ActivityListActivities extends AppCompatActivity {
     String TAG = "_TAG";
     String ACTIVITY = "MainActivity2";
     List<ListActivities> activitiesList;
     ActivityListsPres presenter = new ActivityListsPres();
-    RecyclerView recyclerView ;
-    //userService user = new userService();
+    RecyclerView recyclerView;
+    FloatingActionButton fab;
+
 
 
     @Override
@@ -31,8 +36,19 @@ public class ActivityListActivities extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_activities);
         Log.d(TAG,ACTIVITY+" onCreate");
+        fab =findViewById(R.id.recycled_button);
         initRecycledView();
+        activateupdate();
 
+    }
+    public void activateupdate(){
+        fab.setOnClickListener(view -> {
+            try {
+                presenter.updateRecycledData(recyclerView);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void initRecycledView(){
@@ -44,7 +60,7 @@ public class ActivityListActivities extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, ActivityListsPres::moreActivityInfo);
+        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, this::moreActivityInfo);
         recyclerView = findViewById(R.id.listRecycledView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -53,6 +69,17 @@ public class ActivityListActivities extends AppCompatActivity {
         Log.d(TAG,ACTIVITY+" end init");
 
     }
+    public void moreActivityInfo(ListActivities ListActivities){
+        //Metodo para ir a la vista detallada de actividades
+        Log.d("TAG", "Mostrar en detalle" );
+        Intent intent = new Intent(this,DetailsActivity.class);
+        intent.putExtra("events", ListActivities);
+        startActivity(intent);
+
+    }
+
+
+
 
 
 

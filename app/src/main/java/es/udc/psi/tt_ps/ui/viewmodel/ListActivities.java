@@ -10,7 +10,7 @@ import java.util.Date;
 public class ListActivities implements Serializable {
     public String activityImage;
     public String title;
-    public PointF location;
+    public transient PointF location;
     public Date end_date;
     public String description;
 
