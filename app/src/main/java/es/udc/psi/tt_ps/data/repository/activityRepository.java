@@ -1,10 +1,13 @@
 package es.udc.psi.tt_ps.data.repository;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import es.udc.psi.tt_ps.data.model.ActivityModel;
+import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.network.activity.activityService;
 
 public class activityRepository {
@@ -32,12 +35,12 @@ public class activityRepository {
         return api.getActivitiesByAdminId(adminId,count);
     }
 
-    public List<ActivityModel> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivities();
     }
 
-    public List<ActivityModel> getNextActivities() throws ExecutionException, InterruptedException, TimeoutException {
-        return api.getNextActivities();
+    public  QueryResult<List<ActivityModel>,DocumentSnapshot> getNextActivities(DocumentSnapshot prevDocSnap) throws ExecutionException, InterruptedException, TimeoutException {
+        return api.getNextActivities(prevDocSnap);
     }
 
 

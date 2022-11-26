@@ -90,13 +90,15 @@ public class UserInfoActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, ActivityListsPres::moreActivityInfo);
+        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, UserActivityListPres::moreActivityInfo);
         recyclerView = binding.userAct;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listActivitiesAdapter);
 
         Log.d(TAG,ACTIVITY+" end init");
+
+
 
     }
 }
