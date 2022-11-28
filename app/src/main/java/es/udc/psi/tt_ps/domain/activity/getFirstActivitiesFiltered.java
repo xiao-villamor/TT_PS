@@ -2,6 +2,7 @@ package es.udc.psi.tt_ps.domain.activity;
 
 import android.util.Log;
 
+import com.firebase.geofire.GeoLocation;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
@@ -15,14 +16,14 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 public class getFirstActivitiesFiltered {
 
-    public static Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> getActivitiesFiltered(List<String> tags, List<Float> Range) throws InterruptedException{
+    public static Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> getActivitiesFiltered(List<String> tags, List<Float> Range, GeoLocation location) throws InterruptedException{
 
         Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> res = new Result<>();
         final activityRepository repository = new activityRepository();
 
         Thread t = new Thread(() -> {
             try {
-                res.data = repository.getActivitiesFiltered(tags,Range);
+                res.data = repository.getActivitiesFiltered(tags,Range,location);
 
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 res.exception = e;

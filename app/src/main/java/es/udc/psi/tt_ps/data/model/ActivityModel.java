@@ -3,6 +3,8 @@ package es.udc.psi.tt_ps.data.model;
 import android.graphics.Point;
 import android.graphics.PointF;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +14,8 @@ public class ActivityModel {
     private Date start_date;
     private Date end_date;
     private Date creation_date;
-    private PointF location;
+    private GeoPoint location;
+    private String geohash;
     private String adminId;
     private List<String> participants;
     private List<String> tags;
@@ -20,8 +23,8 @@ public class ActivityModel {
 
     public ActivityModel(String title, String description,
                          Date start_date, Date end_date,Date creation_date,
-                         PointF location, String adminId,
-                         List<String> participants, List<String> tags,  String image) {
+                         GeoPoint location, String adminId,
+                         List<String> participants, List<String> tags,  String image,String geohash) {
 
         this.title = title;
         this.description = description;
@@ -33,6 +36,7 @@ public class ActivityModel {
         this.participants = participants;
         this.tags = tags;
         this.image = image;
+        this.geohash = geohash;
     }
     public ActivityModel() {
     }
@@ -59,7 +63,7 @@ public class ActivityModel {
         return end_date;
     }
 
-    public PointF getLocation() {
+    public GeoPoint getLocation() {
         return location;
     }
 
@@ -74,6 +78,10 @@ public class ActivityModel {
     public List<String> getTags() {
         return tags;
     }
+    public String getGeohash() {
+        return geohash;
+    }
+
     public void setImg(String img) {
         this.image = img;
     }

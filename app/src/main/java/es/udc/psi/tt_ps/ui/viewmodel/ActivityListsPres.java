@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.geofire.GeoLocation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -58,38 +59,44 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         }
     }
 
-    public void setRecycledDataFiltered(List<String> tags,List<Float> range,RecyclerView recyclerView) throws InterruptedException {
+    public void setRecycledDataFiltered(List<String> tags, List<Float> range, GeoLocation location, RecyclerView recyclerView) throws InterruptedException {
+
         Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
-        data = getActivitiesFiltered(tags,range);
-        if (data.exception == null) {
-            Log.d("_TAG", "Presenter " + " data not null");
-            List<ActivityModel> res = new ArrayList<>(data.data.data);
-            prevDocSnap = data.data.cursor;
 
 
-            ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
-            assert adapter != null;
-            List<ListActivities> listActivities = new ArrayList<>();
+        ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
 
-            for (int i = 0; i < res.size(); i++) {
-                listActivities.add(new ListActivities(res.get(0).getImage(), res.get(i).getTitle(),
-                        new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
-                        res.get(i).getDescription()));
+        data = getActivitiesFiltered(tags,range,location);
+        if(data.data.data.size() == 0){
+            Snackbar.make(recyclerView.getRootView(), "No hay actividades que coincidan con los filtros", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+                adapter.setItems(new ArrayList<>());
+        }else {
+
+            if (data.exception == null && data.data.cursor != null) {
+                List<ActivityModel> res = new ArrayList<>(data.data.data);
+
+                prevDocSnap = data.data.cursor;
+
+                assert adapter != null;
+                List<ListActivities> listActivities = new ArrayList<>();
+
+                for (int i = 0; i < res.size(); i++) {
+                    listActivities.add(new ListActivities(res.get(0).getImage(), res.get(i).getTitle(),
+                            new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
+                            res.get(i).getDescription()));
+                }
+                adapter.setItems(listActivities);
             }
-            adapter.setItems(listActivities);
         }
     }
 
-    public void setRecycledDataFiltered(List<String> tags, List<ListActivities> listActivities) throws InterruptedException {
+    public void setRecycledDataFiltered(List<String> tags, List<ListActivities> listActivities,List<Float> range,GeoLocation location) throws InterruptedException {
         Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
 
-        List<Float> range = new ArrayList<>();
 
-        range.add((float) 0);
-        range.add((float) 20);
-
-        data = getActivitiesFiltered(tags,range);
-        if (data.exception == null) {
+        data = getActivitiesFiltered(tags,range,location);
+        if (data.exception == null && data.data.data.size() > 0) {
             Log.d("_TAG", "Presenter " + " data not null");
             List<ActivityModel> res = new ArrayList<>(data.data.data);
             prevDocSnap = data.data.cursor;
@@ -102,20 +109,18 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         }
     }
 
-    public void updateRecycledDataFiltered(List<String> tags,RecyclerView recyclerView) throws InterruptedException {
+    public void updateRecycledDataFiltered(List<String> tags,RecyclerView recyclerView,List<Float> range,GeoLocation location) throws InterruptedException {
         Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
-        List<Float> range = new ArrayList<>();
-        range.add((float) 0);
-        range.add((float) 20);
-        data = getActivitiesFilteredNext(tags,range,prevDocSnap);
+
+        data = getActivitiesFilteredNext(tags,range,prevDocSnap,location);
         if (data.exception == null && data.data.cursor != null) {
             Log.d("_TAG", "Presenter " + " data not null");
             List<ActivityModel> res = new ArrayList<>(data.data.data);
             prevDocSnap = data.data.cursor;
             ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
+
             assert adapter != null;
             List<ListActivities> listActivities = adapter.getmData();
-
 
             for (int i = 0; i < res.size(); i++) {
                 listActivities.add(new ListActivities(res.get(0).getImage(), res.get(i).getTitle(),
@@ -127,7 +132,6 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
     }
 
-    //función para it2, se usará para actualizar los datos del recycled view
     //DEPRECATED
     public void updateRecycledData(RecyclerView recyclerView) throws InterruptedException {
         Log.d("_TAG","Presenter "+" start init");
