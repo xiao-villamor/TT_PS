@@ -5,8 +5,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -52,7 +54,9 @@ public class ActivityListActivities extends AppCompatActivity {
     List<String> tags = new ArrayList<>();
     List<Float> range = new ArrayList<>();
     FusedLocationProviderClient mFusedLocationClient;
+    LocationManager mLocationManager;
     GeoLocation mLocation;
+    boolean getMore = true;
 
 
     @Override
@@ -81,27 +85,40 @@ public class ActivityListActivities extends AppCompatActivity {
     }
 
     private void getLocation() throws InterruptedException {
+        mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+
 
         Result<GeoLocation, Exception> res = new Result<>();
 
-        Thread thread = new Thread(() -> {
-            Looper.prepare();
-
-            try {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            Thread thread = new Thread(() -> {
+                Looper.prepare();
+                try {
+                    Location bestLocation = null;
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                        return;
+                    }
+                    for (String provider : providers) {
+                        Location l = mLocationManager.getLastKnownLocation(provider);
+                        if (l == null) {
+                            continue;
+                        }
+                        if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                            // Found best last known location: %s", l);
+                            bestLocation = l;
+                        }
+                    }
+                    mLocation = new GeoLocation(bestLocation.getLatitude(), bestLocation.getLongitude());
+                } catch (Exception e) {
+                    Log.d(TAG, "getLocation exception: " + e.getMessage());
+                    res.exception = e;
                 }
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            });
+            thread.start();
+            thread.join();
+            thread.interrupt();
 
-                mLocation = new GeoLocation(location.getLatitude(), location.getLongitude());
-            } catch (Exception e) {
-                res.exception = e;
-            }
-        });
-        thread.start();
-        thread.join();
-        thread.interrupt();
     }
 
     private void applySavedFilters(BottomSheetDialog bottomSheetDialog){
@@ -139,19 +156,21 @@ public class ActivityListActivities extends AppCompatActivity {
                 }
             }
 
-            Log.d(TAG, ACTIVITY + " filter_tags: " + filter_tags.size());
             if (filter_tags.size() != 0) {
                 tags = filter_tags;
                 RangeSlider slider = bottomSheetDialog.findViewById(R.id.range_slider);
                 range = slider.getValues();
+                //get last item from recycler view
+                int lastItem = listActivitiesAdapter.getItemCount();
                 try {
                     presenter.setRecycledDataFiltered(tags, range, mLocation, recyclerView);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                bottomSheetDialog.dismiss();
+
                 listActivitiesAdapter.notifyDataSetChanged();
 
-                bottomSheetDialog.dismiss();
             } else {
                 Snackbar.make(v, "No tags selected", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -184,7 +203,7 @@ public class ActivityListActivities extends AppCompatActivity {
 
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (!recyclerView.canScrollVertically(1)) {
+                if (!recyclerView.canScrollVertically(1) && presenter.getMore) {
                     int totalItems = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
                     int lastVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(recyclerView.getLayoutManager())).findLastVisibleItemPosition();
                     Log.d(TAG,ACTIVITY+" totalItems: "+totalItems+" lastVisibleItem: "+lastVisibleItem);

@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted
                 permissionsToRequest.add(permission);
             }
         }
@@ -82,9 +81,9 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         requestPermissionsIfNecessary(new String[]{
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                Manifest.permission.MANAGE_EXTERNAL_STORAGE,
         });
-
         //request location permision
 
 
@@ -133,5 +132,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         startActivity(userProfileIntent);
 
     }
+
 
 }

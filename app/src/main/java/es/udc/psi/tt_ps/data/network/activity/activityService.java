@@ -101,6 +101,8 @@ public class activityService implements activityServiceInterface {
 
         QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
+        Log.d("_TAG", "location" + location);
+
         List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInM);
         final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
         for (GeoQueryBounds b : bounds) {
