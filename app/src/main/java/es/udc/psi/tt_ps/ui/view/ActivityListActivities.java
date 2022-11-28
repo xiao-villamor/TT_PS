@@ -3,6 +3,7 @@ package es.udc.psi.tt_ps.ui.view;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -68,6 +69,10 @@ public class ActivityListActivities extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        binding.floatingActionButtonAdd.setOnClickListener(v -> {
+            Intent intentSend = new Intent(this, ActivityCreateActivity.class);
+            startActivity(intentSend);
+        });
         binding.filterButton.setOnClickListener(v -> {
             showFilterDialog();
 
