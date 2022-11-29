@@ -3,15 +3,15 @@
 
 
     <string-array name="interests_array">
-        <item>Sports</item>
-        <item>Walking route</item>
-        <item>Tourist visits</item>
-        <item>Party</item>
-        <item>Cultural and art</item>
-        <item>Shopping</item>
-        <item>Bar and coffee</item>
-        <item>Conversations</item>
-        <item>Otros</item>
+        <item>sports</item>
+        <item>walking route</item>
+        <item>tourist visits</item>
+        <item>party</item>
+        <item>cultural and art</item>
+        <item>shopping</item>
+        <item>bar and coffee</item>
+        <item>conversation</item>
+        <item>otros</item>
     </string-array>
 
 </resources>

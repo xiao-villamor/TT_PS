@@ -17,8 +17,11 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -56,14 +59,18 @@ public class ActivityCreateActivity extends AppCompatActivity {
         longitude=0;
         startDate=null;
         endDate=null;
+
         binding.createActivity.setOnClickListener(v -> {
 
             if(validate()){
+                String hash = GeoFireUtils.getGeoHashForLocation(new GeoLocation(latitude, longitude));
+
                 try {
+                    Log.d("TAG", "Geohash: "+GeoFireUtils.getGeoHashForLocation(new GeoLocation((float)latitude, (float) longitude)));
                     Result<Object, Exception> res = createActivityUseCase.createAcyivity(
                             binding.activityTitle.getText().toString(), binding.activityDescription.getText().toString(),
                             startDate, endDate,
-                            user.getUid(), new PointF((float)latitude, (float) longitude), selectedTags);
+                            user.getUid(), new GeoPoint((float)latitude, (float) longitude),hash,selectedTags);
 
                     if(res.exception!=null){
                         Log.d("TAG", res.exception.toString());

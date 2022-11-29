@@ -81,9 +81,10 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
 
         void bindData(final ListActivities item){
             if(item.getActivityImage() != null){
-                Glide.with(activity_image.getContext())
+                Glide.with(itemView.getContext())
                         .load(item.getActivityImage())
                         .into(activity_image);
+
             }
             title.setText(item.getTitle());
             location.setText(item.getLocation().toString());

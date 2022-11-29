@@ -93,12 +93,24 @@
         android:text="Select Distance"/>
 
     <com.google.android.material.slider.RangeSlider
+        android:id="@+id/range_slider"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="70dp"
-        android:valueFrom="0.0"
-        android:valueTo="100.0"
+        android:layout_marginBottom="30dp"
+        android:valueFrom="0"
+        android:valueTo="100"
         android:layout_height="wrap_content"
-        android:layout_width="320dp"/>
+        android:layout_width="320dp"
+        app:values="@array/initial_slider_values"
+        android:stepSize="10" />
+
+    <Button
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Filters"/>
+
 
 
 

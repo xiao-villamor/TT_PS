@@ -1,5 +1,6 @@
 package es.udc.psi.tt_ps.data.repository;
 
+import com.firebase.geofire.GeoLocation;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
@@ -43,7 +44,11 @@ public class activityRepository {
         return api.getNextActivities(prevDocSnap);
     }
 
-
-
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
+        return api.getActivitiesFiltered(tags,distanceRange,location);
+    }
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException{
+        return api.getActivitiesFilteredNext(tags,distanceRange,prevDocSnaprec,location);
+    }
 
 }
