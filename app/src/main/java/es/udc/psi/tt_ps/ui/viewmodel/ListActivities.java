@@ -6,6 +6,7 @@ import android.graphics.PointF;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 public class ListActivities implements Serializable {
     public String activityImage;
@@ -13,8 +14,28 @@ public class ListActivities implements Serializable {
     public transient PointF location;
     public Date end_date;
     public String description;
+    public Date start_date;
+    public Date creation_date;
+    public String adminId;
+    public Integer participants;
+    public List<String> tags;
+
+
+    public ListActivities(String activityImage, String title, PointF location, Date end_date, String description, Date start_date, Date creation_date, String adminId, Integer participants, List<String> tags) {
+        this.activityImage = activityImage;
+        this.title = title;
+        this.location = location;
+        this.end_date = end_date;
+        this.description = description;
+        this.start_date = start_date;
+        this.creation_date = creation_date;
+        this.adminId = adminId;
+        this.participants = participants;
+        this.tags = tags;
+    }
 
     public ListActivities() {
+
     }
 
     public ListActivities(String activityImage, String title, PointF location, Date end_date, String description) {

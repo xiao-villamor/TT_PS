@@ -29,13 +29,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     activityRepository ar = new activityRepository();
     private DocumentSnapshot prevDocSnap;
 
-    public static void moreActivityInfo(ListActivities ListActivities){
-        //Metodo para ir a la vista detallada de actividades
-        Log.d("TAG", "Mostrar en detalle" );
-        //Intent intent = new Intent(this,ActivityListActivities.class);
-        //intent.putExtra("events", ListActivities);
-        //startActivity(intent);
-    }
+
 
     public void setRecycledData(List<ListActivities> listActivities) throws InterruptedException {
         Log.d("_TAG", "Presenter " + " start init");
@@ -50,14 +44,17 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
             prevDocSnap = data.data.cursor;
 
             for (int i = 0; i < res.size(); i++) {
-                listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
+                /*listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
                         new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
-                        res.get(i).getDescription()));
+                        res.get(i).getDescription()));*/
+                listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),new PointF((float) 43.36854217446916, (float) -8.415802771112226),res.get(i).getEnd_date(),
+                        res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),0,
+                        res.get(i).getTags()));
             }
         }
     }
 
-    //función para it2, se usará para actualizar los datos del recycled view
+
     public void updateRecycledData(RecyclerView recyclerView) throws InterruptedException {
         Log.d("_TAG","Presenter "+" start init");
 
@@ -74,9 +71,12 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
             List<ListActivities> listActivities = adapter.getmData();
 
             for (int i = 0; i < res.size(); i++) {
-                listActivities.add(new ListActivities(res.get(0).getImage(), res.get(i).getTitle(),
+                /*listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
                         new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
-                        res.get(i).getDescription()));
+                        res.get(i).getDescription()));*/
+                listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),new PointF((float) 43.36854217446916, (float) -8.415802771112226),res.get(i).getEnd_date(),
+                        res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),0,
+                        res.get(i).getTags()));
             }
             adapter.setItems(listActivities);
         }else {

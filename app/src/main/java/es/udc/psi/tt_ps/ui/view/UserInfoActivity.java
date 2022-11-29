@@ -1,5 +1,6 @@
 package es.udc.psi.tt_ps.ui.view;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -90,7 +91,7 @@ public class UserInfoActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, UserActivityListPres::moreActivityInfo);
+        ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, this::moreActivityInfo);
         recyclerView = binding.userAct;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -99,6 +100,15 @@ public class UserInfoActivity extends AppCompatActivity {
         Log.d(TAG,ACTIVITY+" end init");
 
 
+
+    }
+
+    public void moreActivityInfo(ListActivities ListActivities){
+        //Metodo para ir a la vista detallada de actividades
+        Log.d("TAG", "Mostrar en detalle" );
+        Intent intent = new Intent(this,DetailsActivity.class);
+        intent.putExtra("events", ListActivities);
+        startActivity(intent);
 
     }
 }
