@@ -40,6 +40,9 @@
             android:name=".ui.view.ActivityListActivities"
             android:parentActivityName=".ui.view.MainActivity" />
         <activity
+            android:name=".ui.view.DetailsActivity"
+            android:parentActivityName=".ui.view.ActivityListActivities" />
+        <activity
             android:name=".ui.view.LogInActivity"
             android:exported="true" />
         <activity

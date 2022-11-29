@@ -34,14 +34,29 @@
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
-                android:id="@+id/card_date"
+                android:id="@+id/card_startDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Date"
+                android:text="Start Date"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?android:attr/textColorSecondary" />
-
+            <TextView
+                android:id="@+id/card_endDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="End Date"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?android:attr/textColorSecondary" />
+            <TextView
+                android:id="@+id/card_creationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Creation Date"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?android:attr/textColorSecondary" />
             <TextView
                 android:id="@+id/card_location"
                 android:layout_width="wrap_content"
@@ -58,6 +73,16 @@
                 android:text="Description"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?android:attr/textColorSecondary" />
+
+            <TextView
+                android:id="@+id/card_participants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Participants"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?android:attr/textColorSecondary" />
+
             <Button
                 android:id="@+id/signup2"
                 android:layout_width="match_parent"

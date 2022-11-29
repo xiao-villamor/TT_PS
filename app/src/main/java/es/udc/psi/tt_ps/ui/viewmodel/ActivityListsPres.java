@@ -1,21 +1,21 @@
 package es.udc.psi.tt_ps.ui.viewmodel;
 
-import static es.udc.psi.tt_ps.domain.activity.getFirstActivitiesUseCase.getActivities;
-import static es.udc.psi.tt_ps.domain.activity.getNextActivitiesUseCase.getNextActivities;
+
 import static es.udc.psi.tt_ps.domain.activity.getFirstActivitiesFiltered.getActivitiesFiltered;
 import static es.udc.psi.tt_ps.domain.activity.getNextActivitesFilteredUseCase.getActivitiesFilteredNext;
 
 
 
-import android.graphics.PointF;
+
 import android.util.Log;
-import android.widget.Toast;
+
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.geofire.GeoLocation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +30,9 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     activityRepository ar = new activityRepository();
     private DocumentSnapshot prevDocSnap;
     public boolean getMore = true;
+    public List<String> participants = new ArrayList<>();
 
-    public static void moreActivityInfo(ListActivities ListActivities){
-        //Metodo para ir a la vista detallada de actividades
-        Log.d("TAG", "Mostrar en detalle" );
-        //Intent intent = new Intent(this,ActivityListActivities.class);
-        //intent.putExtra("events", ListActivities);
-        //startActivity(intent);
-    }
+
 
     public void setRecycledDataFiltered(List<String> tags, List<Float> range, GeoLocation location, RecyclerView recyclerView) throws InterruptedException {
 
@@ -62,9 +57,12 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                 List<ListActivities> listActivities = new ArrayList<>();
 
                 for (int i = 0; i < res.size(); i++) {
-                    listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
-                            new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
-                            res.get(i).getDescription()));
+                    if (res.get(i).getParticipants()!=null){
+                        participants=res.get(i).getParticipants();
+                    }
+                    listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+                            res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
+                            res.get(i).getTags()));
                 }
                 adapter.setItems(listActivities);
             }else{
@@ -84,10 +82,14 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
             prevDocSnap = data.data.cursor;
 
             for (int i = 0; i < res.size(); i++) {
-                listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
-                        new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
-                        res.get(i).getDescription()));
+                if (res.get(i).getParticipants()!=null){
+                    participants=res.get(i).getParticipants();
+                }
+                listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+                        res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
+                        res.get(i).getTags()));
             }
+
         }
     }
 
@@ -105,9 +107,12 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
             List<ListActivities> listActivities = adapter.getmData();
 
             for (int i = 0; i < res.size(); i++) {
-                listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
-                        new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
-                        res.get(i).getDescription()));
+                if (res.get(i).getParticipants()!=null){
+                    participants=res.get(i).getParticipants();
+                }
+                listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+                        res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
+                        res.get(i).getTags()));
             }
             adapter.setItems(listActivities);
         }else{

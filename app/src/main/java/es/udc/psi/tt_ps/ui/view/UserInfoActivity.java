@@ -103,11 +103,13 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
 
-    public void moreActivityInfo(ListActivities ListActivities){
+    public void moreActivityInfo(ListActivities listActivities){
         //Metodo para ir a la vista detallada de actividades
         Log.d("TAG", "Mostrar en detalle" );
         Intent intent = new Intent(this,DetailsActivity.class);
-        intent.putExtra("events", ListActivities);
+        intent.putExtra("events", listActivities);
+        intent.putExtra("latitud",listActivities.getLocation().getLatitude());
+        intent.putExtra("longitud",listActivities.getLocation().getLongitude());
         startActivity(intent);
 
     }

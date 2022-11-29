@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class DetailsActivity extends AppCompatActivity {
         Log.d("Tag","details");
         Bundle extras = getIntent().getExtras();
         activitiesList= (ListActivities) extras.get("events");
+        GeoPoint coord = new GeoPoint(extras.getDouble("latitud"),extras.getDouble("longitud"));
+        activitiesList.setLocation(coord);
 
         init();
     }
@@ -42,11 +45,14 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         binding.cardTitle.setText(activitiesList.title);
-        binding.cardDate.setText(activitiesList.end_date.toString());
-        if(activitiesList.location!=null){
-            binding.cardLocation.setText(activitiesList.location.toString());
-        }
+        binding.cardStartDate.setText(activitiesList.start_date.toString());
+        binding.cardEndDate.setText(activitiesList.end_date.toString());
+        binding.cardCreationDate.setText(activitiesList.creation_date.toString());
+        binding.cardLocation.setText(activitiesList.getLocation().toString());
         binding.cardDescription.setText(activitiesList.getDescription());
+        binding.cardParticipants.setText(activitiesList.getParticioants());
+
+
 
 
     }

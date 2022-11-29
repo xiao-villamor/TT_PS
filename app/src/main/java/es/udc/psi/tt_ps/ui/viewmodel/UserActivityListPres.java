@@ -17,6 +17,7 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 public class UserActivityListPres {
 
     activityRepository ar = new activityRepository();
+    public List<String> participants = new ArrayList<>();
 
 
     public void setRecycledData(List<ListActivities> listActivities) throws InterruptedException {
@@ -29,11 +30,11 @@ public class UserActivityListPres {
         List<ActivityModel> res = new ArrayList<>(data.data);
 
         for (int i=0; i<res.size();i++){
-            /*listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
-                        new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
-                        res.get(i).getDescription()));*/
-            listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),new PointF((float) 43.36854217446916, (float) -8.415802771112226),res.get(i).getEnd_date(),
-                    res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),0,
+            if (res.get(i).getParticipants()!=null){
+                participants=res.get(i).getParticipants();
+            }
+            listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+                    res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                     res.get(i).getTags()));
         }
     }
