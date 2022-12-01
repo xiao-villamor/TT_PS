@@ -9,6 +9,8 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import es.udc.psi.tt_ps.R;
@@ -44,10 +46,10 @@ public class DetailsActivity extends AppCompatActivity {
             Glide.with(binding.cardMedia.getContext()).load(R.drawable.ic_launcher_background).into(binding.cardMedia);
         }
 
-        binding.cardTitle.setText(activitiesList.title);
-        binding.cardStartDate.setText(activitiesList.start_date.toString());
-        binding.cardEndDate.setText(activitiesList.end_date.toString());
-        binding.cardCreationDate.setText(activitiesList.creation_date.toString());
+        binding.cardTitle.setText(activitiesList.getTitle());
+        binding.cardStartDate.setText(activitiesList.getStart_date().toString());
+        binding.cardEndDate.setText(activitiesList.getEnd_date().toString());
+        binding.cardCreationDate.setText(activitiesList.getCreation_date().toString());
         binding.cardLocation.setText(activitiesList.getLocation().toString());
         binding.cardDescription.setText(activitiesList.getDescription());
         binding.cardParticipants.setText(activitiesList.getParticioants());

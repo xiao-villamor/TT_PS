@@ -1,97 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     tools:context=".ui.view.DetailsActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+
 
         <ImageView
             android:id="@+id/card_media"
             android:layout_width="match_parent"
             android:layout_height="135dp"
             android:scaleType="centerCrop"
+            android:animateLayoutChanges="true"
+            style="@android:style/Animation.Toast"
+            app:cardUseCompatPadding="true"
             android:src="@drawable/ic_launcher_background" />
 
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewFilledStyle"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:animateLayoutChanges="true"
+            app:cardUseCompatPadding="true"
+            android:layout_marginTop="20dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            >
+                <!-- Title, secondary and supporting text -->
 
-            <!-- Title, secondary and supporting text -->
-            <TextView
-                android:id="@+id/card_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Title"
-                android:textAppearance="?attr/textAppearanceHeadline6" />
+                <TextView
+                    android:id="@+id/card_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    android:text="Title"
+                    android:textAppearance="?attr/textAppearanceHeadline6" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:id="@+id/card_startDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Start Date"
+                    android:gravity="center"
+                    style="@style/TextAppearance.Material3.LabelLarge"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:id="@+id/card_endDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="End Date"
+                    android:gravity="center"
+                    style="@style/TextAppearance.Material3.LabelLarge"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?android:attr/textColorSecondary" />
 
-            <TextView
-                android:id="@+id/card_startDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Start Date"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:id="@+id/card_endDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="End Date"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:id="@+id/card_creationDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Creation Date"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:id="@+id/card_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Location"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
-            <TextView
-                android:id="@+id/card_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Description"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
 
-            <TextView
-                android:id="@+id/card_participants"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Participants"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Creation Date"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:id="@+id/card_creationDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Creation Date"
+                    android:gravity="center"
+                    style="@style/TextAppearance.Material3.LabelLarge"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?android:attr/textColorSecondary" />
 
-            <Button
-                android:id="@+id/signup2"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    android:text="Description"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:id="@+id/card_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Description"
+                    android:gravity="center"
+                    style="@style/TextAppearance.Material3.LabelLarge"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Participants"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:id="@+id/card_participants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Participants"
+                    android:gravity="center"
+                    style="@style/TextAppearance.Material3.LabelLarge"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?android:attr/textColorSecondary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textStyle="bold"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?android:attr/textColorSecondary" />
+                <TextView
+                    android:id="@+id/card_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Location"
+                    android:gravity="center"
+                    style="@style/TextAppearance.Material3.LabelLarge"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?android:attr/textColorSecondary" />
+        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Unirse" />
+                android:orientation="horizontal"
+                android:padding="16dp">
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floating_action_button_maps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    android:contentDescription="show location"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    app:tint="@color/black"
+                    app:srcCompat="@android:drawable/ic_dialog_map"
+                    />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/signup2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:layout_margin="6dp"
+                    android:layout_marginTop="26dp"
+                    android:text="Unirse" />
+            </LinearLayout>
+
+
 
 
     </LinearLayout>
 
-</RelativeLayout>
