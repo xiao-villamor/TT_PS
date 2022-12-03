@@ -77,7 +77,9 @@ public class UserInfoActivity extends AppCompatActivity {
         binding.rating.setRating(res.getRating().get(0));
         tagAdapter tagAdapter = new tagAdapter(res.getInterests().toArray(new String[0]));
         binding.simpleGridView.setAdapter(tagAdapter);
-        binding.desc.setText(res.getDescription());
+        if(res.getDescription() != null){
+            binding.desc.setText(res.getDescription());
+        }
 
         initRecycledView();
 
@@ -102,8 +104,6 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void moreActivityInfo(ListActivities listActivities){
-        //Metodo para ir a la vista detallada de actividades
-        Log.d("TAG", "Mostrar en detalle" );
         Intent intent = new Intent(this,DetailsActivity.class);
         intent.putExtra("events", listActivities);
         intent.putExtra("latitud",listActivities.getLocation().getLatitude());

@@ -84,7 +84,7 @@
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Descripción"
+                    android:text="User Don't Have Description Yet"
                     android:textAlignment="center" />
                 <TextView
                     android:layout_width="match_parent"
