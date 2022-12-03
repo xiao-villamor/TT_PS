@@ -58,12 +58,15 @@ public class RegisterUserActivity extends AppCompatActivity {
             if(validate()){
                 try {
                     //Log.d("TAG", "Imagen PostValidacion: " + file.getPath());
+                    //create arrayList
+                    ArrayList<Float> ratings = new ArrayList<>();
+                    ratings.add(0f);
 
                     file=new File("");
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString() , binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), Date.valueOf(binding.birthDateReg.getText().toString()), binding.phoneReg.getText().toString(),
-                            file, null, selectedItems);
+                            file, null, selectedItems,ratings);
 
                     if(res.exception != null){
                         Log.d("TAG", res.exception.toString());
