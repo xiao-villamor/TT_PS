@@ -1,6 +1,7 @@
 package es.udc.psi.tt_ps.ui.view;
 
 import android.content.Intent;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +17,10 @@ import com.bumptech.glide.annotation.GlideModule;
 import com.google.firebase.firestore.auth.User;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.core.firebaseConnection;
@@ -78,7 +81,6 @@ public class UserInfoActivity extends AppCompatActivity {
 
         initRecycledView();
 
-
     }
 
 
@@ -86,21 +88,17 @@ public class UserInfoActivity extends AppCompatActivity {
     public void initRecycledView(){
         activitiesList = new ArrayList<>();
         try {
-            presenter.setRecycledData(activitiesList);
-        } catch (InterruptedException e) {
+            presenter.setRecycledData(activitiesList,this);
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
 
         ListActivitiesAdapter listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,this, this::moreActivityInfo);
+
         recyclerView = binding.userAct;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(listActivitiesAdapter);
-
-        Log.d(TAG,ACTIVITY+" end init");
-
-
-
     }
 
     public void moreActivityInfo(ListActivities listActivities){

@@ -1,26 +1,23 @@
 package es.udc.psi.tt_ps.domain.activity;
 
-import android.graphics.Point;
-import android.graphics.PointF;
+
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 
-import java.io.File;
+
 import java.util.Date;
 import java.util.List;
 
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.Result;
-import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 
 public class createActivityUseCase {
 
-    public static Result<Object, Exception> createAcyivity (String title, String description, Date startDate,
-                                                            Date endDate, String adminId , GeoPoint location,String geohash, List<String> interests) throws InterruptedException {
+    public static Result<Object, Exception> createActivity(String title, String description, Date startDate,
+                                                           Date endDate, String adminId , GeoPoint location, String geohash, List<String> interests) throws InterruptedException {
 
         final activityRepository repository = new activityRepository();
         Result<Object, Exception> res = new Result<>();

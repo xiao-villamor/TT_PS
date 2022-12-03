@@ -94,20 +94,16 @@ public class activityService implements activityServiceInterface {
     }
 
     @Override
-    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) {
         List<ActivityModel> data = new ArrayList<>();
 
         final double radiusInM = 1000 * distanceRange.get(1);
-
         QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
-        Log.d("_TAG", "location" + location);
 
         List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInM);
         final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
         for (GeoQueryBounds b : bounds) {
-            Log.d("_TAG", "Bounds: " + b.startHash + " " + b.endHash);
-            Log.d("_TAG", "location GeoHash: " + GeoFireUtils.getGeoHashForLocation(location,5));
             Query q = db.collection("Activities")
                     .orderBy("geohash")
                     .orderBy("creation_date", Query.Direction.DESCENDING)
@@ -128,7 +124,6 @@ public class activityService implements activityServiceInterface {
 
                         double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation,location);
                         distanceInKm = distanceInKm/1000;
-                        Log.d("_TAG", "Distance: " + distanceInKm +"lower " +distanceRange.get(0) + "upper " + distanceRange.get(1));
 
                         if(distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
                             data.add(document.toObject(ActivityModel.class));

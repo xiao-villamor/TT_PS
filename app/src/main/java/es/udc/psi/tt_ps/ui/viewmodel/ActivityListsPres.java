@@ -63,6 +63,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                     listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                             res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                             res.get(i).getTags()));
+
                 }
                 adapter.setItems(listActivities);
             }else{
@@ -88,6 +89,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                 listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                         res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                         res.get(i).getTags()));
+
             }
 
         }
@@ -113,6 +115,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                 listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                         res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                         res.get(i).getTags()));
+
             }
             adapter.setItems(listActivities);
         }else{

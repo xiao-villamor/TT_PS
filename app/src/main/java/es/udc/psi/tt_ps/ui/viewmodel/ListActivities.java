@@ -53,11 +53,13 @@ public class ListActivities implements Serializable {
         this.title = title;
     }
 
+
     public GeoPoint getLocation() {
         return location;
     }
 
     public void setLocation(GeoPoint location) {
+
         this.location = location;
     }
 
