@@ -2,21 +2,17 @@ package es.udc.psi.tt_ps.ui.view;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.icu.text.UnicodeSetIterator;
+
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -24,27 +20,24 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.io.File;
+
 import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.databinding.ActivityRegisterUserBinding;
 import es.udc.psi.tt_ps.domain.user.createUserUseCase;
-import es.udc.psi.tt_ps.domain.user.loginUserUseCase;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
     private ActivityRegisterUserBinding binding;
-    private File file=null;
+    private Uri image=null;
     private List<String> selectedItems=null;
+    ProgressDialog progressDialog=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +45,34 @@ public class RegisterUserActivity extends AppCompatActivity {
         binding = ActivityRegisterUserBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        image=Uri.parse("");
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Creating user");
 
         binding.signupReg.setOnClickListener(v -> {
 
             if(validate()){
                 try {
-                    //Log.d("TAG", "Imagen PostValidacion: " + file.getPath());
+                    progressDialog.show();
 
-                    file=new File("");
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString() , binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), Date.valueOf(binding.birthDateReg.getText().toString()), binding.phoneReg.getText().toString(),
-                            file, null, selectedItems);
+                            image, null, selectedItems);
+
+
 
                     if(res.exception != null){
                         Log.d("TAG", res.exception.toString());
+                        Toast.makeText(getApplicationContext(), "Cannot create the user", Toast.LENGTH_SHORT).show();
+                        //progressDialog.dismiss();
                     } else{
                         Log.d("TAG", "Usuario creado correctamente");
+                        Toast.makeText(getApplicationContext(), "User created successfuly", Toast.LENGTH_SHORT).show();
                         Intent userProfileIntent = new Intent(this, MainActivity.class);
                         startActivity(userProfileIntent);
                     }
+                    this.finish();
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -237,38 +238,11 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     }
 
-    public static String getRealPathFromDocumentUri(Context context, Uri uri){
-        String filePath = "";
-
-        Pattern p = Pattern.compile("(\\d+)$");
-        Matcher m = p.matcher(uri.toString());
-        if (!m.find()) {
-            return filePath;
-        }
-        String imgId = m.group();
-
-        String[] column = { MediaStore.Images.Media.DATA };
-        String sel = MediaStore.Images.Media._ID + "=?";
-
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                column, sel, new String[]{ imgId }, null);
-
-        int columnIndex = cursor.getColumnIndex(column[0]);
-
-        if (cursor.moveToFirst()) {
-            filePath = cursor.getString(columnIndex);
-        }
-        cursor.close();
-
-        return filePath;
-    }
-
-
-
 
     private void chooseImg(){
 
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.setType("image/*");
         my_startActivityForResult.launch(i);
     }
 
@@ -278,26 +252,9 @@ public class RegisterUserActivity extends AppCompatActivity {
                 if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
                     Intent data = result.getData();
                     if(data!=null){
-                        //DE MOMENTO NO SE CARGAR LA IMAGEN SELECCIONADA
-                        //Uri imgUri=data.getData();
-                        /*
-                        String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                        Cursor cursor = getContentResolver().query(imgUri,
-                                filePathColumn, null, null, null);
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        String picturePath = cursor.getString(columnIndex);
-                        file= new File(picturePath);
+                        image=data.getData();
+                        Log.d("TAG", image.toString());
 
-                         */
-                        /*
-                        file= new File(getRealPathFromDocumentUri(this,imgUri));
-                        Log.d("TAG", "Imagen seleccionada: " + file.getPath());
-                        Log.d("TAG", "Imagen Sin subString: " + imgUri.getPath());
-                        //binding.imageViewReg.setImageURI(imgUri);
-
-
-                         */
                     }
                 }
             }
