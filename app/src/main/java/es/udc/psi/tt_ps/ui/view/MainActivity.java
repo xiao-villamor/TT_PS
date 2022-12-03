@@ -1,52 +1,71 @@
 package es.udc.psi.tt_ps.ui.view;
 
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
+import android.view.View;
+import android.widget.Button;
+
+import com.firebase.geofire.GeoLocation;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.slider.RangeSlider;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 
-import java.io.File;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Locale;
 
+
+import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.core.firebaseConnection;
 import es.udc.psi.tt_ps.data.network.user.OnAuthStateChangeListener;
 import es.udc.psi.tt_ps.data.repository.authRepository;
 import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
+import es.udc.psi.tt_ps.ui.adapter.ListActivitiesAdapter;
+import es.udc.psi.tt_ps.ui.fragments.ActivityListFragment;
+import es.udc.psi.tt_ps.ui.fragments.NavigationBarFragment;
+import es.udc.psi.tt_ps.ui.fragments.SavedActivitiesFragment;
+import es.udc.psi.tt_ps.ui.fragments.SearchFragment;
+import es.udc.psi.tt_ps.ui.fragments.UserInfoFragment;
+import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.MainViewModel;
-import es.udc.psi.tt_ps.ui.view.UserInfoActivity;
 
 
-public class MainActivity extends AppCompatActivity implements OnAuthStateChangeListener {
+public class MainActivity extends AppCompatActivity implements OnAuthStateChangeListener, ActivityListFragment.FragmentListener,NavigationBarFragment.FragmentListener {
     FirebaseFirestore db;
     FirebaseAuth mAuth;
     FirebaseStorage storage;
     private ActivityMainBinding binding;
     authRepository authRepository = new authRepository();
     MainViewModel mainViewModel = new MainViewModel(authRepository);
+    private static final int NUM_PAGES = 4;
+    private ViewPager2 viewPager2;
+    private List<String> mTags;
+    private List<Float> mRange;
+    private GeoLocation mLocation;
+    private ActivityListsPres mPresenter;
+    private ListActivitiesAdapter mListActivitiesAdapter;
+    private RecyclerView mRecycler;
+    private  ScreenSlidePageAdapter adapter;
+    private NavigationBarFragment navigationBarFragment;
 
     private void requestPermissionsIfNecessary(String[] permissions) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
@@ -84,35 +103,82 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION,
                 Manifest.permission.MANAGE_EXTERNAL_STORAGE,
         });
-        //request location permision
 
-
-
-
-
-        //Boton para inciar sesion con otra cuenta
-        binding.login.setOnClickListener(v -> {
-            mainViewModel.signOut();
-
-        });
-
-        binding.show.setOnClickListener(v->{
-            Intent intentSend = new Intent(MainActivity.this, ActivityListActivities.class);
-            startActivity(intentSend);
-        });
-
-        binding.userInfo.setOnClickListener(v->{
-            Intent intentSend = new Intent(MainActivity.this, UserInfoActivity.class);
-            startActivity(intentSend);
-        });
-
-        binding.newActivity.setOnClickListener(v->{
-            Intent intentSend = new Intent(MainActivity.this, ActivityCreateActivity.class);
-            startActivity(intentSend);
+        adapter = new ScreenSlidePageAdapter(this);
+        viewPager2 = binding.pager;
+        viewPager2.setAdapter(adapter);
+        navigationBarFragment = (NavigationBarFragment) getSupportFragmentManager().findFragmentByTag("navigation");
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                navigationBarFragment.onTabChanged(position);
+            }
         });
 
 
     }
+
+    private void applySavedFilters(BottomSheetDialog bottomSheetDialog){
+        bottomSheetDialog.setContentView(R.layout.filter_dialog);
+
+        ChipGroup cg = bottomSheetDialog.findViewById(R.id.chip_group);
+
+        for (int i = 0; i < cg.getChildCount(); i++) {
+            Chip chip = (Chip) cg.getChildAt(i);
+            if (mTags.contains(chip.getText().toString().toLowerCase(Locale.ROOT))) {
+                chip.setChecked(true);
+            }
+        }
+
+        RangeSlider slider = bottomSheetDialog.findViewById(R.id.range_slider);
+        slider.setValues(mRange);
+    }
+
+    private void showFilterDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+
+        applySavedFilters(bottomSheetDialog);
+        bottomSheetDialog.show();
+
+        Button button = bottomSheetDialog.findViewById(R.id.button_save);
+        assert button != null;
+        button.setOnClickListener(v -> {
+
+            ChipGroup chipGroup = bottomSheetDialog.findViewById(R.id.chip_group);
+            List<String> filter_tags = new ArrayList<>();
+            for (int i = 0; i < chipGroup.getChildCount(); i++) {
+                Chip chip = (Chip) chipGroup.getChildAt(i);
+                if (chip.isChecked()) {
+                    filter_tags.add(chip.getText().toString().toLowerCase(Locale.ROOT));
+                }
+            }
+
+            if (filter_tags.size() != 0) {
+                mTags = filter_tags;
+                RangeSlider slider = bottomSheetDialog.findViewById(R.id.range_slider);
+                mRange = slider.getValues();
+                //get last item from recycler view
+                int lastItem = mListActivitiesAdapter.getItemCount();
+                try {
+                    mPresenter.setRecycledDataFiltered(mTags, mRange, mLocation, mRecycler);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                bottomSheetDialog.dismiss();
+                //get fragment using tag
+                ActivityListFragment fragment = (ActivityListFragment) getSupportFragmentManager().findFragmentByTag("f" + viewPager2.getCurrentItem());
+                fragment.updateList(mTags, mRange);
+                mListActivitiesAdapter.notifyDataSetChanged();
+
+            } else {
+                Snackbar.make(v, "No tags selected", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+
+        });
+    }
+
 
     @Override
     protected void onStart() {
@@ -131,6 +197,53 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         Intent userProfileIntent = new Intent(this, LogInActivity.class);
         startActivity(userProfileIntent);
 
+    }
+
+    @Override
+    public void onFragmentInteraction(List<String> tags, List<Float> range, GeoLocation location, ListActivitiesAdapter listActivitiesAdapter, ActivityListsPres presenter, RecyclerView recyclerView) {
+        mTags = tags;
+        mRange = range;
+        mLocation = location;
+        mListActivitiesAdapter = listActivitiesAdapter;
+        mPresenter = presenter;
+        mRecycler = recyclerView;
+        showFilterDialog();
+    }
+
+    @Override
+    public void onFragmentInteraction(int number) {
+        viewPager2.setCurrentItem(number);
+    }
+
+
+    private class ScreenSlidePageAdapter extends FragmentStateAdapter{
+        public ScreenSlidePageAdapter(AppCompatActivity activity) {
+            super(activity);
+        }
+
+        @Override
+        public int getItemCount() {
+            return NUM_PAGES;
+        }
+
+
+
+        @Override
+        public Fragment createFragment(int position) {
+
+            switch (position) {
+                case 0:
+                    return new ActivityListFragment();
+                case 1:
+                    return new SearchFragment();
+                case 2:
+                    return new SavedActivitiesFragment();
+                case 3:
+                    return new UserInfoFragment();
+                default:
+                    return null;
+            }
+        }
     }
 
 

@@ -6,40 +6,18 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/show"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="Continuar"
-        android:text="show" />
-    <Button
-        android:id="@+id/user_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="UserInfo" />
+        android:layout_height="680dp" />
 
-    <Button
-        android:id="@+id/login"
-        android:layout_width="match_parent"
+
+    <fragment
+        android:name="es.udc.psi.tt_ps.ui.fragments.NavigationBarFragment"
+        android:id="@+id/navigation"
+        android:tag="navigation"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LogOut" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="215dp"
-        android:text="TextView" />
-
-    <Button
-        android:id="@+id/newActivity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="New Activity" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="195dp"
-        tools:src="@tools:sample/avatars" />
+        android:layout_gravity="bottom"/>
 
 </LinearLayout>

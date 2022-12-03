@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,7 @@ import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
+import es.udc.psi.tt_ps.ui.adapter.ListActivitiesAdapter;
 
 
 public class ActivityListsPres extends RecyclerView.OnScrollListener {
