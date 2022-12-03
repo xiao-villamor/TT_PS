@@ -63,7 +63,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
                 for (int i = 0; i < res.size(); i++) {
                     listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
-                            new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
+                           "tmp", res.get(i).getStart_date(),
                             res.get(i).getDescription()));
                 }
                 adapter.setItems(listActivities);
@@ -85,7 +85,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
             for (int i = 0; i < res.size(); i++) {
                 listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
-                        new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
+                        "tmp", res.get(i).getStart_date(),
                         res.get(i).getDescription()));
             }
         }
@@ -106,7 +106,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
             for (int i = 0; i < res.size(); i++) {
                 listActivities.add(new ListActivities(res.get(i).getImage(), res.get(i).getTitle(),
-                        new PointF((float) 43.36854217446916, (float) -8.415802771112226), res.get(i).getStart_date(),
+                        "tmp", res.get(i).getStart_date(),
                         res.get(i).getDescription()));
             }
             adapter.setItems(listActivities);

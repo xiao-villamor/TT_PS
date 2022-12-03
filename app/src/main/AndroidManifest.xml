@@ -41,13 +41,13 @@
             android:parentActivityName=".ui.view.MainActivity" />
         <activity
             android:name=".ui.view.LogInActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".ui.view.MainActivity"/>
         <activity
             android:name=".ui.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 

@@ -5,10 +5,22 @@
         android:id="@+id/page_1"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_add_24"
-        android:title="la  ducha  fria"/>
+        android:title="Filter"/>
     <item
         android:id="@+id/page_2"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_filter_alt_24"
-        android:title="filtr"/>
+        android:title="Search"/>
+
+    <item
+        android:id="@+id/page_3"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_filter_alt_24"
+        android:title="Activities"/>
+    <item
+        android:id="@+id/page_4"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_filter_alt_24"
+        android:title="Profile"/>
+
 </menu>

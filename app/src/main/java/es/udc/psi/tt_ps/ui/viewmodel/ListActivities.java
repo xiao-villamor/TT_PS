@@ -10,14 +10,14 @@ import java.util.Date;
 public class ListActivities implements Serializable {
     public String activityImage;
     public String title;
-    public PointF location;
+    public String location;
     public Date end_date;
     public String description;
 
     public ListActivities() {
     }
 
-    public ListActivities(String activityImage, String title, PointF location, Date end_date, String description) {
+    public ListActivities(String activityImage, String title, String location, Date end_date, String description) {
         this.activityImage = activityImage;
         this.title = title;
         this.location = location;
@@ -42,11 +42,11 @@ public class ListActivities implements Serializable {
         this.title = title;
     }
 
-    public PointF getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(PointF location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
