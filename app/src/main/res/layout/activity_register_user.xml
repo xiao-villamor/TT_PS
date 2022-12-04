@@ -43,14 +43,26 @@
         android:inputType="textPassword"
         android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/birth_date_reg"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Birth date (yyyy-[m]m-[d]d)"
-        android:inputType="date"
-        android:minHeight="48dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Birth date" />
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/phone_reg"

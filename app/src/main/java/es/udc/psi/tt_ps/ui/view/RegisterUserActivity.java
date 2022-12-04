@@ -6,7 +6,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +17,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 
@@ -24,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,6 +40,7 @@ import es.udc.psi.tt_ps.domain.user.createUserUseCase;
 public class RegisterUserActivity extends AppCompatActivity {
 
     private ActivityRegisterUserBinding binding;
+    private java.util.Date date=null;
     private Uri image=null;
     private List<String> selectedItems=null;
     ProgressDialog progressDialog=null;
@@ -57,7 +63,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString() , binding.passwordReg.getText().toString(),
-                            binding.surnameReg.getText().toString(), Date.valueOf(binding.birthDateReg.getText().toString()), binding.phoneReg.getText().toString(),
+                            binding.surnameReg.getText().toString(), date, binding.phoneReg.getText().toString(),
                             image, null, selectedItems);
 
 
@@ -81,6 +87,9 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         });
 
+        binding.buttonDate.setOnClickListener(v -> {
+            showStartDateDialog();
+        });
 
         binding.imageReg.setOnClickListener(v -> {
             chooseImg();
@@ -90,6 +99,28 @@ public class RegisterUserActivity extends AppCompatActivity {
             selectedItems = new ArrayList();
             mostrarDialogo();
         });
+
+
+    }
+
+    private void showStartDateDialog(){
+        Calendar calendar = Calendar.getInstance();
+
+        DatePickerDialog.OnDateSetListener dateSetListener=new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                date=calendar.getTime();
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy");
+                binding.textDate.setText(simpleDateFormat.format(date));
+                Log.d("TAG", "Fecha seleccionada: " + date.toString());
+
+            }
+        };
+        DatePickerDialog d = new DatePickerDialog(RegisterUserActivity.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        d.show();
 
 
     }
@@ -215,20 +246,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private boolean val_date(){
 
-        String date = binding.birthDateReg.getText().toString();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
-        try{
-            java.util.Date d = formatter.parse(date);
-            //java.sql.Date sql = new java.sql.Date(parsed.getTime());
-        }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Incorret date", Toast.LENGTH_SHORT).show();
-            Log.d("TAG", "Cuenta no creada por fecha no incorrecta " + e.getMessage());
-            return false;
-        }
-
-        if(date.isEmpty()){
+        if(date==null){
             Toast.makeText(getApplicationContext(), "Date cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por fecha no indicado");
             return false;
