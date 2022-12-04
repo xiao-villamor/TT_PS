@@ -1,6 +1,8 @@
 package es.udc.psi.tt_ps.data.network.user;
 
 
+import android.net.Uri;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -16,7 +18,7 @@ import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 
 public interface userServiceInterface {
-    public void createUser(String email , String password , UserModel user, File pic) throws ExecutionException, InterruptedException, TimeoutException;
+    public void createUser(String email , String password , UserModel user, Uri pic) throws ExecutionException, InterruptedException, TimeoutException;
     public void loginUser(String email, String password) throws ExecutionException, InterruptedException, TimeoutException;
     public void updateUser(UserModel user);
     public UserModel getUser(String uuid) throws ExecutionException, InterruptedException, TimeoutException;
@@ -25,5 +27,5 @@ public interface userServiceInterface {
     public void UpdateUserDetails(String uuid, UserModel user);
     public void updateUserEmail(String email);
     public void updateUserPassword(String password);
-    public String uploadProfilePic(String uuid, File image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException;
+    public String uploadProfilePic(String uuid, Uri image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException;
 }

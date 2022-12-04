@@ -1,11 +1,14 @@
 package es.udc.psi.tt_ps.data.network.user;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -27,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InvalidClassException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -42,7 +46,9 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private UserModel user = null;
     OnAuthStateChangeListener onAuthStateChangeListener;
-     public void auxCreateUser(String User, String pass) throws InterruptedException {
+    private String DEFAULT_PIC = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/users_profile_pic%2Fdefault_user.jpg?alt=media&token=5248a0d0-7966-4080-af95-3e581e324a89";
+
+    public void auxCreateUser(String User, String pass) throws InterruptedException {
          Thread thread = new Thread(new Runnable() {
              @Override
              public void run() {
@@ -56,9 +62,9 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
          thread.start();
          thread.join();
          thread.interrupt();
-     }
+    }
 
-    public void createUser(String email , String password , UserModel user, File pic) throws ExecutionException, InterruptedException, TimeoutException {
+    public void createUser(String email , String password , UserModel user, Uri pic) throws ExecutionException, InterruptedException, TimeoutException {
         Log.d("TAG","create start");
         Tasks.await(mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
@@ -66,7 +72,7 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
                 //default value
                 AtomicReference<String> url = new AtomicReference<>("");
                 Log.d("PIC", pic.getPath());
-                if(pic.getTotalSpace() != 0){
+                if(pic!=null && !pic.toString().equals("")){
                     Thread thread = new Thread() {
                         @Override
                         public void run() {
@@ -85,7 +91,10 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
                         e.printStackTrace();
                     }
                     thread.interrupt();
+                }else{
+                    url.set(DEFAULT_PIC);
                 }
+
 
                 Log.d("TAG","create end " +  url.get());
                 user.profilePic(url.get());
@@ -175,19 +184,36 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
         mAuth.getCurrentUser().updatePassword(password);
     }
 
-    public String uploadProfilePic(String uuid, File image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
-        StorageReference storageRef = storage.getReference();
-        StorageReference profilePicRef = storageRef.child("users_profile_pic/"+uuid+".jpg");
-        String uri = null;
-        Log.d("TAG","image to upload in" + image.getAbsolutePath());
 
-        UploadTask.TaskSnapshot res = Tasks.await(profilePicRef.putStream(new FileInputStream(image)), 10, TimeUnit.SECONDS);
+    public String uploadProfilePic(String uuid, Uri image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+
+        StorageReference profilePicRef = storage.getReference("users_profile_pic/"+uuid+".jpg");
+        String uri = null;
+        UploadTask.TaskSnapshot res=Tasks.await(profilePicRef.putFile(image)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d("TAG", "Imagen subida");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", "Imagen NO subida");
+                    }
+                }), 10, TimeUnit.SECONDS);
+
         if(res != null){
             uri = Tasks.await(profilePicRef.getDownloadUrl(), 10, TimeUnit.SECONDS).toString();
             Log.d("TAG",uri);
+        }else{
+            uri=DEFAULT_PIC;
         }
+
         return uri;
     }
+
+
+
 
     public void setListener(OnAuthStateChangeListener listener){
         onAuthStateChangeListener = listener;
