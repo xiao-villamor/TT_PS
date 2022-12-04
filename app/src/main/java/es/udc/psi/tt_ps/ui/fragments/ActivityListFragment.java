@@ -158,7 +158,8 @@ public class ActivityListFragment extends Fragment {
     public void initRecycledView() throws InterruptedException {
         Log.d(TAG, ACTIVITY + " start init");
         activitiesList = new ArrayList<>();
-        getLocation();
+       getLocation();
+        //mLocation = new GeoLocation(41.3879, 2.1699);
         try {
             presenter.setRecycledDataFiltered(tags, activitiesList,range ,mLocation);
         } catch (InterruptedException e) {
