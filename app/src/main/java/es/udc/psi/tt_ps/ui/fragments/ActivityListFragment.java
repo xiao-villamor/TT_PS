@@ -132,9 +132,14 @@ public class ActivityListFragment extends Fragment {
                             continue;
                         }
                         if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                            // Found best last known location: %s", l);
                             bestLocation = l;
                         }
+
+                    }
+                    if(bestLocation == null){
+                        bestLocation = new Location("noProvider");
+                        bestLocation.setLatitude(-79.159623);
+                        bestLocation.setLongitude(24.548291);
                     }
                     mLocation = new GeoLocation(bestLocation.getLatitude(), bestLocation.getLongitude());
                 } catch (Exception e) {
