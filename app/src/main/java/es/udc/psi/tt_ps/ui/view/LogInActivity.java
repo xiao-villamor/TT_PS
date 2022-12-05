@@ -25,7 +25,7 @@ public class LogInActivity extends AppCompatActivity {
         setContentView(view);
 
 
-        binding.button2.setOnClickListener(v -> {
+        binding.logIn.setOnClickListener(v -> {
 
             try {
                 //usuario válido -> email: dev_m@mail.com    password: 123456

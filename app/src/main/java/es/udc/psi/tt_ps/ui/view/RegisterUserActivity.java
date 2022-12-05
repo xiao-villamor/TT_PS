@@ -1,5 +1,6 @@
 package es.udc.psi.tt_ps.ui.view;
 
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
@@ -175,7 +176,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private boolean validate(){
-        return val_name() && val_surname() && val_email() && val_password() && val_date() && val_phone();
+        return val_name() && val_surname() && val_email() && val_password() && val_date() && val_phone() && val_interests();
 
     }
 
@@ -253,6 +254,18 @@ public class RegisterUserActivity extends AppCompatActivity {
         if(date==null){
             Toast.makeText(getApplicationContext(), "Date cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por fecha no indicado");
+            return false;
+        }else{
+            return true;
+        }
+
+    }
+
+    private boolean val_interests(){
+
+        if(selectedItems==null || selectedItems.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Must be chosen at least one interest", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Cuenta no creada por no haber escogido minimo un tag");
             return false;
         }else{
             return true;
