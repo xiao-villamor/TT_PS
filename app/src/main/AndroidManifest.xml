@@ -37,11 +37,11 @@
             android:name=".ui.view.UserInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.ActivityListActivities"
+            android:name=".ui.fragments.ActivityListFragment"
             android:parentActivityName=".ui.view.MainActivity" />
         <activity
             android:name=".ui.view.DetailsActivity"
-            android:parentActivityName=".ui.view.ActivityListActivities" />
+            android:parentActivityName=".ui.fragments.ActivityListFragment" />
         <activity
             android:name=".ui.view.LogInActivity"
             android:exported="true"

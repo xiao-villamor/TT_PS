@@ -1,4 +1,4 @@
-package es.udc.psi.tt_ps.ui.viewmodel;
+package es.udc.psi.tt_ps.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import es.udc.psi.tt_ps.R;
+import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
 public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAdapter.ActivitiesHolder> {
     private List<ListActivities> mData;
@@ -37,13 +38,13 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
         this.mData = mData;
         this.context = context;
         this.mInflater=LayoutInflater.from(context);
-        this.listener = listener;
+        ListActivitiesAdapter.listener = listener;
     }
 
     @NonNull
     @Override
     public ActivitiesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.list_activities,null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_activities, parent, false);
         return new ActivitiesHolder(view);
     }
 

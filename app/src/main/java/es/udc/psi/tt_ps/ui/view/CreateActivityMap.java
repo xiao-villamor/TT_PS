@@ -12,6 +12,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import es.udc.psi.tt_ps.R;
+import es.udc.psi.tt_ps.ui.view.MapFragment;
 
 public class CreateActivityMap extends AppCompatActivity implements MapFragment.OnPointSelected {
 
