@@ -1,6 +1,5 @@
 package es.udc.psi.tt_ps.ui.view;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
@@ -9,29 +8,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseUser;
 
 
-import java.sql.Date;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
@@ -52,7 +50,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         binding = ActivityRegisterUserBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        image=Uri.parse("");
+        //image=Uri.parse("");
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Creating user");
 
@@ -69,7 +67,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString() , binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), date, binding.phoneReg.getText().toString(),
-                            image, null, selectedItems, ratings);
+                            compress(), null, selectedItems, ratings);
 
 
 
@@ -269,6 +267,28 @@ public class RegisterUserActivity extends AppCompatActivity {
             return false;
         }else{
             return true;
+        }
+
+    }
+
+
+    private byte[] compress(){
+        if(image==null || image==Uri.parse("")){
+            return null;
+        }else{
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), image);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("TAG", "No se pudo obtener el bitmap de la imagen");
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            //here you can choose quality factor in third parameter(ex. i choosen 25)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+
+            return baos.toByteArray();
         }
 
     }

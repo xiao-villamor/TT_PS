@@ -33,7 +33,7 @@ import es.udc.psi.tt_ps.data.network.user.userService;
 public class userRepository {
     private final userService api = new userService();
 
-    public void createUser(String email , String password , UserModel user, Uri pic) throws ExecutionException, InterruptedException, TimeoutException {
+    public void createUser(String email , String password , UserModel user, byte[] pic) throws ExecutionException, InterruptedException, TimeoutException {
         api.createUser(email,password,user,pic);
     }
 
@@ -70,7 +70,7 @@ public class userRepository {
         api.updateUserPassword(password);
     }
 
-    public String uploadProfilePic(String uuid, Uri image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public String uploadProfilePic(String uuid, byte[] image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
        return api.uploadProfilePic(uuid,image);
     }
 

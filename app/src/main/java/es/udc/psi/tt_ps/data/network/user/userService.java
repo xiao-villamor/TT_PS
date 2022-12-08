@@ -1,7 +1,6 @@
 package es.udc.psi.tt_ps.data.network.user;
 
-import android.content.Context;
-import android.net.Uri;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,9 +10,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,20 +19,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.checkerframework.common.returnsreceiver.qual.This;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InvalidClassException;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
-
-import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 
 public class userService implements userServiceInterface,FirebaseAuth.AuthStateListener{
@@ -64,15 +53,15 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
          thread.interrupt();
     }
 
-    public void createUser(String email , String password , UserModel user, Uri pic) throws ExecutionException, InterruptedException, TimeoutException {
+    public void createUser(String email , String password , UserModel user, byte[] pic) throws ExecutionException, InterruptedException, TimeoutException {
         Log.d("TAG","create start");
         Tasks.await(mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
                 // Sign in success, update UI with the signed-in user's information
                 //default value
                 AtomicReference<String> url = new AtomicReference<>("");
-                Log.d("PIC", pic.getPath());
-                if(pic!=null && !pic.toString().equals("")){
+                //Log.d("PIC", pic.getPath());
+                if(pic!=null && pic.length!=0){
                     Thread thread = new Thread() {
                         @Override
                         public void run() {
@@ -185,11 +174,11 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
     }
 
 
-    public String uploadProfilePic(String uuid, Uri image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public String uploadProfilePic(String uuid, byte[] image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
 
         StorageReference profilePicRef = storage.getReference("users_profile_pic/"+uuid+".jpg");
         String uri = null;
-        UploadTask.TaskSnapshot res=Tasks.await(profilePicRef.putFile(image)
+        UploadTask.TaskSnapshot res=Tasks.await(profilePicRef.putBytes(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
