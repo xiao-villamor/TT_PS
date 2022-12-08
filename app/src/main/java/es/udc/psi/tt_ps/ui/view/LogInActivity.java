@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.firebase.auth.FirebaseUser;
 
 import es.udc.psi.tt_ps.data.model.Result;
@@ -50,5 +50,11 @@ public class LogInActivity extends AppCompatActivity {
             startActivity(userProfileIntent);
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        this.moveTaskToBack(true);
     }
 }
