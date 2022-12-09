@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ListActivities implements Serializable {
+    public String activityId;
     public String activityImage;
     public String title;
     public transient GeoPoint location;
@@ -21,7 +22,9 @@ public class ListActivities implements Serializable {
     public List<String> tags;
 
 
-    public ListActivities(String activityImage, String title, GeoPoint location, Date end_date, String description, Date start_date, Date creation_date, String adminId, List<String> participants, List<String> tags) {
+
+    public ListActivities(String activityId, String activityImage, String title, GeoPoint location, Date end_date, String description, Date start_date, Date creation_date, String adminId, List<String> participants, List<String> tags) {
+        this.activityId =activityId;
         this.activityImage = activityImage;
         this.title = title;
         this.location = location;
@@ -35,6 +38,13 @@ public class ListActivities implements Serializable {
     }
 
 
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
     public String getActivityImage() {
         return activityImage;
     }

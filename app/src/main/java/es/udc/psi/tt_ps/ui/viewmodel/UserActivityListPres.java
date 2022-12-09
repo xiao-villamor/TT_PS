@@ -5,6 +5,8 @@ import static es.udc.psi.tt_ps.domain.activity.getUserActivitiesUseCase.getActiv
 import android.content.Context;
 import android.location.Geocoder;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.Locale;
 
 import es.udc.psi.tt_ps.core.firebaseConnection;
 import es.udc.psi.tt_ps.data.model.ActivityModel;
+import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
 
@@ -25,11 +28,14 @@ public class UserActivityListPres {
 
     public void setRecycledData(List<ListActivities> listActivities, Context ctx) throws InterruptedException, IOException {
 
-        Result<List<ActivityModel>, Exception> data ;
+        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> data ;
 
         data = getActivitiesByAdmin(firebaseConnection.getUser(),5);
 
-        List<ActivityModel> res = new ArrayList<>(data.data);
+
+        List<ActivityModel> res = new ArrayList<>(data.data.data);
+        List<DocumentSnapshot> doc = new ArrayList<>(data.data.cursor);
+
         //get context
 
         //get location name using geocoder
@@ -39,7 +45,7 @@ public class UserActivityListPres {
             if (res.get(i).getParticipants()!=null){
                 participants=res.get(i).getParticipants();
             }
-            listActivities.add(new ListActivities(res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+            listActivities.add(new ListActivities(doc.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                     res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                     res.get(i).getTags()));
 

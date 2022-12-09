@@ -68,6 +68,7 @@ public class DetailsActivity extends AppCompatActivity {
         String currentUserId= user.getUid();
         binding.signup2.setOnClickListener(view1 -> {
             try {
+                Toast.makeText(this, activitiesList.getActivityId(), Toast.LENGTH_SHORT).show();
                 joinAnActivity(activitiesList);
             } catch (InterruptedException e) {
                 Log.d("TAG","error al unirse");
