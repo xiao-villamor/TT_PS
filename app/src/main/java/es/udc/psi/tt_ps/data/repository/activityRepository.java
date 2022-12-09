@@ -31,7 +31,9 @@ public class activityRepository {
     public ActivityModel getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivity(id);
     }
-
+    public List<ActivityModel> getActivitiesByAdmin(String adminId )throws ExecutionException, InterruptedException, TimeoutException {
+        return api.getActivitiesByAdmin(adminId);
+    }
     public List<ActivityModel> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivitiesByAdminId(adminId,count);
     }

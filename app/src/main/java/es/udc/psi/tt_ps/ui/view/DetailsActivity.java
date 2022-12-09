@@ -13,8 +13,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.auth.User;
 
-
+import static es.udc.psi.tt_ps.domain.activity.joinAnActivity.joinAnActivity;
 import es.udc.psi.tt_ps.R;
+import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.databinding.ActivityDetailsBinding;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
@@ -63,8 +64,14 @@ public class DetailsActivity extends AppCompatActivity {
 
     public void setbuttons(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+        assert user != null;
+        String currentUserId= user.getUid();
         binding.signup2.setOnClickListener(view1 -> {
+            try {
+                joinAnActivity(activitiesList);
+            } catch (InterruptedException e) {
+                Log.d("TAG","error al unirse");
+            }
             Toast.makeText(this, "implementar unirse", Toast.LENGTH_SHORT).show();
 
         });
@@ -85,8 +92,8 @@ public class DetailsActivity extends AppCompatActivity {
         });
 
 
-        assert user != null;
-        if(!activitiesList.getAdminId().equals(user.getUid())){
+
+        if(!activitiesList.getAdminId().equals(currentUserId)){
             binding.signup2.setVisibility(View.VISIBLE);
             binding.deleteButton.setVisibility(View.INVISIBLE);
             binding.updateButton.setVisibility(View.INVISIBLE);

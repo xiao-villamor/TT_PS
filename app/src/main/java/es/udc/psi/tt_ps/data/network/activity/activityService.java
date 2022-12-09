@@ -2,30 +2,26 @@ package es.udc.psi.tt_ps.data.network.activity;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+
 
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryBounds;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReference;
 
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.QueryResult;
@@ -58,6 +54,20 @@ public class activityService implements activityServiceInterface {
         }
         return activity;
     }
+
+    public List<ActivityModel> getActivitiesByAdmin(String adminId) throws ExecutionException, InterruptedException, TimeoutException {
+        List<ActivityModel> data = new ArrayList<>();
+        Query ref = db.collection("Activities").whereEqualTo("adminId", adminId);
+        Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if(document != null) {
+                data.add(document.toObject(ActivityModel.class));
+            }else{
+                Log.d("TAG", "No such document");
+            }
+        });
+        return data;
+    }
+
 
     public List<ActivityModel> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();

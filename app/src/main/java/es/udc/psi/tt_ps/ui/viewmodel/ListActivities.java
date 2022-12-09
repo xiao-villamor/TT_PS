@@ -1,8 +1,6 @@
 package es.udc.psi.tt_ps.ui.viewmodel;
 
 
-import android.os.Parcelable;
-
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.Serializable;
