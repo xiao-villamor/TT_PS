@@ -34,7 +34,9 @@
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:layout_marginLeft="20dp"/>
 
+
         </LinearLayout>
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/filter_button"

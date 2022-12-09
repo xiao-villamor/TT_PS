@@ -167,36 +167,58 @@
         </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floating_action_button_maps"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
-                    android:contentDescription="show location"
-                    android:backgroundTint="@android:color/holo_green_dark"
-                    app:tint="@color/black"
-                    app:srcCompat="@android:drawable/ic_dialog_map"
-                    />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="4dp"
+            android:layout_marginTop="26dp"
+            android:backgroundTint="@android:color/holo_red_dark"
 
-                <Button
-                    android:id="@+id/signup2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:backgroundTint="@android:color/holo_green_dark"
-                    android:layout_margin="6dp"
-                    android:layout_marginTop="26dp"
-                    android:text="Unirse" />
-            </LinearLayout>
+            android:text="Eliminar" />
 
+        <Button
+            android:id="@+id/update_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_margin="4dp"
+            android:layout_marginTop="26dp"
+            android:backgroundTint="@android:color/holo_green_dark"
 
+            android:text="Editar" />
+
+        <Button
+            android:id="@+id/signup2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_margin="4dp"
+            android:layout_marginTop="26dp"
+            android:backgroundTint="@android:color/holo_green_dark"
+
+            android:text="Unirse" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_maps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="4dp"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:contentDescription="show location"
+            app:srcCompat="@android:drawable/ic_dialog_map"
+            app:tint="@color/black" />
 
 
     </LinearLayout>
+
+
+</LinearLayout>
 
