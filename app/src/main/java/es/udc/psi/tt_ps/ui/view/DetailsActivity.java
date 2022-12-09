@@ -1,13 +1,22 @@
 package es.udc.psi.tt_ps.ui.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
@@ -20,7 +29,7 @@ import es.udc.psi.tt_ps.databinding.ActivityDetailsBinding;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private ActivityDetailsBinding binding;
     ListActivities activitiesList;
     View view;
@@ -56,9 +65,26 @@ public class DetailsActivity extends AppCompatActivity {
         binding.cardStartDate.setText(activitiesList.getStart_date().toString());
         binding.cardEndDate.setText(activitiesList.getEnd_date().toString());
         binding.cardCreationDate.setText(activitiesList.getCreation_date().toString());
-        binding.cardLocation.setText(activitiesList.getLocation().toString());
         binding.cardDescription.setText(activitiesList.getDescription());
         binding.cardParticipants.setText(activitiesList.getParticioants());
+
+        showMap();
+        binding.cardLocation.setOnClickListener(view1 -> {
+            Uri navigationIntentUri = Uri.parse("http://maps.google.com/maps?q=loc:" + activitiesList.getLocation().getLatitude() + "," + activitiesList.getLocation().getLongitude() + " (" +binding.cardTitle.getText().toString()+ ")");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, navigationIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+
+        });
+
+    }
+
+    private void showMap(){
+        SupportMapFragment supportMapFragment = (SupportMapFragment)
+                getSupportFragmentManager().findFragmentById(R.id.activity_map);
+
+
+        supportMapFragment.getMapAsync(this);
 
     }
 
@@ -106,4 +132,12 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        googleMap.clear();
+        LatLng coord = new LatLng(activitiesList.getLocation().getLatitude(), activitiesList.getLocation().getLongitude());
+        googleMap.addMarker(new MarkerOptions().position(coord).title("Marcador"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 14));
+    }
 }
