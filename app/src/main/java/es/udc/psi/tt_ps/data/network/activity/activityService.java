@@ -39,14 +39,16 @@ public class activityService implements activityServiceInterface {
         db.collection("Activities").document(id).delete();
     }
 
-    public ActivityModel getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         DocumentReference userDocument = (db.collection("Activities").document(id));
+        QueryResult<ActivityModel,DocumentSnapshot> result = new QueryResult<>();
 
         DocumentSnapshot res =  Tasks.await(userDocument.get(), 5, TimeUnit.SECONDS);
         if(res.exists()) {
-            activity = res.toObject(ActivityModel.class);
+            result.data = res.toObject(ActivityModel.class);
+            result.cursor = res;
         }
-        return activity;
+        return result;
     }
 
     public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesByAdmin(String adminId) throws ExecutionException, InterruptedException, TimeoutException {

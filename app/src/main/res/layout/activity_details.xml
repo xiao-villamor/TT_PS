@@ -245,17 +245,16 @@
             android:backgroundTint="@android:color/holo_green_dark"
 
             android:text="Unirse" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_button_maps"
+        <Button
+            android:id="@+id/singup3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="bottom|center"
             android:layout_margin="4dp"
+            android:layout_marginTop="26dp"
             android:backgroundTint="@android:color/holo_green_dark"
-            android:contentDescription="show location"
-            app:srcCompat="@android:drawable/ic_dialog_map"
-            app:tint="@color/black" />
+
+            android:text="No acudir" />
 
 
     </LinearLayout>

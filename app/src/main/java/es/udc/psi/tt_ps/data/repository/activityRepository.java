@@ -28,7 +28,7 @@ public class activityRepository {
         api.deleteActivity(id);
     }
 
-    public ActivityModel getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivity(id);
     }
     public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesByAdmin(String adminId)throws ExecutionException, InterruptedException, TimeoutException {

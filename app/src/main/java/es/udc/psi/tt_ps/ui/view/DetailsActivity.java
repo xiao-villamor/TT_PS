@@ -19,12 +19,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.auth.User;
 
 import static es.udc.psi.tt_ps.domain.activity.joinAnActivity.joinAnActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.ActivityModel;
+import es.udc.psi.tt_ps.data.model.QueryResult;
+import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.databinding.ActivityDetailsBinding;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
@@ -48,11 +55,12 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
 
 
-        init();
+        init(activitiesList);
         setbuttons();
+        updateButtonsState(activitiesList);
     }
 
-    public void init(){
+    public void init(ListActivities activitiesList){
         if (activitiesList.getActivityImage()!=null)
         {
             Glide.with(binding.cardMedia.getContext()).load(activitiesList.getActivityImage()).into(binding.cardMedia);
@@ -88,18 +96,24 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
     }
 
-    public void setbuttons(){
+    public void setbuttons() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
         String currentUserId= user.getUid();
+
         binding.signup2.setOnClickListener(view1 -> {
-            try {
-                Toast.makeText(this, activitiesList.getActivityId(), Toast.LENGTH_SHORT).show();
-                joinAnActivity(activitiesList);
-            } catch (InterruptedException e) {
-                Log.d("TAG","error al unirse");
+
+            if (!activitiesList.getParticipants().contains(currentUserId)){
+                try {
+                    addUserToActivity(currentUserId);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                Toast.makeText(this, "Ya se ha unido a esta actividad", Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(this, "implementar unirse", Toast.LENGTH_SHORT).show();
+
 
         });
 
@@ -113,23 +127,56 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
         });
 
-        binding.floatingActionButtonMaps.setOnClickListener(view1 -> {
+        binding.singup3.setOnClickListener(view1 -> {
             Toast.makeText(this, "implementar mostrar mapas", Toast.LENGTH_SHORT).show();
 
         });
 
 
+    }
 
-        if(!activitiesList.getAdminId().equals(currentUserId)){
-            binding.signup2.setVisibility(View.VISIBLE);
+    public void addUserToActivity(String currentUserId) throws InterruptedException {
+
+        Result<QueryResult<ActivityModel,DocumentSnapshot>, Exception> res;
+        if (!activitiesList.getParticipants().contains(currentUserId)){
+            res=joinAnActivity(activitiesList.getActivityId());
+
+            if(res.exception==null){
+                ListActivities listActivities;
+                listActivities=new ListActivities(res.data.cursor.getId(),res.data.data.getImage(),res.data.data.getTitle(),res.data.data.getLocation(),res.data.data.getEnd_date(),
+                        res.data.data.getDescription(),res.data.data.getStart_date(),res.data.data.getCreation_date(),res.data.data.getAdminId(),res.data.data.getParticipants(),
+                        res.data.data.getTags());
+                init(listActivities);
+                updateButtonsState(listActivities);
+            }
+        }else{
+            Toast.makeText(this, "Ya se ha unido a esta actividad", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateButtonsState(ListActivities activitiesList){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
+        String currentUserId= user.getUid();
+        if(activitiesList.getAdminId().equals(currentUserId)){
+            if (activitiesList.getParticipants().contains(currentUserId)){
+                binding.signup2.setVisibility(View.INVISIBLE);
+                binding.singup3.setVisibility(View.VISIBLE);
+            }else {
+                binding.singup3.setVisibility(View.INVISIBLE);
+                binding.signup2.setVisibility(View.VISIBLE);
+            }
+        }else {
             binding.deleteButton.setVisibility(View.INVISIBLE);
             binding.updateButton.setVisibility(View.INVISIBLE);
-        }else{
-            binding.signup2.setVisibility(View.VISIBLE);//poner a invisible, ahora esta visible porque todas las
-            binding.deleteButton.setVisibility(View.VISIBLE);//actividades fueron creadas por este user
-            binding.updateButton.setVisibility(View.VISIBLE);
+            if (activitiesList.getParticipants().contains(currentUserId)){
+                binding.signup2.setVisibility(View.INVISIBLE);
+                binding.singup3.setVisibility(View.VISIBLE);
+            }else {
+                binding.singup3.setVisibility(View.INVISIBLE);
+                binding.signup2.setVisibility(View.VISIBLE);
+            }
         }
-
     }
 
 

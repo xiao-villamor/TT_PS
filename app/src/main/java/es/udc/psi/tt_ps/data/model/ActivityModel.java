@@ -85,4 +85,6 @@ public class ActivityModel {
     public void setImg(String img) {
         this.image = img;
     }
+
+    public void setParticipants(List<String> listaParticipantes) {this.participants =listaParticipantes;}
 }

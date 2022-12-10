@@ -14,7 +14,7 @@ public interface activityServiceInterface {
     public void createActivity(ActivityModel activity);
     public void updateActivity(ActivityModel activity, String id);
     public void deleteActivity(String id);
-    public ActivityModel getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException;
+    public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException;
     public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException;
     public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivities() throws ExecutionException, InterruptedException, TimeoutException;
     public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location);
