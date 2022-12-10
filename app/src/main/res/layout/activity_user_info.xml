@@ -14,10 +14,22 @@
         android:paddingTop="20dp"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="logout"
+            android:layout_marginStart="5dp"
+
+            android:backgroundTint="@android:color/holo_red_dark">
+        </Button>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profile_pic"
@@ -77,15 +89,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
-            <Button
-                android:id="@+id/logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="logout"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="13dp"
-                android:backgroundTint="@android:color/holo_red_dark">
-            </Button>
 
         </LinearLayout>
 
