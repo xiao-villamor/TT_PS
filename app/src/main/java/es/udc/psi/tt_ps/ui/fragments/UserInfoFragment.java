@@ -29,6 +29,7 @@ import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
 import es.udc.psi.tt_ps.ui.view.DetailsActivity;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.adapter.ListActivitiesAdapter;
+import es.udc.psi.tt_ps.ui.viewmodel.MainViewModel;
 import es.udc.psi.tt_ps.ui.viewmodel.UserActivityListPres;
 
 
@@ -84,6 +85,13 @@ public class UserInfoFragment extends Fragment {
         if(res.getDescription() != null){
             binding.desc.setText(res.getDescription());
         }
+        binding.logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
 
         initRecycledView();
 

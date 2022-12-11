@@ -65,7 +65,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                 try {
                     Log.d("TAG", "Geohash: "+GeoFireUtils.getGeoHashForLocation(new GeoLocation((float)latitude, (float) longitude)));
                     Result<Object, Exception> res = createActivityUseCase.createActivity(
-                            binding.activityTitle.getText().toString(), binding.activityDescription.getText().toString(),
+                            binding.activityTitle.getEditText().toString(), binding.activityDescription.getEditText().toString(),
                             startDate, endDate,
                             user.getUid(), new GeoPoint((float)latitude, (float) longitude),hash,selectedTags);
 
@@ -238,7 +238,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
 
     private boolean val_title(){
-        String titulo = binding.activityTitle.getText().toString();
+        String titulo = binding.activityTitle.getEditText().toString();
         if(titulo.isEmpty()){
             Toast.makeText(getApplicationContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por titulo no indicado");
@@ -248,7 +248,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     }
 
     private boolean val_description(){
-        String description = binding.activityDescription.getText().toString();
+        String description = binding.activityDescription.getEditText().toString();
         if(description.isEmpty()){
             Toast.makeText(getApplicationContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por description no indicada");
