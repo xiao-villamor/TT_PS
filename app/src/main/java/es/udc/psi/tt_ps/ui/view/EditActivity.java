@@ -106,7 +106,9 @@ public class EditActivity extends AppCompatActivity{
         });
 
         binding.aceptEdit.setOnClickListener(view1 -> {
-            showAceptDialog();
+            if(validate()){
+                showAceptDialog();
+            }
         });
 
         binding.etStartDate.setOnClickListener(view1 -> {
@@ -271,7 +273,7 @@ public class EditActivity extends AppCompatActivity{
 
     private void updateActivity(){
 
-        if(validate()){
+
             Log.d("TAG", "Comienza la actualizacion");
             progressDialog.setTitle("Uploading image");
             progressDialog.show();
@@ -318,7 +320,7 @@ public class EditActivity extends AppCompatActivity{
                 e.printStackTrace();
             }
 
-        }
+
 
     }
 
@@ -411,7 +413,7 @@ public class EditActivity extends AppCompatActivity{
 
 
     private boolean val_duration(){
-
+        Log.d("TAG", "Duration: " + new_activitiesList.getStart_date().toString() + " " + new_activitiesList.getEnd_date().toString());
         if(!new_activitiesList.getStart_date().before(new_activitiesList.getEnd_date())){
             Toast.makeText(getApplicationContext(), "Start date has to ve previous to the end date", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por fechas no coherentes");
