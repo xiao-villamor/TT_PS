@@ -1,9 +1,14 @@
 package es.udc.psi.tt_ps.data.network.activity;
 
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryBounds;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,6 +17,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -23,6 +33,7 @@ import es.udc.psi.tt_ps.data.model.QueryResult;
 public class activityService implements activityServiceInterface {
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private DocumentSnapshot prevDocSnap = null;
     private ActivityModel activity = null;
 
@@ -241,6 +252,35 @@ public class activityService implements activityServiceInterface {
         result.cursor = doc;
 
         return result;
+    }
+
+
+
+    public String uploadActivityPic(String uuid, byte[] image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
+
+        StorageReference profilePicRef = storage.getReference("activity_image/"+uuid+".jpg");
+        String uri = null;
+        UploadTask.TaskSnapshot res=Tasks.await(profilePicRef.putBytes(image)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d("TAG", "Imagen subida");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", "Imagen NO subida");
+                    }
+                }), 10, TimeUnit.SECONDS);
+
+        if(res != null){
+            uri = Tasks.await(profilePicRef.getDownloadUrl(), 10, TimeUnit.SECONDS).toString();
+            Log.d("TAG",uri);
+        }else{
+            uri=null;
+        }
+
+        return uri;
     }
 
 

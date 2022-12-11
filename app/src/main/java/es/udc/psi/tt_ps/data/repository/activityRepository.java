@@ -3,6 +3,7 @@ package es.udc.psi.tt_ps.data.repository;
 import com.firebase.geofire.GeoLocation;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -51,6 +52,10 @@ public class activityRepository {
     }
     public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException{
         return api.getActivitiesFilteredNext(tags,distanceRange,prevDocSnaprec,location);
+    }
+
+    public String uploadActivityPic(String uuid, byte[] image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException{
+        return api.uploadActivityPic(uuid, image);
     }
 
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,15 +31,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.databinding.ActivityEditBinding;
 import es.udc.psi.tt_ps.domain.activity.editActivityInfoUseCase;
+import es.udc.psi.tt_ps.domain.activity.uploadActivityPicUseCase;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
 public class EditActivity extends AppCompatActivity{
@@ -48,14 +53,12 @@ public class EditActivity extends AppCompatActivity{
     ListActivities activitiesList;
     ListActivities new_activitiesList;
     SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy  mm:ss");
-    Date start_d=null;
-    Date end_d=null;
-    GeoPoint location=null;
     String image=null;
     Uri uriImage=null;
     String LAT_KEY = "latitud_mapa";
     String LON_KEY = "longitud_mapa";
     boolean called=false;
+    ProgressDialog progressDialog=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +68,13 @@ public class EditActivity extends AppCompatActivity{
         setContentView(view);
         if(!called){
             called=true;
+            progressDialog = new ProgressDialog(this);
             Bundle extras = getIntent().getExtras();
             activitiesList= (ListActivities) extras.get("activity");
             GeoPoint coord = new GeoPoint(extras.getDouble("latitud"),extras.getDouble("longitud"));
             activitiesList.setLocation(coord);
 
             new_activitiesList=activitiesList;
-            start_d=new_activitiesList.getStart_date();
-            end_d=new_activitiesList.getEnd_date();
-            location=new_activitiesList.getLocation();
             image=new_activitiesList.getActivityImage();
         }
 
@@ -93,8 +94,8 @@ public class EditActivity extends AppCompatActivity{
 
 
         binding.etTitle.setText(new_activitiesList.getTitle());
-        binding.etStartDate.setText(simpleDateFormat.format(start_d));
-        binding.etEndDate.setText(simpleDateFormat.format(end_d));
+        binding.etStartDate.setText(new_activitiesList.getStart_date().toString());
+        binding.etEndDate.setText(new_activitiesList.getEnd_date().toString());
         binding.etDescription.setText(new_activitiesList.getDescription());
         showMap();
     }
@@ -122,7 +123,7 @@ public class EditActivity extends AppCompatActivity{
         });
 
         binding.buttonImage.setOnClickListener(view1 -> {
-            aplyChanges();
+            //aplyChanges();
             chooseImg();
         });
     }
@@ -136,7 +137,7 @@ public class EditActivity extends AppCompatActivity{
                     Intent data = result.getData();
                     Bundle bundle = data.getExtras();
                     if (bundle!= null) {
-                        location = new GeoPoint(bundle.getDouble(LAT_KEY),bundle.getDouble(LON_KEY));
+                        GeoPoint location = new GeoPoint(bundle.getDouble(LAT_KEY),bundle.getDouble(LON_KEY));
                         new_activitiesList.setLocation(location);
                         Log.d("TAG", "Coordenadas recividas " +  bundle.getDouble(LAT_KEY) + " : " + bundle.getDouble(LON_KEY));
                         called=true;
@@ -153,10 +154,10 @@ public class EditActivity extends AppCompatActivity{
                 if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
                     Intent data = result.getData();
                     if(data!=null){
+                        called=true;
                         uriImage=data.getData();
                         image=uriImage.toString();
-                        Log.d("TAG", image.toString());
-                        called=true;
+                        Log.d("TAG", image);
                         //init();
 
                     }
@@ -179,9 +180,9 @@ public class EditActivity extends AppCompatActivity{
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
-                        start_d=calendar.getTime();
+                        Date start_d=calendar.getTime();
                         new_activitiesList.setStart_date(start_d);
-                        binding.etStartDate.setText(simpleDateFormat.format(start_d));
+                        binding.etStartDate.setText(start_d.toString());
                         Log.d("TAG", "Fecha seleccionada: " + start_d.toString());
                     }
                 };
@@ -209,9 +210,9 @@ public class EditActivity extends AppCompatActivity{
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
-                        end_d=calendar.getTime();
+                        Date end_d=calendar.getTime();
                         new_activitiesList.setEnd_date(end_d);
-                        binding.tvEndDate.setText(simpleDateFormat.format(end_d));
+                        binding.etEndDate.setText(end_d.toString());
                         Log.d("TAG", "Fecha seleccionada: " + end_d.toString());
                     }
                 };
@@ -255,33 +256,7 @@ public class EditActivity extends AppCompatActivity{
         dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d("TAG", "Comienza la actualizacion");
-                //SET VALUES
-                aplyChanges();
-
-                //LANZAR PETICION BBDD
-                try {
-                    Result<Object, Exception> res = editActivityInfoUseCase.updateEditedActivity(new_activitiesList);
-
-                    if(res.exception!=null){
-                        Log.d("TAG", res.exception.toString());
-                        Toast.makeText(getApplicationContext(), "Activity cannot be updated", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Log.d("TAG", "Actividad actualizada correctamente");
-                        Toast.makeText(getApplicationContext(), "activity updated successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent();
-                        intent.putExtra("newActivity", activitiesList);
-                        intent.putExtra("latitud",activitiesList.getLocation().getLatitude());
-                        intent.putExtra("longitud",activitiesList.getLocation().getLongitude());
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
+                updateActivity();
             }
         });
         dialogo.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -294,15 +269,64 @@ public class EditActivity extends AppCompatActivity{
         alert.show();
     }
 
+    private void updateActivity(){
+
+        if(validate()){
+            Log.d("TAG", "Comienza la actualizacion");
+            progressDialog.setTitle("Uploading image");
+            progressDialog.show();
+            //Upload the image and get the URL
+            if(uriImage!=null){
+                try {
+
+                    Result<String, Exception> resPic= uploadActivityPicUseCase.uploadActivityPic(activitiesList.getActivityId(), compress());
+                    if(resPic.exception!=null){
+                        Log.d("TAG", resPic.exception.toString());
+                        Toast.makeText(getApplicationContext(), "The new picture cannot be updated", Toast.LENGTH_SHORT).show();
+                    }else{
+                        new_activitiesList.setActivityImage(resPic.data);
+                        Log.d("TAG", "New uri: " + new_activitiesList.getActivityImage());
+                    }
+
+                } catch (InterruptedException | TimeoutException | ExecutionException | FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //Set values
+            aplyChanges();
+
+            //Lanzar peticion BBDD
+            try {
+                Result<Object, Exception> res = editActivityInfoUseCase.updateEditedActivity(new_activitiesList);
+
+                if(res.exception!=null){
+                    Log.d("TAG", res.exception.toString());
+                    Toast.makeText(getApplicationContext(), "Activity cannot be updated", Toast.LENGTH_SHORT).show();
+                }else{
+                    Log.d("TAG", "Actividad actualizada correctamente");
+                    Toast.makeText(getApplicationContext(), "activity updated successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra("newActivity", new_activitiesList);
+                    intent.putExtra("latitud",new_activitiesList.getLocation().getLatitude());
+                    intent.putExtra("longitud",new_activitiesList.getLocation().getLongitude());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
 
     private void aplyChanges(){
 
         new_activitiesList.setTitle(binding.etTitle.getText().toString());
-        new_activitiesList.setStart_date(start_d);
-        new_activitiesList.setEnd_date(end_d);
         new_activitiesList.setDescription(binding.etDescription.getText().toString());
-        new_activitiesList.setLocation(location);
-
     }
 
     private void showMap(){
@@ -315,7 +339,7 @@ public class EditActivity extends AppCompatActivity{
             public void onMapReady(@NonNull GoogleMap googleMap) {
 
                 MarkerOptions markerOptions = new MarkerOptions();
-                LatLng coord = new LatLng(location.getLatitude(), location.getLongitude());
+                LatLng coord = new LatLng(new_activitiesList.getLocation().getLatitude(), new_activitiesList.getLocation().getLongitude());
                 markerOptions.position(coord);
                 markerOptions.title(new_activitiesList.getTitle());
                 googleMap.clear();
@@ -355,6 +379,47 @@ public class EditActivity extends AppCompatActivity{
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.setType("image/*");
         my_startActivityForResult.launch(i);
+    }
+
+
+    private boolean validate(){
+        return val_title() && val_description()  && val_duration();
+
+    }
+
+
+    private boolean val_title(){
+        String titulo = binding.etTitle.getText().toString();
+        if(titulo.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por titulo no indicado");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean val_description(){
+        String description = binding.etDescription.getText().toString();
+        if(description.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por description no indicada");
+            return false;
+        }
+        return true;
+    }
+
+
+
+    private boolean val_duration(){
+
+        if(!new_activitiesList.getStart_date().before(new_activitiesList.getEnd_date())){
+            Toast.makeText(getApplicationContext(), "Start date has to ve previous to the end date", Toast.LENGTH_SHORT).show();
+            Log.d("TAG", "Actividad no creada por fechas no coherentes");
+            return false;
+        }else{
+            return true;
+        }
+
     }
 
 
