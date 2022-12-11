@@ -89,6 +89,13 @@ public class UserInfoFragment extends Fragment {
         if(res.getDescription() != null){
             binding.desc.setText(res.getDescription());
         }
+        binding.logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
 
         binding.logout.setOnClickListener(view1 -> {
             mainViewModel.signOut();

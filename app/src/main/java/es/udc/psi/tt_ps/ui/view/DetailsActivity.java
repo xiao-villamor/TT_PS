@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,8 +29,13 @@ import com.google.firebase.firestore.auth.User;
 
 import static es.udc.psi.tt_ps.domain.activity.joinAnActivity.joinAnActivity;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 import es.udc.psi.tt_ps.R;
@@ -58,24 +65,43 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
 
 
-        init();
+        try {
+            init();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
         setbuttons();
         updateButtonsState(activitiesList);
     }
 
-    public void init(){
-        if (activitiesList.getActivityImage()!=null)
+
+    public void init() throws ParseException, IOException {
+        if (activitiesList.getActivityImage()!="")
         {
             Glide.with(binding.cardMedia.getContext()).load(activitiesList.getActivityImage()).into(binding.cardMedia);
         }else
         {
-            Glide.with(binding.cardMedia.getContext()).load(R.drawable.ic_launcher_background).into(binding.cardMedia);
+            Glide.with(binding.cardMedia.getContext()).load("https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2FJyu0z9Zdy106suj8hD5n.jpg?alt=media&token=6c4bf33d-4ce7-4ed2-8527-8b2c102d609f").into(binding.cardMedia);
         }
 
         binding.cardTitle.setText(activitiesList.getTitle());
-        binding.cardStartDate.setText(activitiesList.getStart_date().toString());
-        binding.cardEndDate.setText(activitiesList.getEnd_date().toString());
-        binding.cardCreationDate.setText(activitiesList.getCreation_date().toString());
+        String StartDate = activitiesList.getStart_date().toString();
+        String EndDate = activitiesList.getEnd_date().toString();
+        //convert a String that represent a date in yyyy-MM-dd HH:mm:ss z format to String with format dd/MM/yyyy HH:mm
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        Date date = sdf.parse(StartDate);
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
+        String StartDate2 = sdf2.format(date);
+        Date date2 = sdf.parse(EndDate);
+        String EndDate2 = sdf2.format(date2);
+        binding.cardDate.setText(StartDate2 + " - " + EndDate2);
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = geocoder.getFromLocation(activitiesList.getLocation().getLatitude(), activitiesList.getLocation().getLongitude(), 1);
+        String cityName = addresses.get(0).getLocality();
+        if(cityName == null){
+            cityName = addresses.get(0).getSubAdminArea();
+        }
+        binding.location.setText(cityName);
         binding.cardDescription.setText(activitiesList.getDescription());
         binding.cardParticipants.setText(activitiesList.getParticioants());
 
@@ -109,7 +135,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             if (!activitiesList.getParticipants().contains(currentUserId)){
                 try {
                     addUserToActivity(currentUserId);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException | ParseException | IOException e) {
                     e.printStackTrace();
                 }
 
@@ -138,10 +164,11 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             intent.putExtra("longitud",activitiesList.getLocation().getLongitude());
             startEditActivity.launch(intent);
 
+
         });
     }
 
-    public void addUserToActivity(String currentUserId) throws InterruptedException {
+    public void addUserToActivity(String currentUserId) throws InterruptedException, ParseException, IOException {
 
         Result<QueryResult<ActivityModel,DocumentSnapshot>, Exception> res;
         if (!activitiesList.getParticipants().contains(currentUserId)){
@@ -196,7 +223,13 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                         GeoPoint coord = new GeoPoint(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
                         newAct.setLocation(coord);
                         activitiesList=newAct;
-                        init();
+                        try {
+                            init();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
