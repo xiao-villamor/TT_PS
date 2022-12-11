@@ -1,5 +1,7 @@
 package es.udc.psi.tt_ps.ui.view;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -118,7 +120,14 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
         });
 
+        binding.updateButton.setOnClickListener(view1 -> {
+            Intent intent = new Intent(this, EditActivity.class);
+            intent.putExtra("activity", activitiesList);
+            intent.putExtra("latitud",activitiesList.getLocation().getLatitude());
+            intent.putExtra("longitud",activitiesList.getLocation().getLongitude());
+            startEditActivity.launch(intent);
 
+        });
 
         if(!activitiesList.getAdminId().equals(currentUserId)){
             binding.signup2.setVisibility(View.VISIBLE);
@@ -131,6 +140,23 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         }
 
     }
+
+    ActivityResultLauncher<Intent> startEditActivity = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Bundle bundle = data.getExtras();
+                    if (bundle!= null) {
+                        ListActivities newAct= (ListActivities) bundle.get("newActivity");
+                        GeoPoint coord = new GeoPoint(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
+                        newAct.setLocation(coord);
+                        activitiesList=newAct;
+                        init();
+                    }
+                }
+            }
+    );
 
 
     @Override
