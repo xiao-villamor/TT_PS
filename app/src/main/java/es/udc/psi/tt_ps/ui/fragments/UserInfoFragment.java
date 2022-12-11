@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -23,12 +24,14 @@ import java.util.List;
 import es.udc.psi.tt_ps.core.firebaseConnection;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
+import es.udc.psi.tt_ps.data.repository.authRepository;
 import es.udc.psi.tt_ps.databinding.ActivityUserInfoBinding;
 import es.udc.psi.tt_ps.domain.user.getUserInfoUseCase;
 import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
 import es.udc.psi.tt_ps.ui.view.DetailsActivity;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.adapter.ListActivitiesAdapter;
+import es.udc.psi.tt_ps.ui.viewmodel.MainViewModel;
 import es.udc.psi.tt_ps.ui.viewmodel.UserActivityListPres;
 
 
@@ -40,6 +43,8 @@ public class UserInfoFragment extends Fragment {
     List<ListActivities> activitiesList;
     UserActivityListPres presenter = new UserActivityListPres();
     RecyclerView recyclerView ;
+    authRepository authRepository = new authRepository();
+    MainViewModel mainViewModel = new MainViewModel(authRepository);
 
     public static UserInfoFragment newInstance() {
         return new UserInfoFragment();
@@ -84,6 +89,11 @@ public class UserInfoFragment extends Fragment {
         if(res.getDescription() != null){
             binding.desc.setText(res.getDescription());
         }
+
+        binding.logout.setOnClickListener(view1 -> {
+            mainViewModel.signOut();
+
+        });
 
         initRecycledView();
 

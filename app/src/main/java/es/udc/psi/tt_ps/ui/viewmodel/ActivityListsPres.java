@@ -62,6 +62,8 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                 for (int i = 0; i < res.size(); i++) {
                     if (res.get(i).getParticipants()!=null){
                         participants=res.get(i).getParticipants();
+                    }else{
+                        participants=new ArrayList<>();
                     }
                     listActivities.add(new ListActivities(doc.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                             res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,

@@ -5,10 +5,9 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
@@ -21,9 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TT_PS"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.view.EditActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAG5bI3zDlHWyEJGS5ZPx7r4NYonOypyc8" />
+
         <activity
             android:name=".ui.view.CreateActivityMap"
             android:exported="false" />
@@ -45,12 +49,13 @@
         <activity
             android:name=".ui.view.LogInActivity"
             android:exported="true"
-            android:parentActivityName=".ui.view.MainActivity"/>
+            android:parentActivityName=".ui.view.MainActivity" />
         <activity
             android:name=".ui.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 

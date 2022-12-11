@@ -1,5 +1,7 @@
 package es.udc.psi.tt_ps.ui.view;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.auth.User;
 
 import static es.udc.psi.tt_ps.domain.activity.joinAnActivity.joinAnActivity;
 
@@ -55,12 +58,12 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
 
 
-        init(activitiesList);
+        init();
         setbuttons();
         updateButtonsState(activitiesList);
     }
 
-    public void init(ListActivities activitiesList){
+    public void init(){
         if (activitiesList.getActivityImage()!=null)
         {
             Glide.with(binding.cardMedia.getContext()).load(activitiesList.getActivityImage()).into(binding.cardMedia);
@@ -122,17 +125,20 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
         });
 
-        binding.updateButton.setOnClickListener(view1 -> {
-            Toast.makeText(this, "implementar actualizar", Toast.LENGTH_SHORT).show();
-
-        });
 
         binding.singup3.setOnClickListener(view1 -> {
             Toast.makeText(this, "implementar mostrar mapas", Toast.LENGTH_SHORT).show();
 
         });
 
+        binding.updateButton.setOnClickListener(view1 -> {
+            Intent intent = new Intent(this, EditActivity.class);
+            intent.putExtra("activity", activitiesList);
+            intent.putExtra("latitud",activitiesList.getLocation().getLatitude());
+            intent.putExtra("longitud",activitiesList.getLocation().getLongitude());
+            startEditActivity.launch(intent);
 
+        });
     }
 
     public void addUserToActivity(String currentUserId) throws InterruptedException {
@@ -142,12 +148,11 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             res=joinAnActivity(activitiesList.getActivityId());
 
             if(res.exception==null){
-                ListActivities listActivities;
-                listActivities=new ListActivities(res.data.cursor.getId(),res.data.data.getImage(),res.data.data.getTitle(),res.data.data.getLocation(),res.data.data.getEnd_date(),
+                activitiesList=new ListActivities(res.data.cursor.getId(),res.data.data.getImage(),res.data.data.getTitle(),res.data.data.getLocation(),res.data.data.getEnd_date(),
                         res.data.data.getDescription(),res.data.data.getStart_date(),res.data.data.getCreation_date(),res.data.data.getAdminId(),res.data.data.getParticipants(),
                         res.data.data.getTags());
-                init(listActivities);
-                updateButtonsState(listActivities);
+                init();
+                updateButtonsState(activitiesList);
             }
         }else{
             Toast.makeText(this, "Ya se ha unido a esta actividad", Toast.LENGTH_SHORT).show();
@@ -177,7 +182,25 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                 binding.signup2.setVisibility(View.VISIBLE);
             }
         }
+
     }
+
+    ActivityResultLauncher<Intent> startEditActivity = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Bundle bundle = data.getExtras();
+                    if (bundle!= null) {
+                        ListActivities newAct= (ListActivities) bundle.get("newActivity");
+                        GeoPoint coord = new GeoPoint(bundle.getDouble("latitud"),bundle.getDouble("longitud"));
+                        newAct.setLocation(coord);
+                        activitiesList=newAct;
+                        init();
+                    }
+                }
+            }
+    );
 
 
     @Override
