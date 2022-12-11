@@ -65,8 +65,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                     progressDialog.show();
 
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
-                            binding.nameReg.getEditText().toString(), binding.emailReg.getEditText().toString() , binding.passwordReg.getText().toString(),
-                            binding.surnameReg.getEditText().toString(), date, binding.phoneReg.getText().toString(),
+                            binding.nameReg.getText().toString(), binding.emailReg.getText().toString(), binding.passwordReg.getText().toString(),
+                            binding.surnameReg.getText().toString(), date, binding.phoneReg.getText().toString(),
                             compress(), null, selectedItems, ratings);
 
 
@@ -180,7 +180,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private boolean val_name(){
 
-        String name = binding.nameReg.getEditText().toString();
+        String name = binding.nameReg.getText().toString();
         if(name.isEmpty()){
             Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por nombre no indicado");
@@ -191,7 +191,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private boolean val_surname(){
 
-        String surname = binding.surnameReg.getEditText().toString();
+        String surname = binding.surnameReg.getText().toString();
         if(surname.isEmpty()){
             Toast.makeText(getApplicationContext(), "Surname cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por apellido no indicado");
@@ -204,7 +204,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private boolean val_email(){
 
-        String email = binding.emailReg.getEditText().toString();
+        String email = binding.emailReg.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         if(email.isEmpty()){
             Toast.makeText(getApplicationContext(), "Email cannot be empty", Toast.LENGTH_SHORT).show();

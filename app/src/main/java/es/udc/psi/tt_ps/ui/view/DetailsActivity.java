@@ -166,6 +166,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
 
         });
+        binding.closeButton.setOnClickListener(view1 -> {
+            finish();
+        });
     }
 
     public void addUserToActivity(String currentUserId) throws InterruptedException, ParseException, IOException {
