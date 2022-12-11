@@ -71,12 +71,12 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     public void init(ListActivities activitiesList) throws ParseException, IOException {
-        if (activitiesList.getActivityImage()!=null)
+        if (activitiesList.getActivityImage()!="")
         {
             Glide.with(binding.cardMedia.getContext()).load(activitiesList.getActivityImage()).into(binding.cardMedia);
         }else
         {
-            Glide.with(binding.cardMedia.getContext()).load(R.drawable.ic_launcher_background).into(binding.cardMedia);
+            Glide.with(binding.cardMedia.getContext()).load("https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2FJyu0z9Zdy106suj8hD5n.jpg?alt=media&token=6c4bf33d-4ce7-4ed2-8527-8b2c102d609f").into(binding.cardMedia);
         }
 
         binding.cardTitle.setText(activitiesList.getTitle());
@@ -93,6 +93,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocation(activitiesList.getLocation().getLatitude(), activitiesList.getLocation().getLongitude(), 1);
         String cityName = addresses.get(0).getLocality();
+        if(cityName == null){
+            cityName = addresses.get(0).getSubAdminArea();
+        }
         binding.location.setText(cityName);
         binding.cardDescription.setText(activitiesList.getDescription());
         binding.cardParticipants.setText(activitiesList.getParticioants());

@@ -2,9 +2,10 @@ package es.udc.psi.tt_ps.ui.view;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -18,6 +19,11 @@ import android.widget.Toast;
 
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.GeoPoint;
@@ -25,6 +31,7 @@ import com.google.firebase.firestore.GeoPoint;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import es.udc.psi.tt_ps.R;
@@ -41,6 +48,8 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private double longitude;
     private java.util.Date startDate;
     private java.util.Date endDate;
+    private String startHour;
+    private String endHour;
     String LAT_KEY = "latitud_mapa";
     String LON_KEY = "longitud_mapa";
 
@@ -65,7 +74,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                 try {
                     Log.d("TAG", "Geohash: "+GeoFireUtils.getGeoHashForLocation(new GeoLocation((float)latitude, (float) longitude)));
                     Result<Object, Exception> res = createActivityUseCase.createActivity(
-                            binding.activityTitle.getEditText().toString(), binding.activityDescription.getEditText().toString(),
+                            String.valueOf(binding.activityTitle.getEditText().getText()), String.valueOf(binding.activityDescription.getEditText().getText()),
                             startDate, endDate,
                             user.getUid(), new GeoPoint((float)latitude, (float) longitude),hash,selectedTags);
 
@@ -85,13 +94,10 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
         });
 
-        binding.buttonStart.setOnClickListener(v -> {
-            showStartDateDialog();
+        binding.buttonDate.setOnClickListener(v -> {
+            selectDateDialog();
         });
 
-        binding.buttonEnd.setOnClickListener(v -> {
-            showEndDateDialog();
-        });
 
 
         binding.activityTag.setOnClickListener(v -> {
@@ -106,6 +112,103 @@ public class ActivityCreateActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void selectDateDialog() {
+        MaterialDatePicker datePicker = MaterialDatePicker.Builder.dateRangePicker()
+                        .setTitleText("Select date")
+                        .setSelection(new Pair(
+                                MaterialDatePicker.thisMonthInUtcMilliseconds(),
+                                MaterialDatePicker.todayInUtcMilliseconds()
+                        ))
+                        .build();
+        datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+
+            Pair res = (Pair) selection;
+            Log.d("TAG", "Fecha seleccionada: "+res.first.toString());
+            String date = new SimpleDateFormat("dd/MM/yyyy").format(res.first);
+            startDate = new Date((Long) res.first);
+            String date2 = new SimpleDateFormat("dd/MM/yyyy").format(res.second);
+            endDate =  new Date((Long) res.second);
+            timePickerDialog();
+        });
+
+
+
+    }
+
+    private void timePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        if(startDate==null) {
+            Snackbar.make(binding.getRoot(), "Select a start date first", Snackbar.LENGTH_LONG).show();
+        }else {
+            MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                    .setMinute(calendar.get(Calendar.MINUTE))
+                    .setTitleText("Select Start Time")
+                    .build();
+            timePicker.show(getSupportFragmentManager(), "tag");
+
+            timePicker.addOnPositiveButtonClickListener(v -> {
+                String time = timePicker.getHour() + ":" + timePicker.getMinute();
+                SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+                long milliseconds = 0;
+                try {
+                    Date d = f.parse(time);
+                    milliseconds = d.getTime();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.d("TAG", "Hora seleccionada: " + time);
+                startDate.setTime(startDate.getTime() + milliseconds);
+                //startDate.setTime(timePicker.getHour() + timePicker.getMinute());
+                Log.d("TAG", "Time: " + startDate);
+                startHour = time;
+                timePickerEndDialog();
+            });
+        }
+    }
+
+    private void timePickerEndDialog() {
+        Calendar calendar = Calendar.getInstance();
+        if(startDate==null) {
+            Snackbar.make(binding.getRoot(), "Select a start date first", Snackbar.LENGTH_LONG).show();
+        }else {
+            MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                    .setMinute(calendar.get(Calendar.MINUTE))
+                    .setTitleText("Select End Time")
+                    .build();
+            timePicker.show(getSupportFragmentManager(), "tag");
+
+            timePicker.addOnPositiveButtonClickListener(v -> {
+                String time = timePicker.getHour() + ":" + timePicker.getMinute();
+                SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+                long milliseconds = 0;
+                try {
+                    Date d = f.parse(time);
+                    milliseconds = d.getTime();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.d("TAG", "Hora end: " + time);
+                endDate.setTime(endDate.getTime() + milliseconds);
+                //startDate.setTime(timePicker.getHour() + timePicker.getMinute());
+                Log.d("TAG", "end: " + endDate);
+                endHour = time;
+                //Parse date to string in format dd/MM/yyyy HH:mm
+                String date = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(startDate);
+                String date2 = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(endDate);
+                binding.activityDate.setText(date + " - " + date2);
+
+
+            });
+
+        }
     }
 
     private void showStartDateDialog(){
@@ -124,7 +227,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                         calendar.set(Calendar.MINUTE, minute);
                         startDate=calendar.getTime();
                         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy  mm:ss");
-                        binding.activityStart.setText(simpleDateFormat.format(startDate));
+                        //binding.activityStart.setText(simpleDateFormat.format(startDate));
                         Log.d("TAG", "Fecha seleccionada: " + startDate.toString());
                     }
                 };
@@ -154,7 +257,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                         calendar.set(Calendar.MINUTE, minute);
                         endDate=calendar.getTime();
                         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy  mm:ss");
-                        binding.activityEnd.setText(simpleDateFormat.format(endDate));
+                        //binding.activityEnd.setText(simpleDateFormat.format(endDate));
                         Log.d("TAG", "Fecha seleccionada: " + endDate.toString());
                     }
                 };
@@ -169,7 +272,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     }
 
     private void showTagsChooser(){
-        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder dialogo = new MaterialAlertDialogBuilder(this);
         dialogo.setTitle("Choose the tags");
         //Array con los posibles intereses
         String[] interests=getResources().getStringArray(R.array.interests_array);
@@ -238,7 +341,9 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
 
     private boolean val_title(){
-        String titulo = binding.activityTitle.getEditText().toString();
+        String titulo = String.valueOf(binding.activityTitle.getEditText().getText());
+        Log.d("TAG", "Titulo: " + titulo);
+
         if(titulo.isEmpty()){
             Toast.makeText(getApplicationContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por titulo no indicado");
@@ -248,7 +353,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     }
 
     private boolean val_description(){
-        String description = binding.activityDescription.getEditText().toString();
+        String description = String.valueOf(binding.activityDescription.getEditText().getText());
         if(description.isEmpty()){
             Toast.makeText(getApplicationContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por description no indicada");
