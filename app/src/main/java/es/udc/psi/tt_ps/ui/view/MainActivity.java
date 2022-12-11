@@ -11,6 +11,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -92,6 +93,13 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         View view = binding.getRoot();
         setContentView(view);
         mainViewModel.setAuthStateChangeListener(this);
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null){
+            actionBar.hide();
+        }
 
 
         firebaseConnection connection = new firebaseConnection();
