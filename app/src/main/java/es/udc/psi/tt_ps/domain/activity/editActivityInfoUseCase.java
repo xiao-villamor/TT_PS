@@ -25,7 +25,7 @@ public class editActivityInfoUseCase {
 
         String hash = GeoFireUtils.getGeoHashForLocation(new GeoLocation(act.getLocation().getLatitude(), act.getLocation().getLongitude()));
         ActivityModel activity = new ActivityModel(act.getTitle(), act.getDescription(), act.start_date, act.end_date,
-                act.creation_date, act.location, act.adminId, act.getParticipants(), act.getTags(), act.getActivityImage(), hash);
+                act.creation_date, act.location, act.adminId, act.getParticipants(), act.getTags(), act.getActivityImage(), hash,"");
         Thread thread1 = new Thread(() -> {
             try {
                 repository.updateActivity(activity, act.getActivityId());

@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -47,6 +48,7 @@ import es.udc.psi.tt_ps.ui.fragments.SavedActivitiesFragment;
 import es.udc.psi.tt_ps.ui.fragments.SearchFragment;
 import es.udc.psi.tt_ps.ui.fragments.UserInfoFragment;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
+import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.viewmodel.MainViewModel;
 
 
@@ -67,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     private RecyclerView mRecycler;
     private  ScreenSlidePageAdapter adapter;
     private NavigationBarFragment navigationBarFragment;
+    public ActivityListFragment fragment;
+    private static MainActivity mInstance;
+
+    public static MainActivity getInstance(){
+        return mInstance;
+    }
 
     private void requestPermissionsIfNecessary(String[] permissions) {
         ArrayList<String> permissionsToRequest = new ArrayList<>();
@@ -92,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        mInstance = this;
         mainViewModel.setAuthStateChangeListener(this);
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -187,6 +196,12 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         });
     }
 
+    public void dataChanged(String id, ListActivities listActivities,String mode){
+        Log.d("dataChanged", "dataChanged");
+        fragment.dataChanged(id,listActivities,mode);
+
+    }
+
 
     @Override
     protected void onStart() {
@@ -241,13 +256,17 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
             switch (position) {
                 case 0:
-                    return new ActivityListFragment();
+                    fragment = new ActivityListFragment();
+                    return fragment;
                 case 1:
                     return new SearchFragment();
+
                 case 2:
                     return new SavedActivitiesFragment();
+
                 case 3:
                     return new UserInfoFragment();
+
                 default:
                     return null;
             }

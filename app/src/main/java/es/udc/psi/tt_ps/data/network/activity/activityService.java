@@ -62,53 +62,60 @@ public class activityService implements activityServiceInterface {
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesByAdmin(String adminId) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdmin(String adminId) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        List<DocumentSnapshot> doc = new ArrayList<>();
-        QueryResult<List<ActivityModel>,List<DocumentSnapshot>> result = new QueryResult<>();
+        DocumentSnapshot doc;
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
         Query ref = db.collection("Activities").whereEqualTo("adminId", adminId);
         Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
-                    data.add(document.toObject(ActivityModel.class));
-                    doc.add(document);
+                    ActivityModel activity = document.toObject(ActivityModel.class);
+                    activity.setId(document.getId());
+                    data.add(activity);
+                    prevDocSnap = document;
             }else{
                 Log.d("TAG", "No such document");
             }
         });
         result.data=data;
-        result.cursor=doc;
+        result.cursor=prevDocSnap;
         return result;
     }
 
 
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        List<DocumentSnapshot> doc = new ArrayList<>();
-        QueryResult<List<ActivityModel>,List<DocumentSnapshot>> result = new QueryResult<>();
+
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+
+
         Query ref = db.collection("Activities").whereEqualTo("adminId", adminId).orderBy("creation_date", Query.Direction.DESCENDING).limit(count);
         Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
-                data.add(document.toObject(ActivityModel.class));
-                doc.add(document);
+                ActivityModel activity = document.toObject(ActivityModel.class);
+                activity.setId(document.getId());
+                data.add(activity);
+                prevDocSnap = document;
             }else{
                 Log.d("TAG", "No such document");
             }
         });
         result.data=data;
-        result.cursor=doc;
+        result.cursor=prevDocSnap;
         return result;
     }
 
-    public QueryResult<List<ActivityModel>, List<DocumentSnapshot>> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        QueryResult<List<ActivityModel>,List<DocumentSnapshot>> result = new QueryResult<>();
-        List<DocumentSnapshot> doc = new ArrayList<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
         Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).limit(5);
         Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
-                data.add(document.toObject(ActivityModel.class));
-                doc.add(document);
+                ActivityModel activity = document.toObject(ActivityModel.class);
+                activity.setId(document.getId());
+                data.add(activity);
+                prevDocSnap = document;
             }else{
                 Log.d("TAG", "No such document");
             }
@@ -116,15 +123,14 @@ public class activityService implements activityServiceInterface {
 
         Log.d("_TAG", "DocumentSnapshot data: " + prevDocSnap);
         result.data=data;
-        result.cursor=doc;
+        result.cursor=prevDocSnap;
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) {
         List<ActivityModel> data = new ArrayList<>();
-        List<DocumentSnapshot> doc = new ArrayList<>();
         final double radiusInM = 1000 * distanceRange.get(1);
-        QueryResult<List<ActivityModel>,List<DocumentSnapshot>> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
 
         List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInM);
@@ -150,8 +156,11 @@ public class activityService implements activityServiceInterface {
                         distanceInKm = distanceInKm/1000;
 
                         if(distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
-                            data.add(document.toObject(ActivityModel.class));
-                            doc.add(document);
+                            ActivityModel activity = document.toObject(ActivityModel.class);
+                            activity.setId(document.getId());
+                            data.add(activity);
+                            prevDocSnap =document;
+
                         }
                     }else{
                         Log.d("TAG", "No such document");
@@ -163,18 +172,18 @@ public class activityService implements activityServiceInterface {
         });
 
         result.data=data;
-        result.cursor=doc;
+        result.cursor=prevDocSnap;
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        List<DocumentSnapshot> doc = new ArrayList<>();
         final double radiusInM = 1000 * distanceRange.get(1);
 
-        QueryResult<List<ActivityModel>,List<DocumentSnapshot>> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
         List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInM);
+
         final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
         for (GeoQueryBounds b : bounds) {
             Log.d("_TAG", "Bounds: " + b.startHash + " " + b.endHash);
@@ -202,8 +211,9 @@ public class activityService implements activityServiceInterface {
                         Log.d("_TAG", "Distance: " + distanceInKm +"lower " +distanceRange.get(0) + "upper " + distanceRange.get(1));
 
                         if(distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
-                            data.add(document.toObject(ActivityModel.class));
-                            doc.add(document);
+                            ActivityModel activity = document.toObject(ActivityModel.class);
+                            activity.setId(document.getId());
+                            data.add(activity);
                             prevDocSnap =document;
                         }
                     }else{
@@ -214,48 +224,34 @@ public class activityService implements activityServiceInterface {
                 e.printStackTrace();
             }
         });
-        /*
-        Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(5).whereArrayContainsAny("tags", tags);
-        Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
-                Log.d("_TAG", "DocumentSnapshot data: " + document.toObject(ActivityModel.class));
-
-                data.add(document.toObject(ActivityModel.class));
-                prevDocSnap = document;
-            }else{
-                Log.d("TAG", "No such document");
-            }
-        });
-*/
 
 
         result.data = data;
-        result.cursor = doc;
+        result.cursor = prevDocSnap;
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>>  getNextActivities(DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
-        Log.d("_TAG", "POINTER data: " + prevDocSnap);
-        List<DocumentSnapshot> doc = new ArrayList<>();
+    public QueryResult<List<ActivityModel>,DocumentSnapshot>  getNextActivities(DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        QueryResult<List<ActivityModel>,List<DocumentSnapshot>> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
 
         Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(5);
         Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
-                data.add(document.toObject(ActivityModel.class));
-                doc.add(document);
+                ActivityModel activity = document.toObject(ActivityModel.class);
+                activity.setId(document.getId());
+                data.add(activity);
+                prevDocSnap =document;
             }else{
                 Log.d("TAG", "No such document");
             }
         });
         result.data = data;
-        result.cursor = doc;
+        result.cursor = prevDocSnaprec;
 
         return result;
     }
-
 
 
     public String uploadActivityPic(String uuid, byte[] image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {

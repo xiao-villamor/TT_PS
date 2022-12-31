@@ -32,25 +32,25 @@ public class activityRepository {
     public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivity(id);
     }
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesByAdmin(String adminId)throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdmin(String adminId)throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivitiesByAdmin(adminId);
     }
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivitiesByAdminId(adminId,count);
     }
 
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivities();
     }
 
-    public  QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getNextActivities(DocumentSnapshot prevDocSnap) throws ExecutionException, InterruptedException, TimeoutException {
+    public  QueryResult<List<ActivityModel>,DocumentSnapshot> getNextActivities(DocumentSnapshot prevDocSnap) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getNextActivities(prevDocSnap);
     }
 
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivitiesFiltered(tags,distanceRange,location);
     }
-    public QueryResult<List<ActivityModel>,List<DocumentSnapshot>> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException{
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException{
         return api.getActivitiesFilteredNext(tags,distanceRange,prevDocSnaprec,location);
     }
 

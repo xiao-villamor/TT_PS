@@ -28,13 +28,13 @@ public class UserActivityListPres {
 
     public void setRecycledData(List<ListActivities> listActivities, Context ctx) throws InterruptedException, IOException {
 
-        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> data ;
+        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> data ;
 
         data = getActivitiesByAdmin(firebaseConnection.getUser(),5);
 
 
         List<ActivityModel> res = new ArrayList<>(data.data.data);
-        List<DocumentSnapshot> doc = new ArrayList<>(data.data.cursor);
+
 
         //get context
 
@@ -45,7 +45,7 @@ public class UserActivityListPres {
             if (res.get(i).getParticipants()!=null){
                 participants=res.get(i).getParticipants();
             }
-            listActivities.add(new ListActivities(doc.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+            listActivities.add(new ListActivities(res.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                     res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                     res.get(i).getTags()));
 

@@ -4,4 +4,8 @@
         <item>00.0</item>
         <item>30.0</item>
     </string-array>
+    <string-array name="dropdown_values" >
+        <item>Creator</item>
+        <item>Assistant</item>
+    </string-array>
 </resources>

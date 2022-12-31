@@ -20,11 +20,12 @@ public class ActivityModel {
     private List<String> participants;
     private List<String> tags;
     private String image;
+    private String id;
 
     public ActivityModel(String title, String description,
                          Date start_date, Date end_date,Date creation_date,
                          GeoPoint location, String adminId,
-                         List<String> participants, List<String> tags,  String image,String geohash) {
+                         List<String> participants, List<String> tags,  String image,String geohash,String id) {
 
         this.title = title;
         this.description = description;
@@ -37,6 +38,7 @@ public class ActivityModel {
         this.tags = tags;
         this.image = image;
         this.geohash = geohash;
+        this.id = id;
     }
     public ActivityModel() {
     }
@@ -87,4 +89,11 @@ public class ActivityModel {
     }
 
     public void setParticipants(List<String> listaParticipantes) {this.participants =listaParticipantes;}
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getId() {
+        return id;
+    }
 }

@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import es.udc.psi.tt_ps.databinding.ActivityShowActivitiesBinding;
 import es.udc.psi.tt_ps.ui.view.ActivityCreateActivity;
 import es.udc.psi.tt_ps.ui.view.DetailsActivity;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
+import es.udc.psi.tt_ps.ui.viewmodel.ActivityViewModel;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.adapter.ListActivitiesAdapter;
 
@@ -54,6 +56,7 @@ public class ActivityListFragment extends Fragment {
     private FragmentListener listener;
     boolean getMore = true;
     Context ctx;
+    ActivityViewModel activityViewModel;
 
     public static ActivityListFragment newInstance() {
         return new ActivityListFragment();
@@ -158,13 +161,10 @@ public class ActivityListFragment extends Fragment {
         tags = aTags;
     }
 
-
-
     public void initRecycledView() throws InterruptedException {
-        Log.d(TAG, ACTIVITY + " start init");
         activitiesList = new ArrayList<>();
-       getLocation();
-        //mLocation = new GeoLocation(41.3879, 2.1699);
+        getLocation();
+
         try {
             presenter.setRecycledDataFiltered(tags, activitiesList,range ,mLocation);
         } catch (InterruptedException e) {
@@ -172,6 +172,7 @@ public class ActivityListFragment extends Fragment {
         }
 
         listActivitiesAdapter= new ListActivitiesAdapter(activitiesList,getActivity().getApplicationContext(), this::moreActivityInfo);
+        activityViewModel = new ActivityViewModel(listActivitiesAdapter);
         recyclerView = binding.listRecycledView;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
@@ -186,8 +187,6 @@ public class ActivityListFragment extends Fragment {
                 if (!recyclerView.canScrollVertically(1) && presenter.getMore) {
                     int totalItems = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
                     int lastVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(recyclerView.getLayoutManager())).findLastVisibleItemPosition();
-                    Log.d(TAG,ACTIVITY+" totalItems: "+totalItems+" lastVisibleItem: "+lastVisibleItem);
-                    Log.d(TAG,ACTIVITY+" Comprobacion: " + (lastVisibleItem == totalItems - 1));
                     if (lastVisibleItem == totalItems - 1 && lastVisibleItem != 0) {
                         try {
                             presenter.updateRecycledDataFiltered(tags,recyclerView,range ,mLocation);
@@ -212,5 +211,30 @@ public class ActivityListFragment extends Fragment {
         intent.putExtra("latitud",listActivities.getLocation().getLatitude());
         intent.putExtra("longitud",listActivities.getLocation().getLongitude());
         startActivity(intent);
+    }
+    public void dataChanged(String id ,ListActivities listActivities,String mode){
+        Log.d("TAG", "dataChanged: " + id);
+        if(mode == "del"){
+            Log.d("TAG", "dataChanged: " + "del");
+            for (int i = 0; i < activitiesList.size(); i++) {
+                if(activitiesList.get(i).getActivityId().equals(id)){
+                    activitiesList.remove(i);
+                    listActivitiesAdapter.notifyItemRemoved(i);
+                    listActivitiesAdapter.notifyItemRangeChanged(i, activitiesList.size());
+                    break;
+                }
+            }
+        }else if(mode == "edit"){
+            //replace item in the list for the new if the id is the same
+            for (int i = 0; i < activitiesList.size(); i++) {
+                if(activitiesList.get(i).getActivityId().equals(id)){
+                    activitiesList.set(i,listActivities);
+                    listActivitiesAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+
+        }
+
     }
 }

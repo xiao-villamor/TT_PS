@@ -13,9 +13,9 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 public class getNextActivitiesUseCase {
 
-    public static Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> getNextActivities(DocumentSnapshot prevDocSnap) throws InterruptedException{
+    public static Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> getNextActivities(DocumentSnapshot prevDocSnap) throws InterruptedException{
 
-        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> res = new Result<>();
+        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> res = new Result<>();
         final activityRepository repository = new activityRepository();
         Thread t = new Thread(() -> {
             try {

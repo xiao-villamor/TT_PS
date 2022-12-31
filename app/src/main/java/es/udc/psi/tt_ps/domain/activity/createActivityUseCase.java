@@ -25,7 +25,7 @@ public class createActivityUseCase {
         Log.d("TAG",geohash);
 
 
-        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),location,adminId,null, interests, "",geohash);
+        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),location,adminId,null, interests, "",geohash,"");
         Thread thread = new Thread(() -> {
             try{
                 repository.createActivity(activity);

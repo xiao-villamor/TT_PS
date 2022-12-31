@@ -36,7 +36,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
     public void setRecycledDataFiltered(List<String> tags, List<Float> range, GeoLocation location, RecyclerView recyclerView) throws InterruptedException {
 
-        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> data;
+        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> data;
 
 
         ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
@@ -50,10 +50,9 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
             if (data.exception == null && data.data.cursor != null) {
                 List<ActivityModel> res = new ArrayList<>(data.data.data);
-                List<DocumentSnapshot> doc = new ArrayList<>(data.data.cursor);
-                if(doc.size()>0){
-                    prevDocSnap=doc.get(doc.size()-1);
-                }
+
+                prevDocSnap = data.data.cursor;
+
 
 
                 assert adapter != null;
@@ -65,7 +64,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                     }else{
                         participants=new ArrayList<>();
                     }
-                    listActivities.add(new ListActivities(doc.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+                    listActivities.add(new ListActivities(res.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                             res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                             res.get(i).getTags()));
 
@@ -78,17 +77,14 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     }
 
     public void setRecycledDataFiltered(List<String> tags, List<ListActivities> listActivities,List<Float> range,GeoLocation location) throws InterruptedException {
-        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> data;
+        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> data;
 
 
         data = getActivitiesFiltered(tags,range,location);
         if (data.exception == null && data.data.data.size() > 0) {
             Log.d("_TAG", "Presenter " + " data not null");
             List<ActivityModel> res = new ArrayList<>(data.data.data);
-            List<DocumentSnapshot> doc = new ArrayList<>(data.data.cursor);
-            if(doc.size()>0){
-                prevDocSnap=doc.get(doc.size()-1);
-            }
+            prevDocSnap = data.data.cursor;
 
             for (int i = 0; i < res.size(); i++) {
                 if (res.get(i).getParticipants()!=null){
@@ -96,7 +92,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                 }else{
                     participants=new ArrayList<>();
                 }
-                listActivities.add(new ListActivities(doc.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+                listActivities.add(new ListActivities(res.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                         res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                         res.get(i).getTags()));
 
@@ -106,16 +102,15 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     }
 
     public void updateRecycledDataFiltered(List<String> tags,RecyclerView recyclerView,List<Float> range,GeoLocation location) throws InterruptedException {
-        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> data;
+        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> data;
 
         data = getActivitiesFilteredNext(tags,range,prevDocSnap,location);
         if (data.exception == null && data.data.cursor != null) {
             Log.d("_TAG", "Presenter " + " data not null");
             List<ActivityModel> res = new ArrayList<>(data.data.data);
-            List<DocumentSnapshot> doc = new ArrayList<>(data.data.cursor);
-            if(doc.size()>0){
-                prevDocSnap=doc.get(doc.size()-1);
-            }
+
+           prevDocSnap = data.data.cursor;
+
             ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
 
             assert adapter != null;
@@ -125,7 +120,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
                 if (res.get(i).getParticipants()!=null){
                     participants=res.get(i).getParticipants();
                 }
-                listActivities.add(new ListActivities(doc.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
+                listActivities.add(new ListActivities(res.get(i).getId(),res.get(i).getImage(),res.get(i).getTitle(),res.get(i).getLocation(),res.get(i).getEnd_date(),
                         res.get(i).getDescription(),res.get(i).getStart_date(),res.get(i).getCreation_date(),res.get(i).getAdminId(),participants,
                         res.get(i).getTags()));
 
@@ -133,7 +128,6 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
             adapter.setItems(listActivities);
         }else{
             getMore = false;
-
         }
 
     }

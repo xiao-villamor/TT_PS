@@ -16,9 +16,9 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 public class getFirstActivitiesFiltered {
 
-    public static Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> getActivitiesFiltered(List<String> tags, List<Float> Range, GeoLocation location) throws InterruptedException{
+    public static Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> getActivitiesFiltered(List<String> tags, List<Float> Range, GeoLocation location) throws InterruptedException{
 
-        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> res = new Result<>();
+        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> res = new Result<>();
         final activityRepository repository = new activityRepository();
 
         Thread t = new Thread(() -> {
@@ -32,6 +32,7 @@ public class getFirstActivitiesFiltered {
         t.start();
         t.join();
         t.interrupt();
+        Log.d("getFirstActivitiesFiltered", "getActivitiesFiltered: "+res.data.data.get(0).getId());
         return res;
 
     }

@@ -25,24 +25,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.auth.User;
 
-import static es.udc.psi.tt_ps.domain.activity.joinAnActivity.joinAnActivity;
+import static es.udc.psi.tt_ps.domain.activity.joinAnActivityUseCase.joinAnActivity;
+import static es.udc.psi.tt_ps.domain.activity.unsubscribeActivityUseCase.unsubscribeActivity;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicReference;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.databinding.ActivityDetailsBinding;
+import es.udc.psi.tt_ps.domain.activity.deleteActivityUseCase;
+import es.udc.psi.tt_ps.ui.fragments.ActivityListFragment;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
 
@@ -50,6 +50,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     private ActivityDetailsBinding binding;
     ListActivities activitiesList;
     View view;
+    String currentUserId;
+    FirebaseUser user;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +61,18 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());
         view = binding.getRoot();
         setContentView(view);
-        Log.d("Tag","details");
         Bundle extras = getIntent().getExtras();
         activitiesList= (ListActivities) extras.get("events");
+
         GeoPoint coord = new GeoPoint(extras.getDouble("latitud"),extras.getDouble("longitud"));
         activitiesList.setLocation(coord);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        currentUserId = user.getUid();
+
+        Log.d("TAG", "ID: " + activitiesList.getActivityId());
+        if(activitiesList.getParticipants().contains(currentUserId)){
+            binding.signup2.setText("Unsubscribe");
+        }
 
 
 
@@ -71,7 +82,6 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             e.printStackTrace();
         }
         setbuttons();
-        updateButtonsState(activitiesList);
     }
 
 
@@ -135,27 +145,35 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             if (!activitiesList.getParticipants().contains(currentUserId)){
                 try {
                     addUserToActivity(currentUserId);
+                    (MainActivity.getInstance()).dataChanged(activitiesList.getActivityId(),activitiesList,"edit");
                 } catch (InterruptedException | ParseException | IOException e) {
                     e.printStackTrace();
                 }
 
             }else{
-                Toast.makeText(this, "Ya se ha unido a esta actividad", Toast.LENGTH_SHORT).show();
+                try {
+                    unsubscribeUser(currentUserId);
+                    (MainActivity.getInstance()).dataChanged(activitiesList.getActivityId(),activitiesList,"edit");
+
+                } catch (InterruptedException | ParseException | IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
         });
 
         binding.deleteButton.setOnClickListener(view1 -> {
-            Toast.makeText(this, "implementar borrado", Toast.LENGTH_SHORT).show();
+            try {
+                deleteActivityUseCase.deleteActivity(activitiesList.getActivityId());
+                (MainActivity.getInstance()).dataChanged(activitiesList.getActivityId(),activitiesList,"del");
+                finish();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         });
 
-
-        binding.singup3.setOnClickListener(view1 -> {
-            Toast.makeText(this, "implementar mostrar mapas", Toast.LENGTH_SHORT).show();
-
-        });
 
         binding.updateButton.setOnClickListener(view1 -> {
             Intent intent = new Intent(this, EditActivity.class);
@@ -175,43 +193,38 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
         Result<QueryResult<ActivityModel,DocumentSnapshot>, Exception> res;
         if (!activitiesList.getParticipants().contains(currentUserId)){
-            res=joinAnActivity(activitiesList.getActivityId());
+            res=joinAnActivity(activitiesList.getActivityId(),currentUserId);
 
             if(res.exception==null){
-                activitiesList=new ListActivities(res.data.cursor.getId(),res.data.data.getImage(),res.data.data.getTitle(),res.data.data.getLocation(),res.data.data.getEnd_date(),
-                        res.data.data.getDescription(),res.data.data.getStart_date(),res.data.data.getCreation_date(),res.data.data.getAdminId(),res.data.data.getParticipants(),
-                        res.data.data.getTags());
+                activitiesList.getParticipants().add(currentUserId);
                 init();
-                updateButtonsState(activitiesList);
+                updateButtonsState("join");
             }
         }else{
             Toast.makeText(this, "Ya se ha unido a esta actividad", Toast.LENGTH_SHORT).show();
         }
     }
+    public void unsubscribeUser(String currentUserId) throws InterruptedException,ParseException,IOException{
+        Result<QueryResult<ActivityModel,DocumentSnapshot>, Exception> res;
 
-    public void updateButtonsState(ListActivities activitiesList){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        assert user != null;
-        String currentUserId= user.getUid();
-        if(activitiesList.getAdminId().equals(currentUserId)){
-            if (activitiesList.getParticipants().contains(currentUserId)){
-                binding.signup2.setVisibility(View.INVISIBLE);
-                binding.singup3.setVisibility(View.VISIBLE);
-            }else {
-                binding.singup3.setVisibility(View.INVISIBLE);
-                binding.signup2.setVisibility(View.VISIBLE);
-            }
-        }else {
-            binding.deleteButton.setVisibility(View.INVISIBLE);
-            binding.updateButton.setVisibility(View.INVISIBLE);
-            if (activitiesList.getParticipants().contains(currentUserId)){
-                binding.signup2.setVisibility(View.INVISIBLE);
-                binding.singup3.setVisibility(View.VISIBLE);
-            }else {
-                binding.singup3.setVisibility(View.INVISIBLE);
-                binding.signup2.setVisibility(View.VISIBLE);
-            }
+        res=unsubscribeActivity(activitiesList.getActivityId(),currentUserId);
+        if(res.exception==null){
+            activitiesList.getParticipants().remove(currentUserId);
+            init();
+            updateButtonsState("unsubscribe");
         }
+
+
+    }
+
+    public void updateButtonsState(String state){
+        //make switch case statement
+        if(state.equals("join")){
+            binding.signup2.setText("Unsubscribe");
+        }else if(state.equals("unsubscribe")){
+            binding.signup2.setText("Join");
+        }
+
 
     }
 

@@ -14,9 +14,9 @@ import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 public class getUserActivitiesUseCase {
 
-    public static Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> getActivitiesByAdmin(String uuid, Integer count) throws InterruptedException{
+    public static Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> getActivitiesByAdmin(String uuid, Integer count) throws InterruptedException{
 
-        Result<QueryResult<List<ActivityModel>,List<DocumentSnapshot>>, Exception> res = new Result<>();
+        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> res = new Result<>();
         final activityRepository repository = new activityRepository();
         Thread t = new Thread(() -> {
             try {
