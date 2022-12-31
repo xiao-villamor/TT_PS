@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.firebase.firestore.GeoPoint;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,11 +22,13 @@ public class createActivityUseCase {
 
         final activityRepository repository = new activityRepository();
         Result<Object, Exception> res = new Result<>();
+        List<String> participants = new ArrayList<>();
+        participants.add(adminId);
 
         Log.d("TAG",geohash);
 
 
-        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),location,adminId,null, interests, "",geohash,"");
+        ActivityModel activity = new ActivityModel(title, description, startDate, endDate, new Date(System.currentTimeMillis()),location,adminId,participants, interests, "",geohash,"");
         Thread thread = new Thread(() -> {
             try{
                 repository.createActivity(activity);
