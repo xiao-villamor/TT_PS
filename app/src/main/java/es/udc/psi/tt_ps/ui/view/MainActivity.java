@@ -197,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     }
 
     public void dataChanged(String id, ListActivities listActivities,String mode){
-        Log.d("dataChanged", "dataChanged");
         fragment.dataChanged(id,listActivities,mode);
 
     }

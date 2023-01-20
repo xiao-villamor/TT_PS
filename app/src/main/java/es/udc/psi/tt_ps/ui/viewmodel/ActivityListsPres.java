@@ -36,7 +36,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
     public void setRecycledDataFiltered(List<String> tags, List<Float> range, GeoLocation location, RecyclerView recyclerView) throws InterruptedException {
 
-        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> data;
+        Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
 
 
         ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
@@ -45,15 +45,13 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         if(data.data.data.size() == 0){
             Snackbar.make(recyclerView.getRootView(), "No hay actividades que coincidan con los filtros", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-                adapter.setItems(new ArrayList<>());
+            adapter.setItems(new ArrayList<>());
         }else {
 
             if (data.exception == null && data.data.cursor != null) {
                 List<ActivityModel> res = new ArrayList<>(data.data.data);
 
                 prevDocSnap = data.data.cursor;
-
-
 
                 assert adapter != null;
                 List<ListActivities> listActivities = new ArrayList<>();
@@ -77,7 +75,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     }
 
     public void setRecycledDataFiltered(List<String> tags, List<ListActivities> listActivities,List<Float> range,GeoLocation location) throws InterruptedException {
-        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> data;
+        Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
 
 
         data = getActivitiesFiltered(tags,range,location);
@@ -102,15 +100,13 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     }
 
     public void updateRecycledDataFiltered(List<String> tags,RecyclerView recyclerView,List<Float> range,GeoLocation location) throws InterruptedException {
-        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> data;
+        Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
 
         data = getActivitiesFilteredNext(tags,range,prevDocSnap,location);
         if (data.exception == null && data.data.cursor != null) {
             Log.d("_TAG", "Presenter " + " data not null");
             List<ActivityModel> res = new ArrayList<>(data.data.data);
-
-           prevDocSnap = data.data.cursor;
-
+            prevDocSnap = data.data.cursor;
             ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
 
             assert adapter != null;

@@ -61,15 +61,12 @@ public class NavigationBarFragment extends Fragment {
                     break;
                 case R.id.page_2:
                     listener.onFragmentInteraction(1);
-                    Log.d("TAG", "onCreateView: dashboard");
                     break;
                 case R.id.page_3:
                     listener.onFragmentInteraction(2);
-                    Log.d("TAG", "onCreateView: notifications");
                     break;
                 case R.id.page_4:
                     listener.onFragmentInteraction(3);
-                    Log.d("TAG", "onCreateView: Profile");
                     break;
             }
             return true;
@@ -80,7 +77,6 @@ public class NavigationBarFragment extends Fragment {
 
     public void onTabChanged(int tabId) {
       //change the menu index
-        Log.d("_TAG", "onTabChanged: " + tabId);
         BottomNavigationView menu = binding.bottomNavigation;
         switch (tabId) {
             case 0:

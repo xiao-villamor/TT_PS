@@ -121,7 +121,6 @@ public class activityService implements activityServiceInterface {
             }
         });
 
-        Log.d("_TAG", "DocumentSnapshot data: " + prevDocSnap);
         result.data=data;
         result.cursor=prevDocSnap;
         return result;
@@ -142,7 +141,7 @@ public class activityService implements activityServiceInterface {
                     .startAt(b.startHash)
                     .endAt(b.endHash)
                     .whereArrayContainsAny("tags", tags)
-                    .limit(5);
+                    .limit(10);
             tasks.add(q.get());
         }
 
@@ -156,14 +155,14 @@ public class activityService implements activityServiceInterface {
                         distanceInKm = distanceInKm/1000;
 
                         if(distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
+                            prevDocSnap = document;
                             ActivityModel activity = document.toObject(ActivityModel.class);
                             activity.setId(document.getId());
                             data.add(activity);
-                            prevDocSnap =document;
 
                         }
                     }else{
-                        Log.d("TAG", "No such document");
+                        Log.d("_TAG", "No such document");
                     }
                 });
             } catch (ExecutionException | InterruptedException | TimeoutException e) {
@@ -172,7 +171,9 @@ public class activityService implements activityServiceInterface {
         });
 
         result.data=data;
-        result.cursor=prevDocSnap;
+        result.cursor = prevDocSnap;
+        Log.d("_TAG", "getActivitiesFilteredNext: "+result.cursor.getData().toString());
+
         return result;
     }
 
@@ -184,10 +185,9 @@ public class activityService implements activityServiceInterface {
 
         List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInM);
 
+
         final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
         for (GeoQueryBounds b : bounds) {
-            Log.d("_TAG", "Bounds: " + b.startHash + " " + b.endHash);
-            Log.d("_TAG", "location GeoHash: " + GeoFireUtils.getGeoHashForLocation(location,5));
             Query q = db.collection("Activities")
                     .orderBy("geohash")
                     .orderBy("creation_date", Query.Direction.DESCENDING)
@@ -195,7 +195,7 @@ public class activityService implements activityServiceInterface {
                     .endAt(b.endHash)
                     .whereArrayContainsAny("tags", tags)
                     .startAfter(prevDocSnaprec)
-                    .limit(5);
+                    .limit(10);
 
             tasks.add(q.get());
         }
@@ -208,13 +208,13 @@ public class activityService implements activityServiceInterface {
 
                         double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation,location);
                         distanceInKm = distanceInKm/1000;
-                        Log.d("_TAG", "Distance: " + distanceInKm +"lower " +distanceRange.get(0) + "upper " + distanceRange.get(1));
 
                         if(distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
+                            prevDocSnap = document;
                             ActivityModel activity = document.toObject(ActivityModel.class);
                             activity.setId(document.getId());
+                            Log.d("_TAG", "getActivitiesFilteredNext: "+activity.getTitle());
                             data.add(activity);
-                            prevDocSnap =document;
                         }
                     }else{
                         Log.d("TAG", "No such document");
@@ -242,7 +242,7 @@ public class activityService implements activityServiceInterface {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
                 data.add(activity);
-                prevDocSnap =document;
+                prevDocSnap = document;
             }else{
                 Log.d("TAG", "No such document");
             }

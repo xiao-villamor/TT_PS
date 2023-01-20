@@ -187,6 +187,8 @@ public class ActivityListFragment extends Fragment {
                 if (!recyclerView.canScrollVertically(1) && presenter.getMore) {
                     int totalItems = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
                     int lastVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(recyclerView.getLayoutManager())).findLastVisibleItemPosition();
+                    Log.d(TAG,ACTIVITY+" totalItems: "+totalItems+" lastVisibleItem: "+lastVisibleItem);
+                    Log.d(TAG,ACTIVITY+" Comprobacion: " + (lastVisibleItem == totalItems - 1));
                     if (lastVisibleItem == totalItems - 1 && lastVisibleItem != 0) {
                         try {
                             presenter.updateRecycledDataFiltered(tags,recyclerView,range ,mLocation);
@@ -200,6 +202,7 @@ public class ActivityListFragment extends Fragment {
                 }
             }
         });
+        
 
     }
 

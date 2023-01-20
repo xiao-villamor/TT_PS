@@ -32,7 +32,6 @@ public class getFirstActivitiesFiltered {
         t.start();
         t.join();
         t.interrupt();
-        Log.d("getFirstActivitiesFiltered", "getActivitiesFiltered: "+res.data.data.get(0).getId());
         return res;
 
     }

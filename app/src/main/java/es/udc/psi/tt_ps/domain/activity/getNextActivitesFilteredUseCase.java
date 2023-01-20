@@ -1,5 +1,7 @@
 package es.udc.psi.tt_ps.domain.activity;
 
+import android.util.Log;
+
 import com.firebase.geofire.GeoLocation;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -21,6 +23,7 @@ public class getNextActivitesFilteredUseCase {
         Thread t = new Thread(() -> {
             try {
                 res.data = repository.getActivitiesFilteredNext(tags,Range,prev,location);
+                Log.d("getActivitiesFiltered", "getActivitiesFiltered: " + res.data.cursor);
 
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 res.exception = e;
