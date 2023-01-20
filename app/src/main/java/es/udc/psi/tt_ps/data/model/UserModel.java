@@ -46,9 +46,13 @@ public class UserModel {
         return name;
     }
 
+    public void setName(String name){this.name=name;}
+
     public String getSurname() {
         return surname;
     }
+
+    public void setSurname(String surname){this.surname=surname;}
 
     public Date getBirthDate() {
         return birthDate;
@@ -61,6 +65,8 @@ public class UserModel {
     public String getPhone() {
         return phone;
     }
+
+    public void setPhone(String phone){this.phone=phone;}
 
     public String getProfilePic() {
         return profilePic;
@@ -77,6 +83,8 @@ public class UserModel {
     public List<String> getInterests() {
         return interests;
     }
+
+    public void setInterests(List<String> newInterests){interests=newInterests;}
 
     public void profilePic(String image){
         this.profilePic = image;

@@ -9,15 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.GeoPoint;
 
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +33,9 @@ import es.udc.psi.tt_ps.databinding.ActivityUserInfoBinding;
 import es.udc.psi.tt_ps.domain.user.getUserInfoUseCase;
 import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
 import es.udc.psi.tt_ps.ui.view.DetailsActivity;
+import es.udc.psi.tt_ps.ui.view.EditActivity;
+import es.udc.psi.tt_ps.ui.view.EditUser;
+import es.udc.psi.tt_ps.ui.view.RegisterUserActivity;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.adapter.ListActivitiesAdapter;
 import es.udc.psi.tt_ps.ui.viewmodel.MainViewModel;
@@ -59,6 +66,18 @@ public class UserInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = ActivityUserInfoBinding.inflate(inflater, container, false);
+
+
+        init();
+        /*el codigo que estaba aqui y que inicializaba la actividad lo pase tal cual (no modifique nada) al
+        * metodo init() init() para que asi tambien se pueda ejecutar este codigo al terminar de editar la
+        * informacion y se muestre la info del usuario actualizada acorde a lo modificado*/
+
+        return binding.getRoot();
+
+    }
+
+    void init(){
         Result<UserModel, Exception> u = new Result<>();
         UserModel res = null;
         Log.d("_TAG",firebaseConnection.getUser().toString());
@@ -72,8 +91,6 @@ public class UserInfoFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
         try {
             Glide.with(this).load(res.getProfilePic()).into(binding.profilePic);
 
@@ -102,11 +119,33 @@ public class UserInfoFragment extends Fragment {
 
         });
 
+        binding.editUserButton.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getContext(), EditUser.class);
+            intent.putExtra("uuid", firebaseConnection.getUser());
+            startEditUser.launch(intent);
+
+        });
+
         initRecycledView();
-
-        return binding.getRoot();
-
     }
+
+
+    ActivityResultLauncher<Intent> startEditUser = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Bundle bundle = data.getExtras();
+                    if (bundle!= null) {
+                        Boolean b = (Boolean) bundle.get("edited");
+                        if(b){
+                            init();
+                        }
+
+                    }
+                }
+            }
+    );
 
     /*
 
