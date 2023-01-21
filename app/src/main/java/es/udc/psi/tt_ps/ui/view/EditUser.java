@@ -5,7 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -31,12 +31,10 @@ import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.databinding.ActivityEditUserBinding;
-import es.udc.psi.tt_ps.domain.activity.editActivityInfoUseCase;
 import es.udc.psi.tt_ps.domain.activity.editUserInfoUseCase;
-import es.udc.psi.tt_ps.domain.activity.uploadActivityPicUseCase;
+import es.udc.psi.tt_ps.domain.activity.updatePasswordUseCase;
 import es.udc.psi.tt_ps.domain.activity.uploadUserPicUseCase;
 import es.udc.psi.tt_ps.domain.user.getUserInfoUseCase;
-import es.udc.psi.tt_ps.domain.user.loginUserUseCase;
 import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
 
 public class EditUser extends AppCompatActivity {
@@ -46,7 +44,6 @@ public class EditUser extends AppCompatActivity {
     private UserModel newUser;
     List<String> selectedItems = new ArrayList();
     Uri uriImage=null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +62,7 @@ public class EditUser extends AppCompatActivity {
         });
 
         binding.buttonInterests.setOnClickListener(v -> {
-            mostrarDialogo();
+            interestsDialogo();
         });
 
         binding.cancelEditUser.setOnClickListener(view1 -> {
@@ -76,6 +73,10 @@ public class EditUser extends AppCompatActivity {
             if(validate()){
                 showAceptDialog();
             }
+        });
+
+        binding.buttonNewPassword.setOnClickListener(view1 -> {
+            passwordDialog();
         });
 
 
@@ -116,7 +117,7 @@ public class EditUser extends AppCompatActivity {
         }
     }
 
-    private void mostrarDialogo(){
+    private void interestsDialogo(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Choose the interests");
         //Array con los posibles intereses
@@ -161,6 +162,70 @@ public class EditUser extends AppCompatActivity {
         AlertDialog alert = dialogo.create();
         alert.show();
     }
+
+
+    private void passwordDialog(){
+        AlertDialog.Builder buldier = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_new_password, null);
+        EditText newPass=mView.findViewById(R.id.newPassword);
+        EditText newPass2=mView.findViewById(R.id.newPassword2);
+
+
+        buldier.setPositiveButton("Acept", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        buldier.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        buldier.setView(mView);
+        AlertDialog dialog = buldier.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(newPass.getText().toString().equals(newPass2.getText().toString())){
+                    if(newPass.getText().toString().length()<6){
+                        Toast.makeText(EditUser.this, "The password must have min 6", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Log.d("TAG", "New passwords match");
+                        updatePassword(newPass.getText().toString());
+                        dialog.dismiss();
+                    }
+                }else{
+                    Log.d("TAG", "New passwords do not match");
+                    Toast.makeText(EditUser.this, "The new password does not match", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+
+    }
+
+    void updatePassword(String pass){
+        try {
+            Result<Object, Exception> res= updatePasswordUseCase.updateUserPassword(pass);
+            if(res.exception!=null){
+                Log.d("TAG", res.exception.toString());
+                Toast.makeText(getApplicationContext(), "The new password cannot be updated", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getApplicationContext(), "The password has been updated", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void showCancelDialog(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
@@ -341,6 +406,8 @@ public class EditUser extends AppCompatActivity {
             return true;
         }
     }
+
+
 
 
 
