@@ -1,11 +1,17 @@
 package es.udc.psi.tt_ps.ui.view;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -13,8 +19,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
@@ -22,6 +33,8 @@ import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.databinding.ActivityEditUserBinding;
 import es.udc.psi.tt_ps.domain.activity.editActivityInfoUseCase;
 import es.udc.psi.tt_ps.domain.activity.editUserInfoUseCase;
+import es.udc.psi.tt_ps.domain.activity.uploadActivityPicUseCase;
+import es.udc.psi.tt_ps.domain.activity.uploadUserPicUseCase;
 import es.udc.psi.tt_ps.domain.user.getUserInfoUseCase;
 import es.udc.psi.tt_ps.domain.user.loginUserUseCase;
 import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
@@ -32,6 +45,7 @@ public class EditUser extends AppCompatActivity {
     private String uuid;
     private UserModel newUser;
     List<String> selectedItems = new ArrayList();
+    Uri uriImage=null;
 
 
     @Override
@@ -44,6 +58,11 @@ public class EditUser extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         uuid = extras.getString("uuid");
         setInfo();
+
+
+        binding.buttonUserImage.setOnClickListener(view1 -> {
+            chooseImg();
+        });
 
         binding.buttonInterests.setOnClickListener(v -> {
             mostrarDialogo();
@@ -59,7 +78,6 @@ public class EditUser extends AppCompatActivity {
             }
         });
 
-        //aplycChanges
 
     }
 
@@ -73,7 +91,7 @@ public class EditUser extends AppCompatActivity {
                 Log.d("TAG", res.exception.toString());
                 onDestroy();
             }else{
-                Log.d("TAG", "Usuario ontenido");
+                Log.d("TAG", "Usuario obtenido");
                 UserModel user = res.data;
                 newUser=user;
 
@@ -103,7 +121,7 @@ public class EditUser extends AppCompatActivity {
         dialogo.setTitle("Choose the interests");
         //Array con los posibles intereses
         String[] interests=getResources().getStringArray(R.array.interests_array);
-
+        selectedItems=new ArrayList();
 
         dialogo.setMultiChoiceItems(interests, null,
                 new DialogInterface.OnMultiChoiceClickListener() {
@@ -190,6 +208,25 @@ public class EditUser extends AppCompatActivity {
 
     void updateUser(){
 
+        Log.d("TAG", "Comienza la actualizacion");
+        //Upload the image and get the URL
+        if(uriImage!=null){
+            try {
+
+                Result<String, Exception> resPic= uploadUserPicUseCase.uploadUserPic(uuid, compress());
+                if(resPic.exception!=null){
+                    Log.d("TAG", resPic.exception.toString());
+                    Toast.makeText(getApplicationContext(), "The new picture cannot be updated", Toast.LENGTH_SHORT).show();
+                }else{
+                    newUser.profilePic(resPic.data);
+                    Log.d("TAG", "New uri: " + resPic.data);
+                }
+
+            } catch (InterruptedException | TimeoutException | ExecutionException | FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
         aplyChanges();
         try {
             Result<Object, Exception> res = editUserInfoUseCase.updateEditedUser(newUser);
@@ -219,6 +256,49 @@ public class EditUser extends AppCompatActivity {
         newUser.setDescription(binding.etDescription.getText().toString());
         newUser.setPhone(binding.etPhone.getText().toString());
     }
+
+
+    private byte[] compress(){
+        if(uriImage==null || uriImage== Uri.parse("")){
+            return null;
+        }else{
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), uriImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("TAG", "No se pudo obtener el bitmap de la imagen");
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            //here you can choose quality factor in third parameter(ex. i choosen 25)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+
+            return baos.toByteArray();
+        }
+
+    }
+
+    private void chooseImg(){
+
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.setType("image/*");
+        my_startActivityForResult.launch(i);
+    }
+
+    ActivityResultLauncher<Intent> my_startActivityForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                    Intent data = result.getData();
+                    if(data!=null){
+                        uriImage=data.getData();
+                        Log.d("TAG", uriImage.toString());
+
+                    }
+                }
+            }
+    );
 
 
     private boolean validate(){
