@@ -160,7 +160,7 @@
                     <GridView
                         android:id="@+id/interestsGrid"
                         android:layout_width="320dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="100dp"
                         android:layout_gravity="center"
                         android:numColumns="auto_fit"/>
 

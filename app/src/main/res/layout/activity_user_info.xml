@@ -20,16 +20,35 @@
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="logout"
-            android:layout_marginStart="5dp"
 
-            android:backgroundTint="@android:color/holo_red_dark">
-        </Button>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/editUserButton"
+                style="?attr/materialIconButtonFilledStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="150dp"
+                android:layout_gravity="center"
+                app:icon="@drawable/ic_baseline_edit_24" />
+
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="logout"
+
+                android:backgroundTint="@android:color/holo_red_dark">
+            </Button>
+        </LinearLayout>
+
+
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profile_pic"
@@ -41,12 +60,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
             app:srcCompat="@drawable/_92781" />
-        <Button
-            android:id="@+id/editUserButton"
-            style="?attr/materialIconButtonFilledStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/ic_baseline_edit_24" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

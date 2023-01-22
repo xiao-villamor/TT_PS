@@ -80,6 +80,7 @@ public class EditUser extends AppCompatActivity {
         });
 
 
+
     }
 
 
@@ -149,6 +150,8 @@ public class EditUser extends AppCompatActivity {
                     selectedItems=null;
                 }
                 newUser.setInterests(selectedItems);
+                tagAdapter tagAdapter = new tagAdapter(newUser.getInterests().toArray(new String[0]));
+                binding.interestsGrid.setAdapter(tagAdapter);
             }
         });
         dialogo.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
@@ -230,7 +233,7 @@ public class EditUser extends AppCompatActivity {
     private void showCancelDialog(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Cancel");
-        dialogo.setMessage("Do you want to undo the modifications?");
+        dialogo.setMessage("Do you want to undo the personal information modifications?");
 
         dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
@@ -252,7 +255,7 @@ public class EditUser extends AppCompatActivity {
     private void showAceptDialog(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Acept");
-        dialogo.setMessage("Do you want to save the modifications?");
+        dialogo.setMessage("Do you want to save this personal information?");
 
         dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
