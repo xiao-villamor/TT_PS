@@ -1,6 +1,10 @@
 package es.udc.psi.tt_ps.ui.view;
 
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -19,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.geofire.GeoLocation;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -34,6 +39,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 import es.udc.psi.tt_ps.R;
@@ -76,22 +82,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         return mInstance;
     }
 
-    private void requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (permissionsToRequest.size() > 0) {
-
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    1);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +90,14 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        String[] permissions = {Manifest.permission.INTERNET,Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+
+        permissionLauncherMultiple.launch(permissions);
+
+
         mInstance = this;
         mainViewModel.setAuthStateChangeListener(this);
         View decorView = getWindow().getDecorView();
@@ -110,16 +108,8 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
             actionBar.hide();
         }
 
-
         firebaseConnection connection = new firebaseConnection();
         connection.connect(this);
-
-        requestPermissionsIfNecessary(new String[]{
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-        });
 
         adapter = new ScreenSlidePageAdapter(this);
         viewPager2 = binding.pager;
@@ -135,6 +125,36 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
 
     }
+
+    private final ActivityResultLauncher<String[]> permissionLauncherMultiple = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            new ActivityResultCallback<Map<String, Boolean>>() {
+                @Override
+                public void onActivityResult(Map<String, Boolean> result) {
+
+                //Check if permissions are granted or not
+                Log.d("TAG", "permissions requested");
+                boolean allAreGranted = true;
+                for(Boolean isGranted : result.values()){
+                    Log.d("TAG","onActivityResult : isGranted " + isGranted);
+                    allAreGranted = allAreGranted && isGranted;
+
+                }
+
+                if(allAreGranted){
+
+                    Toast.makeText(MainActivity.this,"All permissions granted...",Toast.LENGTH_SHORT).show();
+                    //start app
+                }else{
+                    Toast.makeText(MainActivity.this,"All or some permissions denied...",Toast.LENGTH_SHORT).show();
+                    //close app
+                    finish();
+
+                }
+
+            }
+        });
+
 
     private void applySavedFilters(BottomSheetDialog bottomSheetDialog){
         bottomSheetDialog.setContentView(R.layout.filter_dialog);
