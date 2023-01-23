@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,6 +27,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.core.firebaseConnection;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
@@ -106,6 +109,7 @@ public class UserInfoFragment extends Fragment {
         if(res.getDescription() != null){
             binding.desc.setText(res.getDescription());
         }
+        /*
         binding.logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,12 +123,9 @@ public class UserInfoFragment extends Fragment {
 
         });
 
-        binding.editUserButton.setOnClickListener(view1 -> {
-            Intent intent = new Intent(getContext(), EditUser.class);
-            intent.putExtra("uuid", firebaseConnection.getUser());
-            startEditUser.launch(intent);
+         */
 
-        });
+        binding.editUserButton.setOnClickListener(this::showMenu);
 
         initRecycledView();
     }
@@ -193,7 +194,31 @@ public class UserInfoFragment extends Fragment {
 
      */
 
+    public void showMenu(View v){
+        PopupMenu popupMenu = new PopupMenu(getActivity().getApplicationContext(),v);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Log.d(TAG, "onMenuItemClick: " + item.getItemId());
+                switch (item.getItemId()){
+                    case R.id.option_1:
+                        Intent intent = new Intent(getContext(), EditUser.class);
+                        intent.putExtra("uuid", firebaseConnection.getUser());
+                        startEditUser.launch(intent);
+                        return true;
+                    case R.id.option_2:
+                        mainViewModel.signOut();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
 
+
+        });
+        popupMenu.inflate(R.menu.pop_up_menu);
+        popupMenu.show();
+    }
 
     public void initRecycledView(){
         activitiesList = new ArrayList<>();
