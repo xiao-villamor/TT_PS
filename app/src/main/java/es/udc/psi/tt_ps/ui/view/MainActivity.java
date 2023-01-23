@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     private  ScreenSlidePageAdapter adapter;
     private NavigationBarFragment navigationBarFragment;
     public ActivityListFragment fragment;
+    public SavedActivitiesFragment fragmentS;
     private static MainActivity mInstance;
 
     public static MainActivity getInstance(){
@@ -143,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
                 if(allAreGranted){
 
-                    Toast.makeText(MainActivity.this,"All permissions granted...",Toast.LENGTH_SHORT).show();
                     //start app
                 }else{
                     Toast.makeText(MainActivity.this,"All or some permissions denied...",Toast.LENGTH_SHORT).show();
@@ -218,7 +218,9 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
     public void dataChanged(String id, ListActivities listActivities,String mode){
         fragment.dataChanged(id,listActivities,mode);
-
+    }
+    public void dataChangedSaved(String id, ListActivities listActivities,String mode){
+        fragmentS.dataChangedSaved(id,listActivities,mode);
     }
 
 
@@ -281,7 +283,8 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
                     return new SearchFragment();
 
                 case 2:
-                    return new SavedActivitiesFragment();
+                    fragmentS = new SavedActivitiesFragment();
+                    return fragmentS;
 
                 case 3:
                     return new UserInfoFragment();

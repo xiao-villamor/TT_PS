@@ -105,6 +105,29 @@ public class activityService implements activityServiceInterface {
         return result;
     }
 
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getNextActivitiesByAdminId(String adminId,int count,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
+        List<ActivityModel> data = new ArrayList<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+
+        Query ref = db.collection("Activities").whereEqualTo("adminId", adminId).orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(count);
+        Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if(document != null) {
+                ActivityModel activity = document.toObject(ActivityModel.class);
+                activity.setId(document.getId());
+                data.add(activity);
+                prevDocSnap = document;
+            }else{
+                Log.d("TAG", "No such document");
+            }
+        });
+        
+        result.data=data;
+        result.cursor=prevDocSnap;
+
+        return result;
+    }
+
+
     public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
         QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
@@ -172,7 +195,6 @@ public class activityService implements activityServiceInterface {
 
         result.data=data;
         result.cursor = prevDocSnap;
-        Log.d("_TAG", "getActivitiesFilteredNext: "+result.cursor.getData().toString());
 
         return result;
     }
@@ -280,7 +302,5 @@ public class activityService implements activityServiceInterface {
 
         return uri;
     }
-
-
 
 }

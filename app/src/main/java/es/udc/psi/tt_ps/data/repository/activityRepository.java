@@ -39,6 +39,10 @@ public class activityRepository {
         return api.getActivitiesByAdminId(adminId,count);
     }
 
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getNextActivitiesByAdminId(String adminId,int count,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
+        return api.getNextActivitiesByAdminId(adminId,count,prevDocSnaprec);
+    }
+
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivities();
     }
@@ -50,6 +54,7 @@ public class activityRepository {
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivitiesFiltered(tags,distanceRange,location);
     }
+
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException{
         return api.getActivitiesFilteredNext(tags,distanceRange,prevDocSnaprec,location);
     }

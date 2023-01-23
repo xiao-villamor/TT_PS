@@ -34,7 +34,8 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
 
 
-    public void setRecycledDataFiltered(List<String> tags, List<Float> range, GeoLocation location, RecyclerView recyclerView) throws InterruptedException {
+    public void setRecycledDataFiltered(List<String> tags, List<Float> range, GeoLocation location,
+                                        RecyclerView recyclerView) throws InterruptedException {
 
         Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
 
@@ -74,7 +75,8 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         }
     }
 
-    public void setRecycledDataFiltered(List<String> tags, List<ListActivities> listActivities,List<Float> range,GeoLocation location) throws InterruptedException {
+    public void setRecycledDataFiltered(List<String> tags, List<ListActivities> listActivities,
+                                        List<Float> range,GeoLocation location) throws InterruptedException {
         Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
 
 
@@ -99,7 +101,8 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
         }
     }
 
-    public void updateRecycledDataFiltered(List<String> tags,RecyclerView recyclerView,List<Float> range,GeoLocation location) throws InterruptedException {
+    public void updateRecycledDataFiltered(List<String> tags,RecyclerView recyclerView,
+                                           List<Float> range,GeoLocation location) throws InterruptedException {
         Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
 
         data = getActivitiesFilteredNext(tags,range,prevDocSnap,location);

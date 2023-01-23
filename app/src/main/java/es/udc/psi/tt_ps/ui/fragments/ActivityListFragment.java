@@ -215,6 +215,7 @@ public class ActivityListFragment extends Fragment {
         intent.putExtra("longitud",listActivities.getLocation().getLongitude());
         startActivity(intent);
     }
+
     public void dataChanged(String id ,ListActivities listActivities,String mode){
         Log.d("TAG", "dataChanged: " + id);
         if(mode == "del"){
@@ -238,6 +239,5 @@ public class ActivityListFragment extends Fragment {
             }
 
         }
-
     }
 }

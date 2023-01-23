@@ -107,10 +107,11 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         binding.cardDate.setText(StartDate2 + " - " + EndDate2);
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses = geocoder.getFromLocation(activitiesList.getLocation().getLatitude(), activitiesList.getLocation().getLongitude(), 1);
-        String cityName = addresses.get(0).getLocality();
-        if(cityName == null){
+        String cityName = "";
+        if(addresses.size() != 0) {
             cityName = addresses.get(0).getSubAdminArea();
         }
+
         binding.location.setText(cityName);
         binding.cardDescription.setText(activitiesList.getDescription());
         binding.cardParticipants.setText(activitiesList.getParticioants());
@@ -129,8 +130,6 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     private void showMap(){
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.activity_map);
-
-
         supportMapFragment.getMapAsync(this);
 
     }
@@ -166,7 +165,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         binding.deleteButton.setOnClickListener(view1 -> {
             try {
                 deleteActivityUseCase.deleteActivity(activitiesList.getActivityId());
-                (MainActivity.getInstance()).dataChanged(activitiesList.getActivityId(),activitiesList,"del");
+                MainActivity mainActivity = MainActivity.getInstance();
+                mainActivity.dataChanged(activitiesList.getActivityId(),activitiesList,"del");
+                mainActivity.dataChangedSaved(activitiesList.getActivityId(),activitiesList,"del");
                 finish();
             } catch (InterruptedException e) {
                 e.printStackTrace();
