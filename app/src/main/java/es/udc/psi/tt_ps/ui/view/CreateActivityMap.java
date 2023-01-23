@@ -92,14 +92,18 @@ public class CreateActivityMap extends FragmentActivity implements MapFragment.O
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    mMap.clear();
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                    latitude=latLng.latitude;
-                    longitude=latLng.longitude;
-                    pointed=true;
+                    if(addressList.size()==0){
+                        Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        latitude = latLng.latitude;
+                        longitude = latLng.longitude;
+                        pointed = true;
+                    }
 
                 }
                 return false;
