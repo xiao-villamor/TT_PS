@@ -29,7 +29,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/menu"
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                android:layout_width="140dp"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:hint="Rol"
                 android:layout_marginRight="20dp"
@@ -37,6 +37,7 @@
                 android:layout_gravity="center|end">
 
                 <AutoCompleteTextView
+                    android:id="@+id/filter_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"

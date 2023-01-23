@@ -60,7 +60,6 @@ public class SavedActivitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSavedActivitiesBinding.inflate(inflater, container, false);
-
         try {
             initRecycledView();
         } catch (InterruptedException e) {

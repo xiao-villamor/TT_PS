@@ -43,7 +43,7 @@ import es.udc.psi.tt_ps.domain.activity.createActivityUseCase;
 public class ActivityCreateActivity extends AppCompatActivity {
 
     private ActivityCreateBinding binding;
-    private List<String> selectedTags=null;
+    private List<String> selectedTags=new ArrayList();;
     private double latitude;
     private double longitude;
     private java.util.Date startDate;
@@ -101,7 +101,6 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
 
         binding.activityTag.setOnClickListener(v -> {
-            selectedTags = new ArrayList();
             showTagsChooser();
         });
 
@@ -276,9 +275,15 @@ public class ActivityCreateActivity extends AppCompatActivity {
         dialogo.setTitle("Choose the tags");
         //Array con los posibles intereses
         String[] interests=getResources().getStringArray(R.array.interests_array);
+        boolean[] checkedItems = new boolean[interests.length];
+        //make position true if this item is in checkedItems
+        Log.d("_TAG", "antes " + selectedTags.toString());
+        for (int i = 0; i < interests.length; i++) {
+            checkedItems[i] = selectedTags.contains(interests[i]);
+        }
 
 
-        dialogo.setMultiChoiceItems(interests, null,
+        dialogo.setMultiChoiceItems(interests, checkedItems,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which,
@@ -302,6 +307,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                 if(selectedTags.isEmpty()){
                     selectedTags=null;
                 }
+                Log.d("_TAG", selectedTags.toString());
             }
         });
         dialogo.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
@@ -312,6 +318,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                 dialogInterface.dismiss();
             }
         });
+
         AlertDialog alert = dialogo.create();
         alert.show();
     }
