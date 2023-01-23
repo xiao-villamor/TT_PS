@@ -1,25 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.view.CreateActivityMap">
+    tools:context=".ui.view.MapFragment">
 
-    <FrameLayout
+
+    <fragment
+        android:id="@+id/google_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_weight="10"
-        android:layout_height="0dp"
-        android:id="@+id/frame_layout">
+        android:layout_height="match_parent" />
 
-    </FrameLayout>
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search..."
+            android:elevation="5dp">
+
+        </androidx.appcompat.widget.SearchView>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <Button
         android:id="@+id/pointButton"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Submit" />
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_gravity="bottom|center_horizontal"/>
 
-</LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

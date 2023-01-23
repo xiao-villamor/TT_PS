@@ -5,6 +5,7 @@ import android.graphics.Camera;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ public class MapFragment extends Fragment {
 
     OnPointSelected clickedListener;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class MapFragment extends Fragment {
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.google_map);
+
 
 
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
