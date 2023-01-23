@@ -45,11 +45,12 @@ public class LogInActivity extends AppCompatActivity {
 
         });
 
-        binding.signup.setOnClickListener(v -> {
-            Intent userProfileIntent = new Intent(this, RegisterUserActivity.class);
-            startActivity(userProfileIntent);
-        });
 
+    }
+
+    public void clickTextView(View view){
+        Intent userProfileIntent = new Intent(this, RegisterUserActivity.class);
+        startActivity(userProfileIntent);
     }
 
     @Override
