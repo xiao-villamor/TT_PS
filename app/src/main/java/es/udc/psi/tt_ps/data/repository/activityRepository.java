@@ -46,6 +46,14 @@ public class activityRepository {
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivities();
     }
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getAssistantActivitiesById(String uuid,int count) throws ExecutionException, InterruptedException,TimeoutException {
+        return api.getAssistantActivitiesById(uuid,count);
+    }
+
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getNextAssistantActivitiesById(String uuid,int count,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException,TimeoutException{
+        return api.getNextAssistantActivitiesById(uuid,count,prevDocSnaprec);
+    }
+
 
     public  QueryResult<List<ActivityModel>,DocumentSnapshot> getNextActivities(DocumentSnapshot prevDocSnap) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getNextActivities(prevDocSnap);

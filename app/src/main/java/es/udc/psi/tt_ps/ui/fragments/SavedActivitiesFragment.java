@@ -13,9 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import com.firebase.geofire.GeoLocation;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +31,7 @@ import es.udc.psi.tt_ps.databinding.ActivityShowActivitiesBinding;
 import es.udc.psi.tt_ps.databinding.FragmentSavedActivitiesBinding;
 import es.udc.psi.tt_ps.ui.adapter.ListActivitiesAdapter;
 import es.udc.psi.tt_ps.ui.view.DetailsActivity;
+import es.udc.psi.tt_ps.ui.view.MainActivity;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityViewModel;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
@@ -41,7 +47,8 @@ public class SavedActivitiesFragment extends Fragment {
     ListActivitiesAdapter listActivitiesAdapter;
     String user = firebaseConnection.getUser();
     ActivityViewModel activityViewModel;
-
+    AutoCompleteTextView autoCompleteTextView;
+    private String state = "Admin";
 
 
     public static SavedActivitiesFragment newInstance(String param1, String param2) {
@@ -60,6 +67,32 @@ public class SavedActivitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSavedActivitiesBinding.inflate(inflater, container, false);
+        binding.filterButton.setText("Admin", false);
+        //detect when the user change the filter
+        autoCompleteTextView = binding.filterButton;
+
+        autoCompleteTextView.setThreshold(1);
+
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("TAG", "State: " + state + " - " + autoCompleteTextView.getText().toString());
+                if (!(autoCompleteTextView.getText().toString().equals(state))) {
+                    Log.d("TAG", "tag Changed");
+                    state = autoCompleteTextView.getText().toString();
+                    try {
+                        Log.d("TAG", "tag Changed" + state);
+                        presenter.setRecycledDataByRol(state,recyclerView,user);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    listActivitiesAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
+
         try {
             initRecycledView();
         } catch (InterruptedException e) {
@@ -76,7 +109,7 @@ public class SavedActivitiesFragment extends Fragment {
         activitiesList = new ArrayList<>();
 
         try {
-            presenter.setRecycledDataByRol( activitiesList, user,"admin");
+            presenter.setRecycledDataByRol( activitiesList, user,"Admin");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -100,7 +133,11 @@ public class SavedActivitiesFragment extends Fragment {
 
                     if (lastVisibleItem == totalItems - 1 && lastVisibleItem != 0) {
                         try {
-                            presenter.updateRecycledDataByRol(recyclerView, user, "admin");
+                            if(state.equals("Admin")){
+                                presenter.updateRecycledDataByRol(recyclerView, user, "Admin");
+                            }else{
+                                presenter.updateRecycledDataByRol(recyclerView, user, "Assistant");
+                            }
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

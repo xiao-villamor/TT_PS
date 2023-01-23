@@ -74,5 +74,6 @@ public class userRepository {
        return api.uploadProfilePic(uuid,image);
     }
 
+
 }
     

@@ -82,6 +82,28 @@ public class activityService implements activityServiceInterface {
         return result;
     }
 
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getAssistantActivitiesById(String uuid,int count) throws ExecutionException, InterruptedException,TimeoutException{
+
+        List<ActivityModel> data = new ArrayList<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        Log.d("TAG", "GetAssist Activities: "+uuid);
+
+        Query ref = db.collection("Activities").whereArrayContains("participants", uuid).orderBy("start_date", Query.Direction.DESCENDING).limit(count);
+        Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if(document != null) {
+                ActivityModel activity = document.toObject(ActivityModel.class);
+                activity.setId(document.getId());
+                data.add(activity);
+                prevDocSnap = document;
+            }else{
+                Log.d("TAG", "No such document");
+            }
+        });
+        result.data=data;
+        result.cursor=prevDocSnap;
+        return result;
+    }
+
 
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
@@ -90,7 +112,28 @@ public class activityService implements activityServiceInterface {
 
 
         Query ref = db.collection("Activities").whereEqualTo("adminId", adminId).orderBy("creation_date", Query.Direction.DESCENDING).limit(count);
-        Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+        Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if(document != null) {
+                ActivityModel activity = document.toObject(ActivityModel.class);
+                activity.setId(document.getId());
+                data.add(activity);
+                prevDocSnap = document;
+            }else{
+                Log.d("TAG", "No such document");
+            }
+        });
+        result.data=data;
+        result.cursor=prevDocSnap;
+        return result;
+    }
+
+    public QueryResult<List<ActivityModel>,DocumentSnapshot> getNextAssistantActivitiesById(String uuid,int count,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException,TimeoutException{
+
+        List<ActivityModel> data = new ArrayList<>();
+        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+
+        Query ref = db.collection("Activities").whereArrayContains("participants", uuid).orderBy("start_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(count);
+        Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
@@ -110,7 +153,7 @@ public class activityService implements activityServiceInterface {
         QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
         Query ref = db.collection("Activities").whereEqualTo("adminId", adminId).orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(count);
-        Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+        Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
@@ -133,7 +176,7 @@ public class activityService implements activityServiceInterface {
         QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
 
         Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).limit(5);
-        Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+        Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
