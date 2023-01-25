@@ -3,6 +3,7 @@ package es.udc.psi.tt_ps.data.network.activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
@@ -12,9 +13,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -24,9 +28,12 @@ import com.google.firebase.storage.UploadTask;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
+
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.QueryResult;
 
@@ -346,4 +353,30 @@ public class activityService implements activityServiceInterface {
         return uri;
     }
 
+    public void ActivityListener(String uuid, Consumer<String> listener){
+        Query ref = db.collection("Activities").whereArrayContains("participants", uuid);
+        ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    return;
+                }
+
+                for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case MODIFIED:
+                            listener.accept(dc.getDocument().getString("title") + " Modified");
+                            break;
+                        case REMOVED:
+                            Log.d("TAG", "Removed city: " + dc.getDocument().getData());
+                            listener.accept(dc.getDocument().getString("title") + " Deleted");
+                            break;
+                    }
+                }
+
+            }
+        });
+    }
 }

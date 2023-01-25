@@ -1,12 +1,16 @@
 package es.udc.psi.tt_ps.ui.view;
 
 
+import static es.udc.psi.tt_ps.domain.activity.ListenToActivityChangesUseCase.listenToActivityChanges;
+
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +20,12 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -40,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 
 import es.udc.psi.tt_ps.R;
@@ -78,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     public ActivityListFragment fragment;
     public SavedActivitiesFragment fragmentS;
     private static MainActivity mInstance;
+    String CHANNEL_ID ="1";
+    int notificationid;
 
     public static MainActivity getInstance(){
         return mInstance;
@@ -124,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
             }
         });
 
+        createNotificationChannel();
+        Consumer<String> i = s -> createNotification(s);
+        listenToActivityChanges(firebaseConnection.getUser(),i);
+
 
     }
 
@@ -155,6 +170,41 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
             }
         });
 
+    private void createNotification(String title){
+        String desc;
+        if(title.contains("Modified")){
+            desc = "The activity Has been edited enter in the app to see details.";
+        }else{
+            desc = "The activity Has been deleted enter in the app to see details.";
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(title)
+                .setContentText(desc)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(desc))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(notificationid, builder.build());
+        notificationid++;
+
+    }
+
+    private void createNotificationChannel(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel";
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    name, importance);
+            channel.setDescription(description);
+            NotificationManager notifManager = getSystemService(NotificationManager.class);
+            notifManager.createNotificationChannel(channel);
+        }
+    }
+
 
     private void applySavedFilters(BottomSheetDialog bottomSheetDialog){
         bottomSheetDialog.setContentView(R.layout.filter_dialog);
@@ -181,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         Button button = bottomSheetDialog.findViewById(R.id.button_save);
         assert button != null;
         button.setOnClickListener(v -> {
-
             ChipGroup chipGroup = bottomSheetDialog.findViewById(R.id.chip_group);
             List<String> filter_tags = new ArrayList<>();
             for (int i = 0; i < chipGroup.getChildCount(); i++) {
@@ -219,10 +268,10 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     public void dataChanged(String id, ListActivities listActivities,String mode){
         fragment.dataChanged(id,listActivities,mode);
     }
+
     public void dataChangedSaved(String id, ListActivities listActivities,String mode){
         fragmentS.dataChangedSaved(id,listActivities,mode);
     }
-
 
     @Override
     protected void onStart() {
@@ -294,6 +343,5 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
             }
         }
     }
-
 
 }

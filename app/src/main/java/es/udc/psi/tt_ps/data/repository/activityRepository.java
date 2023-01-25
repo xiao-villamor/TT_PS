@@ -5,8 +5,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.QueryResult;
@@ -69,6 +71,10 @@ public class activityRepository {
 
     public String uploadActivityPic(String uuid, byte[] image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException{
         return api.uploadActivityPic(uuid, image);
+    }
+
+    public void ActivityListener(String uuid, Consumer<String> listener){
+        api.ActivityListener(uuid,listener);
     }
 
 }
