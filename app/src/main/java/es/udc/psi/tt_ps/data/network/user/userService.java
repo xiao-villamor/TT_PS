@@ -148,21 +148,33 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
         return user;
     }
 
-    public List<UserModel> getUserByUsername(String username) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<UserModel>,DocumentSnapshot> getUserByUsername(String username,DocumentSnapshot adminId) throws ExecutionException, InterruptedException, TimeoutException {
 
         List<UserModel> data = new ArrayList<>();
-        //DocumentSnapshot doc;
-        //QueryResult<List<UserModel>,DocumentSnapshot> result = new QueryResult<>();
-        Query ref = db.collection("User_Info");
+        QueryResult<List<UserModel>,DocumentSnapshot> result =new QueryResult<>();
+        Query ref;
+        if (adminId==null) {
+            ref = db.collection("User_Info")
+                    .whereEqualTo("name",username)
+                    .limit(5);
+
+        }else {
+            ref = db.collection("User_Info")
+                    .whereEqualTo("name",username)
+                    .startAfter(adminId)
+                    .limit(5);
+        }
         Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {
                 UserModel user = document.toObject(UserModel.class);
                 data.add(user);
+                result.cursor = document;
             }else{
                 Log.d("TAG", "No such document");
             }
         });
-        return data;
+        result.data=data;
+        return result;
     }
 
     public void deleteUser(){

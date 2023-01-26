@@ -113,7 +113,7 @@ public class SearchFragment extends Fragment {
 
 
         try {
-            presenter.setRecycledDataFiltered(usersList,name);
+            presenter.setRecycledData(usersList,name);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -137,11 +137,11 @@ public class SearchFragment extends Fragment {
                     Log.d(TAG,ACTIVITY+" totalItems: "+totalItems+" lastVisibleItem: "+lastVisibleItem);
                     Log.d(TAG,ACTIVITY+" Comprobacion: " + (lastVisibleItem == totalItems - 1));
                     if (lastVisibleItem == totalItems - 1 && lastVisibleItem != 0) {
-                       /* try {
-                            presenter.updateRecycledDataFiltered(tags,recyclerView,range ,mLocation);
+                        try {
+                            presenter.updateRecycledDataFiltered(usersList,name);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                        }*/
+                        }
 
                         listUsersAdapter.notifyDataSetChanged();
                     }

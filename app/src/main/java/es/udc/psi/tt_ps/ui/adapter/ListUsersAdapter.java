@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,7 @@ public class ListUsersAdapter extends RecyclerView.Adapter<ListUsersAdapter.User
     public static class UsersHolder extends  RecyclerView.ViewHolder{
         ImageView profile_pic;
         TextView name, surname, birthdate;
+        RatingBar ratingBar;
 
         UsersHolder(View itemView){
             super(itemView);
@@ -78,6 +80,7 @@ public class ListUsersAdapter extends RecyclerView.Adapter<ListUsersAdapter.User
             name = itemView.findViewById(R.id.userName);
             surname = itemView.findViewById(R.id.userSurname);
             birthdate = itemView.findViewById(R.id.userBirthDate);
+            ratingBar = itemView.findViewById(R.id.ratingUser);
         }
 
         void bindData(final ListUsers item){
@@ -90,6 +93,7 @@ public class ListUsersAdapter extends RecyclerView.Adapter<ListUsersAdapter.User
             name.setText(item.getName());
             surname.setText(item.getSurname());
             birthdate.setText(item.getBirthDate().toString());
+            ratingBar.setRating(item.getRating().get(0));
             itemView.setOnClickListener(view -> listener.onItemClick(item));
 
         }

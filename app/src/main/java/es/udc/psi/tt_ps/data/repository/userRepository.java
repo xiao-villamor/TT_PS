@@ -52,8 +52,8 @@ public class userRepository {
        return api.getUser(uuid);
     }
 
-    public List<UserModel> getUserByUsername(String username) throws ExecutionException, InterruptedException, TimeoutException {
-       return api.getUserByUsername(username);
+    public QueryResult<List<UserModel>, DocumentSnapshot> getUserByUsername(String username, DocumentSnapshot adminId) throws ExecutionException, InterruptedException, TimeoutException {
+       return api.getUserByUsername(username,adminId);
     }
 
     public void deleteUser(){
