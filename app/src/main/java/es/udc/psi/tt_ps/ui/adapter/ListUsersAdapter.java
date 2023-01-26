@@ -93,7 +93,7 @@ public class ListUsersAdapter extends RecyclerView.Adapter<ListUsersAdapter.User
             name.setText(item.getName());
             surname.setText(item.getSurname());
             birthdate.setText(item.getBirthDate().toString());
-            ratingBar.setRating(item.getRating().get(0));
+            ratingBar.setRating(item.getRating());
             itemView.setOnClickListener(view -> listener.onItemClick(item));
 
         }

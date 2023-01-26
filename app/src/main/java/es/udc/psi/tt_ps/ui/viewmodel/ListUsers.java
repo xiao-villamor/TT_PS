@@ -11,12 +11,12 @@ public class ListUsers {
     private String phone;
     private String profilePic;
     private List<String> rrss;
-    private List<Float> rating;
+    private Float rating;
     private List<String> interests;
     private String description;
 
     public ListUsers(String name, String surname, Date birthDate, String email,
-                     String phone, String profilePic, List<String> rrss, List<Float> rating,
+                     String phone, String profilePic, List<String> rrss, Float rating,
                      List<String> interests, String description) {
         this.name = name;
         this.surname = surname;
@@ -60,7 +60,7 @@ public class ListUsers {
         return rrss;
     }
 
-    public List<Float> getRating() {
+    public Float getRating() {
         return rating;
     }
 

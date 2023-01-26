@@ -15,7 +15,7 @@ public class createUserUseCase {
 
     public static Result<FirebaseUser, Exception> createUser (String name, String email, String password,
                               String surname, Date birthDate, String phone,
-                              byte[] pic, List<String> rsss, List<String> interests,List<Float> rating) throws InterruptedException {
+                              byte[] pic, List<String> rsss, List<String> interests,Float rating) throws InterruptedException {
 
         final userRepository repository = new userRepository();
         Result<FirebaseUser, Exception> res = new Result<>();

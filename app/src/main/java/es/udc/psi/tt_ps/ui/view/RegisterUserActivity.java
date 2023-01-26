@@ -60,8 +60,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 try {
                     //Log.d("TAG", "Imagen PostValidacion: " + file.getPath());
                     //create arrayList
-                    ArrayList<Float> ratings = new ArrayList<>();
-                    ratings.add(0f);
+                    Float ratings = (float) 0;
                     progressDialog.show();
 
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(

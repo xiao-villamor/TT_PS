@@ -12,14 +12,14 @@ public class UserModel {
     private String phone;
     private String profilePic;
     private List<String> rrss;
-    private List<Float> rating;
+    private Float rating;
     private List<String> interests;
     private String description;
 
     public UserModel( String name,
                      String surname, Date birthDate, String email,
                      String phone, String profilePic, List<String> rrss,
-                     List<Float> rating, List<String> interests) {
+                     Float rating, List<String> interests) {
 
         this.name = name;
         this.surname = surname;
@@ -76,7 +76,7 @@ public class UserModel {
         return rrss;
     }
 
-    public List<Float> getRating() {
+    public Float getRating() {
         return rating;
     }
 

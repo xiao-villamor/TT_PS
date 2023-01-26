@@ -23,7 +23,7 @@ public class UserListPres extends RecyclerView.OnScrollListener {
 
     public boolean getMore = true;
     public List<String> interests ;
-    public List<Float> rating ;
+    public Float rating ;
     public List<String> rrss ;
     private DocumentSnapshot prevDocSnap;
 
@@ -53,7 +53,7 @@ public class UserListPres extends RecyclerView.OnScrollListener {
                     rrss=res.get(i).getrrss();
                 }
                 if (res.get(i).getRating()==null){
-                    rating=new ArrayList<>();
+                    rating= (float) 0;
                 }else{
                     rating=res.get(i).getRating();
                 }
@@ -62,9 +62,7 @@ public class UserListPres extends RecyclerView.OnScrollListener {
                 }else{
                     interests=res.get(i).getInterests();
                 }
-                if(res.get(i).getrrss()==null) rrss=new ArrayList<>();
-                if(res.get(i).getRating()==null) rating=new ArrayList<>();
-                if(res.get(i).getInterests()==null) interests=new ArrayList<>();
+
                 listUsers.add(new ListUsers(res.get(i).getName(),res.get(i).getSurname(),res.get(i).getBirthDate(),
                         res.get(i).getEmail(),res.get(i).getPhone(),res.get(i).getProfilePic(),res.get(i).getrrss(),
                         res.get(i).getRating(),res.get(i).getInterests(),res.get(i).getDescription()));
@@ -94,7 +92,7 @@ public class UserListPres extends RecyclerView.OnScrollListener {
                     rrss=res.get(i).getrrss();
                 }
                 if (res.get(i).getRating()==null){
-                    rating=new ArrayList<>();
+                    rating=(float) 0;
                 }else{
                     rating=res.get(i).getRating();
                 }
@@ -103,9 +101,7 @@ public class UserListPres extends RecyclerView.OnScrollListener {
                 }else{
                     interests=res.get(i).getInterests();
                 }
-                if(res.get(i).getrrss()==null) rrss=new ArrayList<>();
-                if(res.get(i).getRating()==null) rating=new ArrayList<>();
-                if(res.get(i).getInterests()==null) interests=new ArrayList<>();
+
                 listUsers.add(new ListUsers(res.get(i).getName(),res.get(i).getSurname(),res.get(i).getBirthDate(),
                         res.get(i).getEmail(),res.get(i).getPhone(),res.get(i).getProfilePic(),res.get(i).getrrss(),
                         res.get(i).getRating(),res.get(i).getInterests(),res.get(i).getDescription()));
