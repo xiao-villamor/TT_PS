@@ -126,6 +126,7 @@ public class activityService implements activityServiceInterface {
     public void finalizeActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         QueryResult<ActivityModel,DocumentSnapshot> activity = getActivity(id);
         unsubscribeToActivity(id);
+        db.collection("Activities").document(id).delete();
         Log.d("_TAG", "Unsubscribing to activity: "+id);
         List<String> participants = activity.data.getParticipants();
         //count number of participants in the List ussing the size of the list
