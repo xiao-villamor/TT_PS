@@ -21,12 +21,17 @@ import com.google.firebase.storage.UploadTask;
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+
+import es.udc.psi.tt_ps.data.model.ActivityModel;
+import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.UserModel;
+import es.udc.psi.tt_ps.ui.viewmodel.UserListPres;
 
 public class userService implements userServiceInterface,FirebaseAuth.AuthStateListener{
 
@@ -143,13 +148,33 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
         return user;
     }
 
-    public List<UserModel> getUserByUsername(String username) throws ExecutionException, InterruptedException, TimeoutException {
-        List <UserModel> users = null;
+    public QueryResult<List<UserModel>,DocumentSnapshot> getUserByUsername(String username,DocumentSnapshot adminId) throws ExecutionException, InterruptedException, TimeoutException {
 
-        Query userQuery = db.collection("User_Info").whereEqualTo("username", username);
-        users = Tasks.await(userQuery.get(), 5, TimeUnit.SECONDS).toObjects(UserModel.class);
+        List<UserModel> data = new ArrayList<>();
+        QueryResult<List<UserModel>,DocumentSnapshot> result =new QueryResult<>();
+        Query ref;
+        if (adminId==null) {
+            ref = db.collection("User_Info")
+                    .whereEqualTo("name",username)
+                    .limit(5);
 
-        return users;
+        }else {
+            ref = db.collection("User_Info")
+                    .whereEqualTo("name",username)
+                    .startAfter(adminId)
+                    .limit(5);
+        }
+        Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if(document != null) {
+                UserModel user = document.toObject(UserModel.class);
+                data.add(user);
+                result.cursor = document;
+            }else{
+                Log.d("TAG", "No such document");
+            }
+        });
+        result.data=data;
+        return result;
     }
 
     public void deleteUser(){

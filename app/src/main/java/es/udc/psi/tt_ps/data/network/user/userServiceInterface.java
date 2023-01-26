@@ -6,6 +6,7 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.Result;
 
 import es.udc.psi.tt_ps.data.model.UserModel;
@@ -22,7 +24,7 @@ public interface userServiceInterface {
     public void loginUser(String email, String password) throws ExecutionException, InterruptedException, TimeoutException;
     public void updateUser(UserModel user);
     public UserModel getUser(String uuid) throws ExecutionException, InterruptedException, TimeoutException;
-    public List<UserModel> getUserByUsername(String username) throws ExecutionException, InterruptedException, TimeoutException;
+    public QueryResult<List<UserModel>, DocumentSnapshot> getUserByUsername(String username, DocumentSnapshot adminId) throws ExecutionException, InterruptedException, TimeoutException;
     public void deleteUser();
     public void UpdateUserDetails(String uuid, UserModel user);
     public void updateUserEmail(String email);

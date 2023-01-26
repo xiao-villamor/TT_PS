@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import es.udc.psi.tt_ps.data.model.ActivityModel;
+import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.data.network.user.userService;
@@ -50,8 +52,8 @@ public class userRepository {
        return api.getUser(uuid);
     }
 
-    public List<UserModel> getUserByUsername(String username) throws ExecutionException, InterruptedException, TimeoutException {
-       return api.getUserByUsername(username);
+    public QueryResult<List<UserModel>, DocumentSnapshot> getUserByUsername(String username, DocumentSnapshot adminId) throws ExecutionException, InterruptedException, TimeoutException {
+       return api.getUserByUsername(username,adminId);
     }
 
     public void deleteUser(){
