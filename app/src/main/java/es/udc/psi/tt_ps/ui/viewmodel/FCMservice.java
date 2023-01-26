@@ -28,8 +28,12 @@ public class FCMservice extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         String title = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
+
         String update_id = remoteMessage.getData().get("update_id");
         String rating_id = remoteMessage.getData().get("rating_id");
+
+        String Count = remoteMessage.getData().get("count");
+        String Name = remoteMessage.getData().get("UUID");
 
 
         String CHANNEL_ID = "my_channel_01";
@@ -44,8 +48,10 @@ public class FCMservice extends FirebaseMessagingService {
 
         if(update_id != null){
             intent.putExtra("update_id", update_id);
-        }else if (rating_id != null){
+        }else if (rating_id != null && Count != null && Name != null){
             intent.putExtra("rating_id", rating_id);
+            intent.putExtra("count", Count);
+            intent.putExtra("UUID", Name);
         }
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

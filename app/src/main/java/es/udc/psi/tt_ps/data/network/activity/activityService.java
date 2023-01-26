@@ -13,7 +13,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.common.eventbus.Subscribe;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,7 +30,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -40,6 +37,7 @@ import java.util.function.Consumer;
 
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.QueryResult;
+import es.udc.psi.tt_ps.data.network.API.ApiClient;
 
 public class activityService implements activityServiceInterface {
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -48,6 +46,9 @@ public class activityService implements activityServiceInterface {
     private DocumentSnapshot prevDocSnap = null;
     private ActivityModel activity = null;
 
+    ApiClient apiClient = new ApiClient();
+
+
 
     public void createActivity(ActivityModel activity) throws ExecutionException, InterruptedException, TimeoutException {
         //get the id of the document created
@@ -55,24 +56,23 @@ public class activityService implements activityServiceInterface {
         db.collection("Activities").add(activity).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
-                        subscribeToActivity(documentReference.getId());
+                        Log.d("_TAG","Subscribing to activity: "+documentReference.getId());
                         activity.setId(documentReference.getId());
-                        updateActivity(activity,documentReference.getId());
+                        try {
+                            updateActivity(activity,documentReference.getId());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
     }
 
-    public void updateActivity(ActivityModel activity, String id){
+    public void updateActivity(ActivityModel activity, String id) throws InterruptedException {
         db.collection("Activities").document(id).set(activity);
         //send message to topic ussing firebase messaging
-        Log.d("TAG", "Sending message to topic: "+id);
-        FirebaseMessaging.getInstance().send(new RemoteMessage.Builder("topic/"+id)
-                .setMessageId(Integer.toString(1))
-                .addData("my_message", "Activity updated")
-                .addData("my_action","Activity " + activity.getTitle() + " has been updated")
-                .build());
+        apiClient.NotifyUpdate(id,activity.getTitle());
+
     }
 
     public void addParticipant(ActivityModel activity,String id){
@@ -86,7 +86,7 @@ public class activityService implements activityServiceInterface {
     }
 
     public void subscribeToActivity(String id){
-        Log.d("TAG", "Subscribing to activity: "+id);
+        Log.d("_TAG", "Subscribing to activity: "+id);
         FirebaseMessaging.getInstance().subscribeToTopic(id)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -101,7 +101,6 @@ public class activityService implements activityServiceInterface {
     }
 
     public void unsubscribeToActivity(String uuid){
-        Log.d("TAG", "Unsubscribing to activity: "+uuid);
         FirebaseMessaging.getInstance().unsubscribeFromTopic(uuid)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -115,9 +114,23 @@ public class activityService implements activityServiceInterface {
                 });
     }
 
-    public void deleteActivity(String id){
+    public void deleteActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
+        QueryResult<ActivityModel,DocumentSnapshot> activity = getActivity(id);
         db.collection("Activities").document(id).delete();
         unsubscribeToActivity(id);
+        Log.d("_TAG", "Unsubscribing to activity: "+id);
+        apiClient.NotifyDelete(id,activity.data.getTitle());
+
+    }
+
+    public void finalizeActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
+        QueryResult<ActivityModel,DocumentSnapshot> activity = getActivity(id);
+        unsubscribeToActivity(id);
+        Log.d("_TAG", "Unsubscribing to activity: "+id);
+        List<String> participants = activity.data.getParticipants();
+        //count number of participants in the List ussing the size of the list
+        apiClient.NotifyRate(id,activity.data.getTitle(),activity.data.getAdminId(),participants.size());
+
     }
 
     public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {

@@ -21,6 +21,8 @@ public class RatingActivity extends AppCompatActivity {
     UserModel user;
     int participants;
     ActivityModel activityModel;
+    String UUID;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +34,12 @@ public class RatingActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             id = extras.getString("id");
+            UUID = extras.getString("UUID");
+            count = Integer.parseInt(extras.getString("count"));
 
             try {
-                  activityModel = getActivityUseCase.getActivityUseCase(id).data;
-                 participants = activityModel.getParticipants().size();
-                 userId = activityModel.getAdminId();
+                 participants = count;
+                 userId = UUID;
                  if (userId != null)
                     user = getUserInfoUseCase.getInfo(userId).data;
             } catch (InterruptedException e) {
@@ -45,7 +48,7 @@ public class RatingActivity extends AppCompatActivity {
 
 
         }
-        binding.logoName.setText(activityModel.getTitle());
+        binding.logoName.setText(user.getName());
 
         binding.ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
             binding.ratingBar.setRating(rating);
@@ -54,8 +57,8 @@ public class RatingActivity extends AppCompatActivity {
 
         binding.submitRating.setOnClickListener(v -> {
             Float oldRating = user.getRating();
-            user.setRating(oldRating +(ratingGiven/participants));
             user.setRatingCount(user.getRatingCount()+1);
+            user.setRating((oldRating +(ratingGiven/participants))/user.getRatingCount());
             try {
                 editUserInfoUseCase.updateEditedUser(user);
             } catch (InterruptedException e) {

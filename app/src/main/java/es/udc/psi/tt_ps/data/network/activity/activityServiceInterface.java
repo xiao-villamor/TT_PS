@@ -13,8 +13,8 @@ import es.udc.psi.tt_ps.data.model.QueryResult;
 
 public interface activityServiceInterface {
     public void createActivity(ActivityModel activity) throws ExecutionException, InterruptedException, TimeoutException;
-    public void updateActivity(ActivityModel activity, String id);
-    public void deleteActivity(String id);
+    public void updateActivity(ActivityModel activity, String id) throws InterruptedException;
+    public void deleteActivity(String id) throws ExecutionException, InterruptedException, TimeoutException;
     public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException;
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException;
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getNextActivitiesByAdminId(String adminId,int count,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException;

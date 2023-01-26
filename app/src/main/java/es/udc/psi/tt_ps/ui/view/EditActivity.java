@@ -275,8 +275,8 @@ public class EditActivity extends AppCompatActivity{
 
 
             Log.d("TAG", "Comienza la actualizacion");
-            progressDialog.setTitle("Uploading image");
-            progressDialog.show();
+            //progressDialog.setTitle("Uploading image");
+            //progressDialog.show();
             //Upload the image and get the URL
             if(uriImage!=null){
                 try {

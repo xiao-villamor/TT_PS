@@ -143,6 +143,9 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
             String update_id = extras.getString("update_id");
             String rating_id = extras.getString("rating_id");
+            String count = extras.getString("count");
+            String UUID = extras.getString("UUID");
+
 
             if(update_id != null){
 
@@ -170,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
                 Intent intent = new Intent(this, RatingActivity.class);
 
                 intent.putExtra("id", rating_id);
+                intent.putExtra("count", count);
+                intent.putExtra("UUID", UUID);
                 startActivity(intent);
             }
 

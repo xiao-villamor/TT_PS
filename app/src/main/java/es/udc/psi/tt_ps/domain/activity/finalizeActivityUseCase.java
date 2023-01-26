@@ -5,14 +5,14 @@ import java.util.concurrent.TimeoutException;
 
 import es.udc.psi.tt_ps.data.repository.activityRepository;
 
-public class deleteActivityUseCase {
-    public static void deleteActivity(String activityId) throws InterruptedException{
+public class finalizeActivityUseCase {
+    public static void finalizeActivityUseCase(String activityId) throws InterruptedException{
 
         final activityRepository repository = new activityRepository();
 
         Thread t = new Thread(() -> {
             try {
-                repository.deleteActivity(activityId);
+                repository.finalizeActivity(activityId);
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -27,4 +27,3 @@ public class deleteActivityUseCase {
         t.interrupt();
     }
 }
-

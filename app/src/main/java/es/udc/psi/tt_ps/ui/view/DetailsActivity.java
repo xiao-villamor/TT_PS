@@ -42,6 +42,7 @@ import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.databinding.ActivityDetailsBinding;
 import es.udc.psi.tt_ps.domain.activity.deleteActivityUseCase;
+import es.udc.psi.tt_ps.domain.activity.finalizeActivityUseCase;
 import es.udc.psi.tt_ps.ui.fragments.ActivityListFragment;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
@@ -80,6 +81,13 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         if (!(activitiesList.getAdminId().equals(currentUserId))){
             binding.updateButton.setVisibility(View.GONE);
             binding.deleteButton.setVisibility(View.GONE);
+        }
+        Log.d("_TAG", "ID: " + activitiesList.getEnd_date());
+        Log.d("_TAG", "ID: " + new Date());
+
+        if(new Date().after(activitiesList.getEnd_date())){
+            binding.deleteButton.setText("Finalize");
+
         }
 
 
@@ -171,14 +179,26 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         });
 
         binding.deleteButton.setOnClickListener(view1 -> {
-            try {
-                deleteActivityUseCase.deleteActivity(activitiesList.getActivityId());
-                MainActivity mainActivity = MainActivity.getInstance();
-                mainActivity.dataChanged(activitiesList.getActivityId(),activitiesList,"del");
-                mainActivity.dataChangedSaved(activitiesList.getActivityId(),activitiesList,"del");
-                finish();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if(binding.deleteButton.getText().toString().equals("Finalize")){
+                try {
+                    finalizeActivityUseCase.finalizeActivityUseCase(activitiesList.getActivityId());
+                    MainActivity mainActivity = MainActivity.getInstance();
+                    mainActivity.dataChanged(activitiesList.getActivityId(), activitiesList, "del");
+                    mainActivity.dataChangedSaved(activitiesList.getActivityId(), activitiesList, "del");
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                try {
+                    deleteActivityUseCase.deleteActivity(activitiesList.getActivityId());
+                    MainActivity mainActivity = MainActivity.getInstance();
+                    mainActivity.dataChanged(activitiesList.getActivityId(), activitiesList, "del");
+                    mainActivity.dataChangedSaved(activitiesList.getActivityId(), activitiesList, "del");
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
         });

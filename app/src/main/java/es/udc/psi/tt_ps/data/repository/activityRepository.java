@@ -23,7 +23,7 @@ public class activityRepository {
         api.createActivity(activity);
     }
 
-    public void updateActivity(ActivityModel activity, String id){
+    public void updateActivity(ActivityModel activity, String id) throws InterruptedException {
         api.updateActivity(activity, id);
     }
     public void addParticipant(ActivityModel activity, String id){
@@ -32,8 +32,11 @@ public class activityRepository {
     public void removeParticipant(ActivityModel activity,String id){
         api.removeParticipant(activity,id);
     }
-    public void deleteActivity(String id){
+    public void deleteActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         api.deleteActivity(id);
+    }
+    public void finalizeActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
+        api.finalizeActivity(id);
     }
 
     public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
