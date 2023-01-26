@@ -77,6 +77,11 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             binding.signup2.setText("Unsubscribe");
         }
 
+        if (!(activitiesList.getAdminId().equals(currentUserId))){
+            binding.updateButton.setVisibility(View.GONE);
+            binding.deleteButton.setVisibility(View.GONE);
+        }
+
 
 
         try {

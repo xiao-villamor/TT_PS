@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.firebase.firestore.auth.User;
-
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.databinding.ActivityRatingBinding;
