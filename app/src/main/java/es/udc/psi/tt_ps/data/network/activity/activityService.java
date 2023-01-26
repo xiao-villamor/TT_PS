@@ -8,10 +8,12 @@ import androidx.annotation.Nullable;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryBounds;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.common.eventbus.Subscribe;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,6 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,16 +49,75 @@ public class activityService implements activityServiceInterface {
     private ActivityModel activity = null;
 
 
-    public void createActivity(ActivityModel activity){
-        db.collection("Activities").document().set(activity);
+    public void createActivity(ActivityModel activity) throws ExecutionException, InterruptedException, TimeoutException {
+        //get the id of the document created
+        //Tasks.await(db.collection("Activities").document().set(activity), 45, TimeUnit.SECONDS);
+        db.collection("Activities").add(activity).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("TAG", "DocumentSnapshot written with ID: " + documentReference.getId());
+                        subscribeToActivity(documentReference.getId());
+                        activity.setId(documentReference.getId());
+                        updateActivity(activity,documentReference.getId());
+                    }
+                });
+
     }
 
     public void updateActivity(ActivityModel activity, String id){
         db.collection("Activities").document(id).set(activity);
+        //send message to topic ussing firebase messaging
+        Log.d("TAG", "Sending message to topic: "+id);
+        FirebaseMessaging.getInstance().send(new RemoteMessage.Builder("topic/"+id)
+                .setMessageId(Integer.toString(1))
+                .addData("my_message", "Activity updated")
+                .addData("my_action","Activity " + activity.getTitle() + " has been updated")
+                .build());
+    }
+
+    public void addParticipant(ActivityModel activity,String id){
+        db.collection("Activities").document(id).set(activity);
+        subscribeToActivity(id);
+    }
+
+    public void removeParticipant(ActivityModel activity,String id){
+        db.collection("Activities").document(id).set(activity);
+        unsubscribeToActivity(id);
+    }
+
+    public void subscribeToActivity(String id){
+        Log.d("TAG", "Subscribing to activity: "+id);
+        FirebaseMessaging.getInstance().subscribeToTopic(id)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Subscribed";
+                        if (!task.isSuccessful()) {
+                            msg = "Subscribe failed";
+                        }
+                        Log.d("TAG", msg);
+                    }
+                });
+    }
+
+    public void unsubscribeToActivity(String uuid){
+        Log.d("TAG", "Unsubscribing to activity: "+uuid);
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(uuid)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Unsubscribed";
+                        if (!task.isSuccessful()) {
+                            msg = "Unsubscribe failed";
+                        }
+                        Log.d("TAG", msg);
+                    }
+                });
     }
 
     public void deleteActivity(String id){
         db.collection("Activities").document(id).delete();
+        unsubscribeToActivity(id);
     }
 
     public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {

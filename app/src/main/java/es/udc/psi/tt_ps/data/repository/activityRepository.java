@@ -19,14 +19,19 @@ public class activityRepository {
     private final activityService api = new activityService();
 
 
-    public void createActivity(ActivityModel activity){
+    public void createActivity(ActivityModel activity) throws ExecutionException, InterruptedException, TimeoutException {
         api.createActivity(activity);
     }
 
     public void updateActivity(ActivityModel activity, String id){
         api.updateActivity(activity, id);
     }
-
+    public void addParticipant(ActivityModel activity, String id){
+        api.addParticipant(activity, id);
+    }
+    public void removeParticipant(ActivityModel activity,String id){
+        api.removeParticipant(activity,id);
+    }
     public void deleteActivity(String id){
         api.deleteActivity(id);
     }

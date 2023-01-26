@@ -42,7 +42,7 @@ public class joinAnActivityUseCase {
 
         Thread thread2 = new Thread(() -> {
             try{
-                repository.updateActivity(result.data.data,activityId);
+                repository.addParticipant(result.data.data,activityId);
             }catch (Exception e){
                 result.exception = e;
             }

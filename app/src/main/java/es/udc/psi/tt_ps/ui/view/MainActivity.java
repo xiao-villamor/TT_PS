@@ -1,30 +1,23 @@
 package es.udc.psi.tt_ps.ui.view;
 
 
-import static es.udc.psi.tt_ps.domain.activity.ListenToActivityChangesUseCase.listenToActivityChanges;
-
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -34,6 +27,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoLocation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -41,18 +36,20 @@ import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.Consumer;
 
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.core.firebaseConnection;
+import es.udc.psi.tt_ps.data.model.ActivityModel;
+import es.udc.psi.tt_ps.data.model.QueryResult;
+import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.network.user.OnAuthStateChangeListener;
 import es.udc.psi.tt_ps.data.repository.authRepository;
 import es.udc.psi.tt_ps.databinding.ActivityMainBinding;
@@ -65,6 +62,7 @@ import es.udc.psi.tt_ps.ui.fragments.UserInfoFragment;
 import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 import es.udc.psi.tt_ps.ui.viewmodel.MainViewModel;
+import es.udc.psi.tt_ps.domain.activity.getActivityUseCase;
 
 
 public class MainActivity extends AppCompatActivity implements OnAuthStateChangeListener, ActivityListFragment.FragmentListener,NavigationBarFragment.FragmentListener {
@@ -89,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     private static MainActivity mInstance;
     String CHANNEL_ID ="1";
     int notificationid;
+    Intent mServiceIntent;
+
+
 
     public static MainActivity getInstance(){
         return mInstance;
@@ -134,12 +135,56 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
                 navigationBarFragment.onTabChanged(position);
             }
         });
-
-        createNotificationChannel();
-        Consumer<String> i = s -> createNotification(s);
-        listenToActivityChanges(firebaseConnection.getUser(),i);
+        FCM();
 
 
+
+    }
+
+    private void FCM(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FCM", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        Log.d("FCM", token);
+                    }
+                });
+    }
+
+
+
+
+    private void createNotificationChannel(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel";
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                    name, importance);
+            channel.setDescription(description);
+            NotificationManager notifManager = getSystemService(NotificationManager.class);
+            notifManager.createNotificationChannel(channel);
+        }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.i ("isMyServiceRunning?", false+"");
+        return false;
     }
 
     private final ActivityResultLauncher<String[]> permissionLauncherMultiple = registerForActivityResult(
@@ -170,40 +215,23 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
             }
         });
 
-    private void createNotification(String title){
-        String desc;
-        if(title.contains("Modified")){
-            desc = "The activity Has been edited enter in the app to see details.";
-        }else{
-            desc = "The activity Has been deleted enter in the app to see details.";
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(title)
-                .setContentText(desc)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(desc))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(notificationid, builder.build());
-        notificationid++;
-
+    public void displayActivity(String id) throws InterruptedException {
+        Log.d("TAG", "Mostrar en detalle" );
+        Intent intent = new Intent(this, DetailsActivity.class);
+        Result<ActivityModel,Exception> listActivities = getActivityUseCase.getActivityUseCase(id);
+        ListActivities listActivities1 = new ListActivities(listActivities.data.getId(),listActivities.data.getImage(),listActivities.data.getTitle()
+                ,listActivities.data.getLocation(),listActivities.data.getEnd_date(),listActivities.data.getDescription()
+                ,listActivities.data.getStart_date(),listActivities.data.getCreation_date(),listActivities.data.getAdminId()
+                ,listActivities.data.getTags(),listActivities.data.getParticipants());
+        intent.putExtra("events", listActivities1);
+        intent.putExtra("latitud",listActivities1.getLocation().getLatitude());
+        intent.putExtra("longitud",listActivities1.getLocation().getLongitude());
+        startActivity(intent);
     }
 
-    private void createNotificationChannel(){
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "channel";
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    name, importance);
-            channel.setDescription(description);
-            NotificationManager notifManager = getSystemService(NotificationManager.class);
-            notifManager.createNotificationChannel(channel);
-        }
-    }
+
 
 
     private void applySavedFilters(BottomSheetDialog bottomSheetDialog){
@@ -284,7 +312,10 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         super.onStop();
         mainViewModel.removeAuthListener();
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
     @Override
     public void onAuthStateChanged(boolean isUserLoggedOut) {
         Intent userProfileIntent = new Intent(this, LogInActivity.class);

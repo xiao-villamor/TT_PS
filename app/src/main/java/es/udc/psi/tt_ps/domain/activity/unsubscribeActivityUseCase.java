@@ -36,7 +36,7 @@ public class unsubscribeActivityUseCase {
 
         Thread thread2 = new Thread(() -> {
             try{
-                repository.updateActivity(result.data.data,activityId);
+                repository.removeParticipant(result.data.data,activityId);
             }catch (Exception e){
                 result.exception = e;
             }
