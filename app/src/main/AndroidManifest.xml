@@ -22,6 +22,10 @@
         android:theme="@style/Theme.TT_PS"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.RatingActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.fragments.ActivityListFragment" />
+        <activity
             android:name=".ui.view.EditUser"
             android:exported="false" />
         <activity
@@ -36,7 +40,6 @@
             </intent-filter>
         </service>
 
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAG5bI3zDlHWyEJGS5ZPx7r4NYonOypyc8" />
@@ -49,9 +52,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.view.RegisterUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.view.UserInfoActivity"
             android:exported="false" />
         <activity
             android:name=".ui.fragments.ActivityListFragment"

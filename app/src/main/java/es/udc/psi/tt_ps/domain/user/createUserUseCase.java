@@ -15,12 +15,12 @@ public class createUserUseCase {
 
     public static Result<FirebaseUser, Exception> createUser (String name, String email, String password,
                               String surname, Date birthDate, String phone,
-                              byte[] pic, List<String> rsss, List<String> interests,List<Float> rating) throws InterruptedException {
+                              byte[] pic, List<String> rsss, List<String> interests,Float rating) throws InterruptedException {
 
         final userRepository repository = new userRepository();
         Result<FirebaseUser, Exception> res = new Result<>();
 
-        UserModel user = new UserModel(name,surname,birthDate,email,phone,null,rsss,rating,interests);
+        UserModel user = new UserModel(name,surname,birthDate,email,phone,null,rsss,rating,interests,0);
         Thread thread = new Thread(() -> {
             try{
                 repository.createUser(email,password,user,pic);

@@ -12,14 +12,15 @@ public class UserModel {
     private String phone;
     private String profilePic;
     private List<String> rrss;
-    private List<Float> rating;
+    private Float rating;
     private List<String> interests;
     private String description;
+    private int ratingCount;
 
     public UserModel( String name,
                      String surname, Date birthDate, String email,
                      String phone, String profilePic, List<String> rrss,
-                     List<Float> rating, List<String> interests) {
+                     Float rating, List<String> interests,int ratingCount) {
 
         this.name = name;
         this.surname = surname;
@@ -30,11 +31,18 @@ public class UserModel {
         this.rrss = rrss;
         this.rating = rating;
         this.interests = interests;
+        this.ratingCount = ratingCount;
     }
 
     public UserModel() {
     }
 
+    public int getRatingCount() {
+        return ratingCount;
+    }
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
+    }
     public String getDescription() {
         return description;
     }
@@ -76,8 +84,11 @@ public class UserModel {
         return rrss;
     }
 
-    public List<Float> getRating() {
+    public Float getRating() {
         return rating;
+    }
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 
     public List<String> getInterests() {

@@ -60,14 +60,13 @@ public class RegisterUserActivity extends AppCompatActivity {
                 try {
                     //Log.d("TAG", "Imagen PostValidacion: " + file.getPath());
                     //create arrayList
-                    ArrayList<Float> ratings = new ArrayList<>();
-                    ratings.add(0f);
+
                     progressDialog.show();
 
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString(), binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), date, binding.phoneReg.getText().toString(),
-                            compress(), null, selectedItems, ratings);
+                            compress(), null, selectedItems, 0.0f);
 
 
 

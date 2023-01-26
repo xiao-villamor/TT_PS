@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
         permissionLauncherMultiple.launch(permissions);
 
 
+
+
         mInstance = this;
         mainViewModel.setAuthStateChangeListener(this);
         View decorView = getWindow().getDecorView();
@@ -136,6 +138,43 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
             }
         });
         FCM();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+
+            String update_id = extras.getString("update_id");
+            String rating_id = extras.getString("rating_id");
+
+            if(update_id != null){
+
+                Result<ActivityModel,Exception> listActivities = null;
+                try {
+                    listActivities = getActivityUseCase.getActivityUseCase(update_id);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                ListActivities listActivities1 = new ListActivities(listActivities.data.getId(),listActivities.data.getImage(),listActivities.data.getTitle()
+                        ,listActivities.data.getLocation(),listActivities.data.getEnd_date(),listActivities.data.getDescription()
+                        ,listActivities.data.getStart_date(),listActivities.data.getCreation_date(),listActivities.data.getAdminId()
+                        ,listActivities.data.getTags(),listActivities.data.getParticipants());
+
+                Intent intent = new Intent(this, DetailsActivity.class);
+
+                intent.putExtra("events", listActivities1);
+                intent.putExtra("latitud", listActivities1.getLocation().getLatitude());
+                intent.putExtra("longitud", listActivities1.getLocation().getLongitude());
+                startActivity(intent);
+            }else if (rating_id != null){
+
+
+                Intent intent = new Intent(this, RatingActivity.class);
+
+                intent.putExtra("id", rating_id);
+                startActivity(intent);
+            }
+
+
+        }
 
 
 
@@ -159,33 +198,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     }
 
 
-
-
-    private void createNotificationChannel(){
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "channel";
-            String description = "description";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    name, importance);
-            channel.setDescription(description);
-            NotificationManager notifManager = getSystemService(NotificationManager.class);
-            notifManager.createNotificationChannel(channel);
-        }
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
-                return true;
-            }
-        }
-        Log.i ("isMyServiceRunning?", false+"");
-        return false;
-    }
 
     private final ActivityResultLauncher<String[]> permissionLauncherMultiple = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(),
@@ -214,22 +226,6 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
             }
         });
-
-
-    public void displayActivity(String id) throws InterruptedException {
-        Log.d("TAG", "Mostrar en detalle" );
-        Intent intent = new Intent(this, DetailsActivity.class);
-        Result<ActivityModel,Exception> listActivities = getActivityUseCase.getActivityUseCase(id);
-        ListActivities listActivities1 = new ListActivities(listActivities.data.getId(),listActivities.data.getImage(),listActivities.data.getTitle()
-                ,listActivities.data.getLocation(),listActivities.data.getEnd_date(),listActivities.data.getDescription()
-                ,listActivities.data.getStart_date(),listActivities.data.getCreation_date(),listActivities.data.getAdminId()
-                ,listActivities.data.getTags(),listActivities.data.getParticipants());
-        intent.putExtra("events", listActivities1);
-        intent.putExtra("latitud",listActivities1.getLocation().getLatitude());
-        intent.putExtra("longitud",listActivities1.getLocation().getLongitude());
-        startActivity(intent);
-    }
-
 
 
 

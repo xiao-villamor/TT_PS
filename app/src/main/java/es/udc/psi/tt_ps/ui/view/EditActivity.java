@@ -43,7 +43,7 @@ import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.databinding.ActivityEditBinding;
 import es.udc.psi.tt_ps.domain.activity.editActivityInfoUseCase;
-import es.udc.psi.tt_ps.domain.activity.uploadActivityPicUseCase;
+import es.udc.psi.tt_ps.domain.user.uploadActivityPicUseCase;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
 
 public class EditActivity extends AppCompatActivity{

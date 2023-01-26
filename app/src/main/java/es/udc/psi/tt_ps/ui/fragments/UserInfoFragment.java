@@ -103,7 +103,9 @@ public class UserInfoFragment extends Fragment {
         }
 
         binding.Name.setText(res.getName());
-        binding.rating.setRating(res.getRating().get(0));
+        Log.d("_TAG",res.getRating().toString());
+        binding.rating.setRating(res.getRating());
+        binding.ratingCnt.setText("("+res.getRatingCount()+")");
         tagAdapter tagAdapter = new tagAdapter(res.getInterests().toArray(new String[0]));
         binding.simpleGridView.setAdapter(tagAdapter);
         if(res.getDescription() != null){

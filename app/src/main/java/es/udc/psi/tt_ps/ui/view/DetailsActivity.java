@@ -63,9 +63,12 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         setContentView(view);
         Bundle extras = getIntent().getExtras();
         activitiesList= (ListActivities) extras.get("events");
-
+        Log.d("FCM" ,"received Details: " + extras.getDouble("latitud") + " " + extras.getDouble("longitud"));
         GeoPoint coord = new GeoPoint(extras.getDouble("latitud"),extras.getDouble("longitud"));
+        Log.d("FCM" ,"Cords Details: " + coord.getLatitude() + " " + coord.getLongitude());
+
         activitiesList.setLocation(coord);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         currentUserId = user.getUid();
 

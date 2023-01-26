@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -31,9 +30,9 @@ import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.model.UserModel;
 import es.udc.psi.tt_ps.databinding.ActivityEditUserBinding;
-import es.udc.psi.tt_ps.domain.activity.editUserInfoUseCase;
-import es.udc.psi.tt_ps.domain.activity.updatePasswordUseCase;
-import es.udc.psi.tt_ps.domain.activity.uploadUserPicUseCase;
+import es.udc.psi.tt_ps.domain.user.editUserInfoUseCase;
+import es.udc.psi.tt_ps.domain.user.updatePasswordUseCase;
+import es.udc.psi.tt_ps.domain.user.uploadUserPicUseCase;
 import es.udc.psi.tt_ps.domain.user.getUserInfoUseCase;
 import es.udc.psi.tt_ps.ui.adapter.tagAdapter;
 
@@ -78,8 +77,6 @@ public class EditUser extends AppCompatActivity {
         binding.buttonNewPassword.setOnClickListener(view1 -> {
             passwordDialog();
         });
-
-
 
     }
 
