@@ -61,6 +61,10 @@
             android:name=".ui.view.DetailsActivity"
             android:parentActivityName=".ui.fragments.ActivityListFragment" />
         <activity
+            android:name=".ui.view.UserDetailsSearched"
+            android:exported="false"
+            android:parentActivityName=".ui.fragments.SearchFragment" />
+        <activity
             android:name=".ui.view.LogInActivity"
             android:exported="true"
             android:parentActivityName=".ui.view.MainActivity" />

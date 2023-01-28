@@ -1,50 +1,30 @@
 package es.udc.psi.tt_ps.ui.fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.location.LocationManager;
-import android.os.Bundle;
 
+import android.content.Intent;
+import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Handler;
-
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.databinding.ActivitySearchBinding;
 import es.udc.psi.tt_ps.ui.adapter.ListUsersAdapter;
-import es.udc.psi.tt_ps.ui.adapter.ListUsersAdapter;
-import es.udc.psi.tt_ps.ui.view.DetailsActivity;
-import es.udc.psi.tt_ps.ui.viewmodel.ActivityListsPres;
-import es.udc.psi.tt_ps.ui.viewmodel.ActivityViewModel;
-import es.udc.psi.tt_ps.ui.viewmodel.ListUsers;
+import es.udc.psi.tt_ps.ui.view.UserDetailsSearched;
 import es.udc.psi.tt_ps.ui.viewmodel.ListUsers;
 import es.udc.psi.tt_ps.ui.viewmodel.UserListPres;
 import es.udc.psi.tt_ps.ui.viewmodel.UserViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SearchFragment extends Fragment {
     String TAG = "_TAG";
     String ACTIVITY = "MainActivity2";
@@ -56,9 +36,6 @@ public class SearchFragment extends Fragment {
     List<String> tags = new ArrayList<>();
     List<Float> range = new ArrayList<>();
     FusedLocationProviderClient mFusedLocationClient;
-    LocationManager mLocationManager;
-    GeoLocation mLocation;
-    private ActivityListFragment.FragmentListener listener;
     ActivitySearchBinding binding;
     UserViewModel userViewModel;
 
@@ -67,20 +44,6 @@ public class SearchFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-    public static SearchFragment newInstance() {
-        SearchFragment fragment = new SearchFragment();
-
-        return fragment;
-    }
-
-
-
-    public interface FragmentListener {
-        void onFragmentInteraction(List<String> tags, List<Float> range, GeoLocation location,
-                                   ListUsersAdapter listUsersAdapter, ActivityListsPres presenter,
-                                   RecyclerView recyclerView);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,10 +118,18 @@ public class SearchFragment extends Fragment {
 
     public void moreActivityInfo(ListUsers listUsers){
         //Metodo para ir a la vista detallada de actividades
-        Toast.makeText(getContext(), "detallitos", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity().getApplicationContext(), UserDetailsSearched.class);
+        intent.putExtra("user", listUsers);
+        startActivity(intent);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

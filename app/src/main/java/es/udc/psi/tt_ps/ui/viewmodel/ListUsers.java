@@ -1,9 +1,10 @@
 package es.udc.psi.tt_ps.ui.viewmodel;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class ListUsers {
+public class ListUsers implements Serializable {
     private String name;
     private String surname;
     private Date birthDate;
