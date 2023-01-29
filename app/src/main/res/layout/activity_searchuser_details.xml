@@ -115,7 +115,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Descripción"
+                    android:text="@string/user_description"
                     style="@style/TextAppearance.Material3.LabelLarge"
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
@@ -128,12 +128,12 @@
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="User Don't Have Description Yet"
+                    android:text="@string/user_notDescription"
                     android:textAlignment="center" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Intereses"
+                    android:text="@string/user_interests"
                     style="@style/TextAppearance.Material3.LabelLarge"
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"

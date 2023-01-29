@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:textSize="30sp"
             android:layout_marginTop="20dp"
-            android:text="Register"/>
+            android:text="@string/register_title"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -25,7 +25,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="25dp"
             android:gravity="center"
-            android:text="Fill the entries to create your account"/>
+            android:text="@string/register_subtitle"/>
 
         <EditText
             android:id="@+id/name_reg"
@@ -34,7 +34,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:hint="Name" />
+            android:hint="@string/register_name" />
 
         <EditText
             android:id="@+id/surname_reg"
@@ -43,14 +43,14 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:hint="Surname" />
+            android:hint="@string/register_surname" />
 
         <EditText
             android:id="@+id/email_reg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Email"
+            android:hint="@string/register_email"
             android:inputType="textEmailAddress"
             android:minHeight="48dp" />
 
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint=" Password (min 6)"
+            android:hint="@string/register_password"
             android:inputType="textPassword"
             android:minHeight="48dp" />
 
@@ -74,7 +74,7 @@
                 android:id="@+id/buttonDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Birth date" />
+                android:text="@string/register_birthDate" />
 
             <TextView
                 android:id="@+id/textDate"
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Phone"
+            android:hint="@string/register_phone"
             android:inputType="phone"
             android:minHeight="48dp" />
 
@@ -98,13 +98,13 @@
             android:id="@+id/image_reg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select user image" />
+            android:text="@string/register_image" />
 
         <Button
             android:id="@+id/interests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select interests" />
+            android:text="@string/register_interests" />
 
         <Button
             android:id="@+id/signup_reg"
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="25dp"
-            android:text="Sign Up" />
+            android:text="@string/register_button" />
 
     </LinearLayout>
 

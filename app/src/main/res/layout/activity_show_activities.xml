@@ -22,7 +22,7 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Find New"
+                android:text="@string/listAct_title1"
                 android:textAppearance="?attr/textAppearanceHeadline5"
                 android:layout_marginLeft="20dp"
                 />
@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Experiences"
+                android:text="@string/listAct_title2"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:layout_marginLeft="20dp"/>
 

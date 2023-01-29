@@ -68,7 +68,7 @@ public class CreateActivityMap extends FragmentActivity implements MapFragment.O
 
         boton.setOnClickListener(v -> {
             if(!pointed){
-                Toast.makeText(getApplicationContext(), "You must select a coordinates to submit", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.dialog_newAct_map, Toast.LENGTH_SHORT).show();
             }else{
                 //enviar los resultados
                 Intent intent = new Intent();

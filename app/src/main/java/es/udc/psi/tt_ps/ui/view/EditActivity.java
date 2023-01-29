@@ -230,17 +230,17 @@ public class EditActivity extends AppCompatActivity{
 
     private void showCancelDialog(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("Cancel");
-        dialogo.setMessage("Do you want to undo the modifications?");
+        dialogo.setTitle(R.string.dialog_cancel);
+        dialogo.setMessage(R.string.dialog_cancel_msg);
 
-        dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("TAG", "Cancel-cancel");
                 onBackPressed();
             }
         });
-        dialogo.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.dialog_back, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("TAG", "cancel-back");
@@ -252,16 +252,16 @@ public class EditActivity extends AppCompatActivity{
 
     private void showAceptDialog(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("Acept");
-        dialogo.setMessage("Do you want to save the modifications?");
+        dialogo.setTitle(R.string.dialog_acept);
+        dialogo.setMessage(R.string.dialog_acept_msg);
 
-        dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 updateActivity();
             }
         });
-        dialogo.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("TAG", "acept-cancel");
@@ -284,7 +284,7 @@ public class EditActivity extends AppCompatActivity{
                     Result<String, Exception> resPic= uploadActivityPicUseCase.uploadActivityPic(activitiesList.getActivityId(), compress());
                     if(resPic.exception!=null){
                         Log.d("TAG", resPic.exception.toString());
-                        Toast.makeText(getApplicationContext(), "The new picture cannot be updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.toast_notImage, Toast.LENGTH_SHORT).show();
                     }else{
                         new_activitiesList.setActivityImage(resPic.data);
                         Log.d("TAG", "New uri: " + new_activitiesList.getActivityImage());
@@ -304,10 +304,10 @@ public class EditActivity extends AppCompatActivity{
 
                 if(res.exception!=null){
                     Log.d("TAG", res.exception.toString());
-                    Toast.makeText(getApplicationContext(), "Activity cannot be updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.toast_notUpdateActivity, Toast.LENGTH_SHORT).show();
                 }else{
                     Log.d("TAG", "Actividad actualizada correctamente");
-                    Toast.makeText(getApplicationContext(), "activity updated successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.toast_updateActivity, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     intent.putExtra("newActivity", new_activitiesList);
                     intent.putExtra("latitud",new_activitiesList.getLocation().getLatitude());
@@ -393,7 +393,7 @@ public class EditActivity extends AppCompatActivity{
     private boolean val_title(){
         String titulo = binding.etTitle.getText().toString();
         if(titulo.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valTitle, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por titulo no indicado");
             return false;
         }
@@ -403,7 +403,7 @@ public class EditActivity extends AppCompatActivity{
     private boolean val_description(){
         String description = binding.etDescription.getText().toString();
         if(description.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valDescription, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por description no indicada");
             return false;
         }
@@ -415,7 +415,7 @@ public class EditActivity extends AppCompatActivity{
     private boolean val_duration(){
         Log.d("TAG", "Duration: " + new_activitiesList.getStart_date().toString() + " " + new_activitiesList.getEnd_date().toString());
         if(!new_activitiesList.getStart_date().before(new_activitiesList.getEnd_date())){
-            Toast.makeText(getApplicationContext(), "Start date has to ve previous to the end date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valDuration, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por fechas no coherentes");
             return false;
         }else{

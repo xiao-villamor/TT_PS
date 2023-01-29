@@ -117,7 +117,7 @@ public class EditUser extends AppCompatActivity {
 
     private void interestsDialogo(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("Choose the interests");
+        dialogo.setTitle(R.string.dialog_interestsTitle);
         //Array con los posibles intereses
         String[] interests=getResources().getStringArray(R.array.interests_array);
         selectedItems=new ArrayList();
@@ -139,7 +139,7 @@ public class EditUser extends AppCompatActivity {
                 }
         );
 
-        dialogo.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo aceptado");
@@ -151,7 +151,7 @@ public class EditUser extends AppCompatActivity {
                 binding.interestsGrid.setAdapter(tagAdapter);
             }
         });
-        dialogo.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.dialog_cancel,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo cancelado");
@@ -171,14 +171,14 @@ public class EditUser extends AppCompatActivity {
         EditText newPass2=mView.findViewById(R.id.newPassword2);
 
 
-        buldier.setPositiveButton("Acept", new DialogInterface.OnClickListener() {
+        buldier.setPositiveButton(R.string.dialog_acept, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
 
-        buldier.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        buldier.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 dialogInterface.dismiss();
@@ -194,7 +194,7 @@ public class EditUser extends AppCompatActivity {
             public void onClick(View v) {
                 if(newPass.getText().toString().equals(newPass2.getText().toString())){
                     if(newPass.getText().toString().length()<6){
-                        Toast.makeText(EditUser.this, "The password must have min 6", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditUser.this, R.string.toast_minLengthPass, Toast.LENGTH_SHORT).show();
                     }else{
                         Log.d("TAG", "New passwords match");
                         updatePassword(newPass.getText().toString());
@@ -202,7 +202,7 @@ public class EditUser extends AppCompatActivity {
                     }
                 }else{
                     Log.d("TAG", "New passwords do not match");
-                    Toast.makeText(EditUser.this, "The new password does not match", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditUser.this, R.string.toast_passNotMatch, Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -216,9 +216,9 @@ public class EditUser extends AppCompatActivity {
             Result<Object, Exception> res= updatePasswordUseCase.updateUserPassword(pass);
             if(res.exception!=null){
                 Log.d("TAG", res.exception.toString());
-                Toast.makeText(getApplicationContext(), "The new password cannot be updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_passNotUpdated, Toast.LENGTH_SHORT).show();
             }else{
-                Toast.makeText(getApplicationContext(), "The password has been updated", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_passUpdated, Toast.LENGTH_LONG).show();
             }
 
         } catch (InterruptedException e) {
@@ -229,17 +229,17 @@ public class EditUser extends AppCompatActivity {
 
     private void showCancelDialog(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("Cancel");
-        dialogo.setMessage("Do you want to undo the personal information modifications?");
+        dialogo.setTitle(R.string.dialog_cancel);
+        dialogo.setMessage(R.string.dialog_cancelEditUser_msg);
 
-        dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("TAG", "Cancel-cancel");
                 onBackPressed();
             }
         });
-        dialogo.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.dialog_back, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("TAG", "cancel-back");
@@ -251,16 +251,16 @@ public class EditUser extends AppCompatActivity {
 
     private void showAceptDialog(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("Acept");
-        dialogo.setMessage("Do you want to save this personal information?");
+        dialogo.setTitle(R.string.dialog_acept);
+        dialogo.setMessage(R.string.dialog_aceptEditUser_msg);
 
-        dialogo.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 updateUser();
             }
         });
-        dialogo.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("TAG", "acept-cancel");
@@ -281,7 +281,7 @@ public class EditUser extends AppCompatActivity {
                 Result<String, Exception> resPic= uploadUserPicUseCase.uploadUserPic(uuid, compress());
                 if(resPic.exception!=null){
                     Log.d("TAG", resPic.exception.toString());
-                    Toast.makeText(getApplicationContext(), "The new picture cannot be updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.toast_notImage, Toast.LENGTH_SHORT).show();
                 }else{
                     newUser.profilePic(resPic.data);
                     Log.d("TAG", "New uri: " + resPic.data);
@@ -298,10 +298,10 @@ public class EditUser extends AppCompatActivity {
 
             if(res.exception!=null){
                 Log.d("TAG", res.exception.toString());
-                Toast.makeText(getApplicationContext(), "User cannot be updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_notUpdateUser, Toast.LENGTH_SHORT).show();
             }else{
                 Log.d("TAG", "Usuario actualizado correctamente");
-                Toast.makeText(getApplicationContext(), "user updated successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_updateUser, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra("edited", true);
                 setResult(RESULT_OK, intent);
@@ -375,7 +375,7 @@ public class EditUser extends AppCompatActivity {
 
         String name = binding.etName.getText().toString();
         if(name.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valName, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por nombre no indicado");
             return false;
         }
@@ -386,7 +386,7 @@ public class EditUser extends AppCompatActivity {
 
         String surname = binding.etSurname.getText().toString();
         if(surname.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Surname cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valSurname, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por apellido no indicado");
             return false;
         }else{
@@ -399,7 +399,7 @@ public class EditUser extends AppCompatActivity {
 
         String phone = binding.etPhone.getText().toString();
         if(phone.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Phone cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valPhone, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por telefono no indicado");
             return false;
         }else{
