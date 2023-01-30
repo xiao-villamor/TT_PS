@@ -69,8 +69,12 @@ public class activityRepository {
         return api.getNextActivities(prevDocSnap);
     }
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>,Boolean> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
         return api.getActivitiesFiltered(tags,distanceRange,location);
+    }
+
+    public QueryResult<List<ActivityModel>,Boolean> getActivitiesFilteredNext() throws ExecutionException, InterruptedException, TimeoutException{
+        return api.getActivitiesFilteredNext();
     }
 
     public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException{
@@ -81,8 +85,6 @@ public class activityRepository {
         return api.uploadActivityPic(uuid, image);
     }
 
-    public void ActivityListener(String uuid, Consumer<String> listener){
-        api.ActivityListener(uuid,listener);
-    }
+
 
 }

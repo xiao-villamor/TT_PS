@@ -82,7 +82,7 @@
     <string name="toast_updateActivity">activity updated successfully</string>
     <string name="editAct_imagButton">Select new image</string>
     <string name="editAct_title">Title</string>
-    <string name="editAct_startdate">Start Date</string>
+    <string name="editAct_startdate">Date</string>
     <string name="editAct_endDate">End Date</string>
     <string name="editAct_description">Description</string>
     <string name="editAct_location">Location</string>

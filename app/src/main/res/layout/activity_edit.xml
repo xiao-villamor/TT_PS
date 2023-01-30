@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".ui.view.EditActivity">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,7 +20,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal">
-
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                >
 
             <ImageView
                 android:id="@+id/card_media"
@@ -30,17 +35,20 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_background"
                 app:cardUseCompatPadding="true" />
-
-            <Button
-                android:id="@+id/button_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/editAct_imagButton"/>
+                <Button
+                    android:id="@+id/button_image"
+                    style="?attr/materialIconButtonFilledStyle"
+                    android:layout_marginRight="20dp"
+                    android:layout_margin="20dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom|end"
+                    app:icon="@drawable/ic_baseline_edit_24" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"
-                android:layout_width="match_parent"
+                android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
@@ -97,28 +105,6 @@
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?android:attr/textColorSecondary" />
 
-                    <TextView
-                        android:id="@+id/tv_endDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:gravity="center"
-                        android:text="@string/editAct_endDate"
-                        android:textAppearance="?attr/textAppearanceSubtitle1"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/et_endDate"
-                        style="@style/TextAppearance.Material3.LabelLarge"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:gravity="center"
-                        android:text=""
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary" />
-
 
                     <TextView
                         android:id="@+id/tv_description"
@@ -155,17 +141,12 @@
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/buton_new_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:backgroundTint="#313A7095"
-                        android:gravity="center"
-                        android:text="@string/editAct_locationButton"
-                        android:textColor="@color/md_theme_dark_inverseOnSurface" />
 
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        >
                     <fragment
                         android:id="@+id/edit_activity_map"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -176,6 +157,16 @@
                         map:uiRotateGestures="false"
                         map:uiScrollGestures="false"
                         map:uiZoomControls="true" />
+                        <Button
+                            android:id="@+id/buton_new_location"
+                            style="?attr/materialIconButtonFilledStyle"
+                            android:layout_marginRight="20dp"
+                            android:layout_margin="20dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="bottom|start"
+                            app:icon="@drawable/ic_baseline_edit_24" />
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 
@@ -198,12 +189,13 @@
         >
 
         <Button
+
             android:id="@+id/cancel_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="75dp"
             android:layout_gravity="center"
-            android:backgroundTint="@android:color/holo_red_dark"
+            app:backgroundTint="?attr/colorError"
             android:text="@string/button_cancel" />
 
         <Button

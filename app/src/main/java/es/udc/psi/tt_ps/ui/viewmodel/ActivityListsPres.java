@@ -38,7 +38,9 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
     public void setRecycledDataFiltered(List<String> tags, List<Float> range, GeoLocation location,
                                         RecyclerView recyclerView) throws InterruptedException {
 
-        Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
+        getMore = true;
+
+        Result<QueryResult<List<ActivityModel>, Boolean>, Exception> data;
 
 
         ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
@@ -50,10 +52,9 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
             adapter.setItems(new ArrayList<>());
         }else {
 
-            if (data.exception == null && data.data.cursor != null) {
+            if (data.exception == null && data.data.cursor) {
                 List<ActivityModel> res = new ArrayList<>(data.data.data);
 
-                prevDocSnap = data.data.cursor;
 
                 assert adapter != null;
                 List<ListActivities> listActivities = new ArrayList<>();
@@ -78,14 +79,13 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
     public void setRecycledDataFiltered(List<String> tags, List<ListActivities> listActivities,
                                         List<Float> range,GeoLocation location) throws InterruptedException {
-        Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
+        Result<QueryResult<List<ActivityModel>, Boolean>, Exception> data;
 
 
         data = getActivitiesFiltered(tags,range,location);
         if (data.exception == null && data.data.data.size() > 0) {
             Log.d("_TAG", "Presenter " + " data not null");
             List<ActivityModel> res = new ArrayList<>(data.data.data);
-            prevDocSnap = data.data.cursor;
 
             for (int i = 0; i < res.size(); i++) {
                 if (res.get(i).getParticipants()!=null){
@@ -104,13 +104,12 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
     public void updateRecycledDataFiltered(List<String> tags,RecyclerView recyclerView,
                                            List<Float> range,GeoLocation location) throws InterruptedException {
-        Result<QueryResult<List<ActivityModel>, DocumentSnapshot>, Exception> data;
+        Result<QueryResult<List<ActivityModel>, Boolean>, Exception> data;
 
-        data = getActivitiesFilteredNext(tags,range,prevDocSnap,location);
-        if (data.exception == null && data.data.cursor != null) {
-            Log.d("_TAG", "Presenter " + " data not null");
+        data = getActivitiesFilteredNext();
+        if (data.exception == null && data.data.cursor) {
+            Log.d("_TAG", "GetNext " + data.data.data.size() + " data not null");
             List<ActivityModel> res = new ArrayList<>(data.data.data);
-            prevDocSnap = data.data.cursor;
             ListActivitiesAdapter adapter = (ListActivitiesAdapter) recyclerView.getAdapter();
 
             assert adapter != null;

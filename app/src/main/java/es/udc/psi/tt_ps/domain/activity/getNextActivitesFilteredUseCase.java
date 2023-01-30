@@ -15,14 +15,14 @@ import es.udc.psi.tt_ps.data.model.Result;
 import es.udc.psi.tt_ps.data.repository.activityRepository;
 
 public class getNextActivitesFilteredUseCase {
-    public static Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> getActivitiesFilteredNext(List<String> tags, List<Float> Range, DocumentSnapshot prev, GeoLocation location) throws InterruptedException{
+    public static Result<QueryResult<List<ActivityModel>,Boolean>, Exception> getActivitiesFilteredNext() throws InterruptedException{
 
-        Result<QueryResult<List<ActivityModel>,DocumentSnapshot>, Exception> res = new Result<>();
+        Result<QueryResult<List<ActivityModel>,Boolean>, Exception> res = new Result<>();
         final activityRepository repository = new activityRepository();
 
         Thread t = new Thread(() -> {
             try {
-                res.data = repository.getActivitiesFilteredNext(tags,Range,prev,location);
+                res.data = repository.getActivitiesFilteredNext();
                 Log.d("getActivitiesFiltered", "getActivitiesFiltered: " + res.data.cursor);
 
             } catch (InterruptedException | ExecutionException | TimeoutException e) {

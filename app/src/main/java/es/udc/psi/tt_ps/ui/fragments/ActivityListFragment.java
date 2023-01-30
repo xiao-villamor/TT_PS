@@ -54,7 +54,7 @@ public class ActivityListFragment extends Fragment {
     LocationManager mLocationManager;
     GeoLocation mLocation;
     private FragmentListener listener;
-    boolean getMore = true;
+    static boolean getMore = true;
     Context ctx;
     ActivityViewModel activityViewModel;
 
@@ -157,6 +157,9 @@ public class ActivityListFragment extends Fragment {
     }
 
     public void updateList(List<String> aTags, List<Float> aRange){
+        Log.d(TAG, "Cambios filtros");
+        getMore = true;
+
         range = aRange;
         tags = aTags;
     }
@@ -164,7 +167,6 @@ public class ActivityListFragment extends Fragment {
     public void initRecycledView() throws InterruptedException {
         activitiesList = new ArrayList<>();
         getLocation();
-
         try {
             presenter.setRecycledDataFiltered(tags, activitiesList,range ,mLocation);
         } catch (InterruptedException e) {
@@ -187,8 +189,6 @@ public class ActivityListFragment extends Fragment {
                 if (!recyclerView.canScrollVertically(1) && presenter.getMore) {
                     int totalItems = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
                     int lastVisibleItem = ((LinearLayoutManager) Objects.requireNonNull(recyclerView.getLayoutManager())).findLastVisibleItemPosition();
-                    Log.d(TAG,ACTIVITY+" totalItems: "+totalItems+" lastVisibleItem: "+lastVisibleItem);
-                    Log.d(TAG,ACTIVITY+" Comprobacion: " + (lastVisibleItem == totalItems - 1));
                     if (lastVisibleItem == totalItems - 1 && lastVisibleItem != 0) {
                         try {
                             presenter.updateRecycledDataFiltered(tags,recyclerView,range ,mLocation);
@@ -202,7 +202,6 @@ public class ActivityListFragment extends Fragment {
                 }
             }
         });
-        
 
     }
 

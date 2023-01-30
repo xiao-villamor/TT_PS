@@ -2,7 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -90,13 +90,12 @@
             android:text="@string/actNew_location" />
 
     <Button
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/createActivity"
         style="@style/Widget.Material3.Button.IconButton.Filled"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:gravity="bottom|center"
-        android:layout_weight="0"
         android:text="@string/actNew_button" />
 
 </LinearLayout>

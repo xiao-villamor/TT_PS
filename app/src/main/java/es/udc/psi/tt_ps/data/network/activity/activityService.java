@@ -27,6 +27,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +47,9 @@ public class activityService implements activityServiceInterface {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private DocumentSnapshot prevDocSnap = null;
     private ActivityModel activity = null;
-
+    private static List<ActivityModel> activities = new ArrayList<>();
     ApiClient apiClient = new ApiClient();
+    private static int cursor = 0;
 
     String spots_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fsports.jpg?alt=media&token=f3afcfa9-6081-442d-9001-577189e7d0bc";
     String walking_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fwalking.jpg?alt=media&token=ae57731f-c7bf-40fa-8a9e-247ae4c0a097";
@@ -58,10 +61,10 @@ public class activityService implements activityServiceInterface {
     String conv_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fconver.jpg?alt=media&token=52edaec5-822c-4417-99aa-291a5f2b98bd";
     String other_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fother.jpg?alt=media&token=32525b4a-0a08-487b-b331-6b618575e26f";
 
-    public ActivityModel selectImage(ActivityModel activity){
+    public ActivityModel selectImage(ActivityModel activity) {
         //select one image for each activity based on the activity tags and return the activity with the image. The image should be one of the images above
         //do it with a switch case
-        switch (activity.getTags().get(0)){
+        switch (activity.getTags().get(0)) {
             case "sports":
                 activity.setImg(spots_image);
                 break;
@@ -91,7 +94,7 @@ public class activityService implements activityServiceInterface {
                 break;
         }
 
-    return activity;
+        return activity;
     }
 
     public void createActivity(ActivityModel activityrec) throws ExecutionException, InterruptedException, TimeoutException {
@@ -99,39 +102,39 @@ public class activityService implements activityServiceInterface {
         //Tasks.await(db.collection("Activities").document().set(activity), 45, TimeUnit.SECONDS);
         activityrec = selectImage(activityrec);
         db.collection("Activities").add(activityrec).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("_TAG","Subscribing to activity: "+documentReference.getId());
-                        activity.setId(documentReference.getId());
-                        try {
-                            updateActivity(activity,documentReference.getId());
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d("_TAG", "Subscribing to activity: " + documentReference.getId());
+                activity.setId(documentReference.getId());
+                try {
+                    updateActivity(activity, documentReference.getId());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
     public void updateActivity(ActivityModel activity, String id) throws InterruptedException {
         db.collection("Activities").document(id).set(activity);
         //send message to topic ussing firebase messaging
-        apiClient.NotifyUpdate(id,activity.getTitle());
+        apiClient.NotifyUpdate(id, activity.getTitle());
 
     }
 
-    public void addParticipant(ActivityModel activity,String id){
+    public void addParticipant(ActivityModel activity, String id) {
         db.collection("Activities").document(id).set(activity);
         subscribeToActivity(id);
     }
 
-    public void removeParticipant(ActivityModel activity,String id){
+    public void removeParticipant(ActivityModel activity, String id) {
         db.collection("Activities").document(id).set(activity);
         unsubscribeToActivity(id);
     }
 
-    public void subscribeToActivity(String id){
-        Log.d("_TAG", "Subscribing to activity: "+id);
+    public void subscribeToActivity(String id) {
+        Log.d("_TAG", "Subscribing to activity: " + id);
         FirebaseMessaging.getInstance().subscribeToTopic(id)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -145,7 +148,7 @@ public class activityService implements activityServiceInterface {
                 });
     }
 
-    public void unsubscribeToActivity(String uuid){
+    public void unsubscribeToActivity(String uuid) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(uuid)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -160,141 +163,141 @@ public class activityService implements activityServiceInterface {
     }
 
     public void deleteActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
-        QueryResult<ActivityModel,DocumentSnapshot> activity = getActivity(id);
+        QueryResult<ActivityModel, DocumentSnapshot> activity = getActivity(id);
         db.collection("Activities").document(id).delete();
         unsubscribeToActivity(id);
-        Log.d("_TAG", "Unsubscribing to activity: "+id);
-        apiClient.NotifyDelete(id,activity.data.getTitle());
+        Log.d("_TAG", "Unsubscribing to activity: " + id);
+        apiClient.NotifyDelete(id, activity.data.getTitle());
 
     }
 
     public void finalizeActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
-        QueryResult<ActivityModel,DocumentSnapshot> activity = getActivity(id);
+        QueryResult<ActivityModel, DocumentSnapshot> activity = getActivity(id);
         unsubscribeToActivity(id);
         db.collection("Activities").document(id).delete();
-        Log.d("_TAG", "Unsubscribing to activity: "+id);
+        Log.d("_TAG", "Unsubscribing to activity: " + id);
         List<String> participants = activity.data.getParticipants();
         //count number of participants in the List ussing the size of the list
-        apiClient.NotifyRate(id,activity.data.getTitle(),activity.data.getAdminId(),participants.size());
+        apiClient.NotifyRate(id, activity.data.getTitle(), activity.data.getAdminId(), participants.size());
 
     }
 
-    public QueryResult<ActivityModel,DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<ActivityModel, DocumentSnapshot> getActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         DocumentReference userDocument = (db.collection("Activities").document(id));
-        QueryResult<ActivityModel,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<ActivityModel, DocumentSnapshot> result = new QueryResult<>();
 
-        DocumentSnapshot res =  Tasks.await(userDocument.get(), 5, TimeUnit.SECONDS);
-        if(res.exists()) {
+        DocumentSnapshot res = Tasks.await(userDocument.get(), 5, TimeUnit.SECONDS);
+        if (res.exists()) {
             result.data = res.toObject(ActivityModel.class);
             result.cursor = res;
         }
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdmin(String adminId) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesByAdmin(String adminId) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
         DocumentSnapshot doc;
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
         Query ref = db.collection("Activities").whereEqualTo("adminId", adminId);
         Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
-                    ActivityModel activity = document.toObject(ActivityModel.class);
-                    activity.setId(document.getId());
-                    data.add(activity);
-                    prevDocSnap = document;
-            }else{
-                Log.d("TAG", "No such document");
-            }
-        });
-        result.data=data;
-        result.cursor=prevDocSnap;
-        return result;
-    }
-
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getAssistantActivitiesById(String uuid,int count) throws ExecutionException, InterruptedException,TimeoutException{
-
-        List<ActivityModel> data = new ArrayList<>();
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
-        Log.d("TAG", "GetAssist Activities: "+uuid);
-
-        Query ref = db.collection("Activities").whereArrayContains("participants", uuid).orderBy("start_date", Query.Direction.DESCENDING).limit(count);
-        Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
+            if (document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
                 data.add(activity);
                 prevDocSnap = document;
-            }else{
+            } else {
                 Log.d("TAG", "No such document");
             }
         });
-        result.data=data;
-        result.cursor=prevDocSnap;
+        result.data = data;
+        result.cursor = prevDocSnap;
+        return result;
+    }
+
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getAssistantActivitiesById(String uuid, int count) throws ExecutionException, InterruptedException, TimeoutException {
+
+        List<ActivityModel> data = new ArrayList<>();
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
+        Log.d("TAG", "GetAssist Activities: " + uuid);
+
+        Query ref = db.collection("Activities").whereArrayContains("participants", uuid).orderBy("start_date", Query.Direction.DESCENDING).limit(count);
+        Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
+            if (document != null) {
+                ActivityModel activity = document.toObject(ActivityModel.class);
+                activity.setId(document.getId());
+                data.add(activity);
+                prevDocSnap = document;
+            } else {
+                Log.d("TAG", "No such document");
+            }
+        });
+        result.data = data;
+        result.cursor = prevDocSnap;
         return result;
     }
 
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesByAdminId(String adminId,int count) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesByAdminId(String adminId, int count) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
 
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
 
 
         Query ref = db.collection("Activities").whereEqualTo("adminId", adminId).orderBy("creation_date", Query.Direction.DESCENDING).limit(count);
         Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
+            if (document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
                 data.add(activity);
                 prevDocSnap = document;
-            }else{
+            } else {
                 Log.d("TAG", "No such document");
             }
         });
-        result.data=data;
-        result.cursor=prevDocSnap;
+        result.data = data;
+        result.cursor = prevDocSnap;
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getNextAssistantActivitiesById(String uuid,int count,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException,TimeoutException{
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getNextAssistantActivitiesById(String uuid, int count, DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
 
         List<ActivityModel> data = new ArrayList<>();
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
 
         Query ref = db.collection("Activities").whereArrayContains("participants", uuid).orderBy("start_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(count);
         Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
+            if (document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
                 data.add(activity);
                 prevDocSnap = document;
-            }else{
+            } else {
                 Log.d("TAG", "No such document");
             }
         });
-        result.data=data;
-        result.cursor=prevDocSnap;
+        result.data = data;
+        result.cursor = prevDocSnap;
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getNextActivitiesByAdminId(String adminId,int count,DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getNextActivitiesByAdminId(String adminId, int count, DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
 
         Query ref = db.collection("Activities").whereEqualTo("adminId", adminId).orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(count);
         Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
+            if (document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
                 data.add(activity);
                 prevDocSnap = document;
-            }else{
+            } else {
                 Log.d("TAG", "No such document");
             }
         });
-        
-        result.data=data;
-        result.cursor=prevDocSnap;
+
+        result.data = data;
+        result.cursor = prevDocSnap;
 
         return result;
     }
@@ -302,29 +305,32 @@ public class activityService implements activityServiceInterface {
 
     public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivities() throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
 
         Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).limit(5);
         Tasks.await(ref.get(), 30, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
+            if (document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
                 data.add(activity);
                 prevDocSnap = document;
-            }else{
+            } else {
                 Log.d("TAG", "No such document");
             }
         });
 
-        result.data=data;
-        result.cursor=prevDocSnap;
+        result.data = data;
+        result.cursor = prevDocSnap;
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) {
-        List<ActivityModel> data = new ArrayList<>();
+    public QueryResult<List<ActivityModel>, Boolean> getActivitiesFiltered(List<String> tags, List<Float> distanceRange, GeoLocation location) {
+        List<ActivityModel> data;
+        activities.clear();
+        cursor = 0;
         final double radiusInM = 1000 * distanceRange.get(1);
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>, Boolean> result = new QueryResult<>();
 
 
         List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInM);
@@ -336,27 +342,27 @@ public class activityService implements activityServiceInterface {
                     .startAt(b.startHash)
                     .endAt(b.endHash)
                     .whereArrayContainsAny("tags", tags)
-                    .limit(5);
+                    .limit(150);
             tasks.add(q.get());
         }
 
         tasks.forEach(task -> {
             try {
                 Tasks.await(task, 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-                    if(document.exists()) {
+                    if (document.exists()) {
                         GeoLocation docLocation = new GeoLocation(document.getGeoPoint("location").getLatitude(), document.getGeoPoint("location").getLongitude());
 
-                        double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation,location);
-                        distanceInKm = distanceInKm/1000;
+                        double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation, location);
+                        distanceInKm = distanceInKm / 1000;
 
-                        if(distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
+                        if (distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
                             prevDocSnap = document;
                             ActivityModel activity = document.toObject(ActivityModel.class);
                             activity.setId(document.getId());
-                            data.add(activity);
+                            activities.add(activity);
 
                         }
-                    }else{
+                    } else {
                         Log.d("_TAG", "No such document");
                     }
                 });
@@ -364,18 +370,41 @@ public class activityService implements activityServiceInterface {
                 e.printStackTrace();
             }
         });
-
-        result.data=data;
-        result.cursor = prevDocSnap;
+        cursor = 3;
+        data = activities.subList(0, 3);
+        result.data = data;
+        result.cursor = true;
+        Log.d("_TAG", "Size: " + activities.size() + " cursor: " + cursor);
 
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange,DocumentSnapshot prevDocSnaprec,GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
+    public QueryResult<List<ActivityModel>, Boolean> getActivitiesFilteredNext() {
+        List<ActivityModel> data;
+        QueryResult<List<ActivityModel>, Boolean> result = new QueryResult<>();
+        Log.d("_TAG", "cursor: " + cursor + " Tamaño lista: " + activities.size());
+        //get next 5 activities if there are more than 5 in the subList
+        if (activities.size() >= cursor + 3) {
+            data = activities.subList(cursor, cursor + 3);
+            cursor += 3;
+            result.cursor = true;
+        }else {
+            data = activities.subList(cursor, activities.size());
+            cursor += 3;
+            result.cursor = false;
+
+        }
+        result.data = data;
+        return result;
+
+
+    }
+
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getActivitiesFilteredNext(List<String> tags, List<Float> distanceRange, DocumentSnapshot prevDocSnaprec, GeoLocation location) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
         final double radiusInM = 1000 * distanceRange.get(1);
 
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
 
         List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(location, radiusInM);
 
@@ -398,20 +427,20 @@ public class activityService implements activityServiceInterface {
         tasks.forEach(task -> {
             try {
                 Tasks.await(task, 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-                    if(document.exists()) {
+                    if (document.exists()) {
                         GeoLocation docLocation = new GeoLocation(document.getGeoPoint("location").getLatitude(), document.getGeoPoint("location").getLongitude());
 
-                        double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation,location);
-                        distanceInKm = distanceInKm/1000;
+                        double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation, location);
+                        distanceInKm = distanceInKm / 1000;
 
-                        if(distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
+                        if (distanceInKm >= distanceRange.get(0) && distanceInKm <= distanceRange.get(1)) {
                             prevDocSnap = document;
                             ActivityModel activity = document.toObject(ActivityModel.class);
                             activity.setId(document.getId());
-                            Log.d("_TAG", "getActivitiesFilteredNext: "+activity.getTitle());
+                            Log.d("_TAG", "getActivitiesFilteredNext: " + activity.getTitle());
                             data.add(activity);
                         }
-                    }else{
+                    } else {
                         Log.d("TAG", "No such document");
                     }
                 });
@@ -426,19 +455,20 @@ public class activityService implements activityServiceInterface {
         return result;
     }
 
-    public QueryResult<List<ActivityModel>,DocumentSnapshot>  getNextActivities(DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
+
+    public QueryResult<List<ActivityModel>, DocumentSnapshot> getNextActivities(DocumentSnapshot prevDocSnaprec) throws ExecutionException, InterruptedException, TimeoutException {
         List<ActivityModel> data = new ArrayList<>();
-        QueryResult<List<ActivityModel>,DocumentSnapshot> result = new QueryResult<>();
+        QueryResult<List<ActivityModel>, DocumentSnapshot> result = new QueryResult<>();
 
 
         Query ref = db.collection("Activities").orderBy("creation_date", Query.Direction.DESCENDING).startAfter(prevDocSnaprec).limit(5);
         Tasks.await(ref.get(), 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-            if(document != null) {
+            if (document != null) {
                 ActivityModel activity = document.toObject(ActivityModel.class);
                 activity.setId(document.getId());
                 data.add(activity);
                 prevDocSnap = document;
-            }else{
+            } else {
                 Log.d("TAG", "No such document");
             }
         });
@@ -451,9 +481,9 @@ public class activityService implements activityServiceInterface {
 
     public String uploadActivityPic(String uuid, byte[] image) throws FileNotFoundException, ExecutionException, InterruptedException, TimeoutException {
 
-        StorageReference profilePicRef = storage.getReference("activity_image/"+uuid+".jpg");
+        StorageReference profilePicRef = storage.getReference("activity_image/" + uuid + ".jpg");
         String uri = null;
-        UploadTask.TaskSnapshot res=Tasks.await(profilePicRef.putBytes(image)
+        UploadTask.TaskSnapshot res = Tasks.await(profilePicRef.putBytes(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -466,40 +496,14 @@ public class activityService implements activityServiceInterface {
                     }
                 }), 10, TimeUnit.SECONDS);
 
-        if(res != null){
+        if (res != null) {
             uri = Tasks.await(profilePicRef.getDownloadUrl(), 10, TimeUnit.SECONDS).toString();
-            Log.d("TAG",uri);
-        }else{
-            uri=null;
+            Log.d("TAG", uri);
+        } else {
+            uri = null;
         }
 
         return uri;
     }
 
-    public void ActivityListener(String uuid, Consumer<String> listener){
-        Query ref = db.collection("Activities").whereArrayContains("participants", uuid);
-        ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    return;
-                }
-
-                for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                    switch (dc.getType()) {
-                        case MODIFIED:
-                            listener.accept(dc.getDocument().getString("title") + " Modified");
-                            break;
-                        case REMOVED:
-                            Log.d("TAG", "Removed city: " + dc.getDocument().getData());
-                            listener.accept(dc.getDocument().getString("title") + " Deleted");
-                            break;
-                    }
-                }
-
-            }
-        });
-    }
 }

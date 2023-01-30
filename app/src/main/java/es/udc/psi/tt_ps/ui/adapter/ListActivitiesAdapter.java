@@ -1,6 +1,8 @@
 package es.udc.psi.tt_ps.ui.adapter;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.ui.viewmodel.ListActivities;
@@ -50,7 +57,13 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
 
     @Override
     public void onBindViewHolder(@NonNull ActivitiesHolder holder, int position) {
-        holder.bindData(mData.get(position));
+        try {
+            holder.bindData(mData.get(position));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<ListActivities> getmData() {
@@ -80,16 +93,34 @@ public class ListActivitiesAdapter extends RecyclerView.Adapter<ListActivitiesAd
             end_date = itemView.findViewById(R.id.card_date);
         }
 
-        void bindData(final ListActivities item){
+        void bindData(final ListActivities item) throws ParseException, IOException {
             if(item.getActivityImage() != null){
                 Glide.with(itemView.getContext())
                         .load(item.getActivityImage())
                         .into(activity_image);
 
             }
+
+
             title.setText(item.getTitle());
-            location.setText(item.getLocation().toString());
-            end_date.setText(item.getEnd_date().toString());
+            String StartDate = item.getStart_date().toString();
+            String EndDate = item.getEnd_date().toString();
+            //convert a String that represent a date in yyyy-MM-dd HH:mm:ss z format to String with format dd/MM/yyyy HH:mm
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+            Date date = sdf.parse(StartDate);
+            SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
+            String StartDate2 = sdf2.format(date);
+            Date date2 = sdf.parse(EndDate);
+            String EndDate2 = sdf2.format(date2);
+            location.setText(StartDate2 + " - " + EndDate2);
+            Geocoder geocoder = new Geocoder(itemView.getContext(), Locale.getDefault());
+
+            List<Address> addresses = geocoder.getFromLocation(item.getLocation().getLatitude(), item.getLocation().getLongitude(), 1);
+            String cityName = "";
+            if(addresses.size() != 0) {
+                cityName = addresses.get(0).getLocality();
+            }
+            end_date.setText(cityName);
             itemView.setOnClickListener(view -> listener.onItemClick(item));
 
         }
