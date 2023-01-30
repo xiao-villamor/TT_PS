@@ -6,6 +6,7 @@
     android:layout_width="match_parent">
 
     <LinearLayout
+
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_marginBottom="20dp"
@@ -27,90 +28,142 @@
             android:gravity="center"
             android:text="@string/register_subtitle"/>
 
-        <EditText
-            android:id="@+id/name_reg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:hint="@string/register_name" />
 
-        <EditText
-            android:id="@+id/surname_reg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:hint="@string/register_surname" />
+        <com.google.android.material.textfield.TextInputLayout
 
-        <EditText
-            android:id="@+id/email_reg"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/register_email"
-            android:inputType="textEmailAddress"
-            android:minHeight="48dp" />
+            android:hint="@string/register_name">
 
-        <EditText
-            android:id="@+id/password_reg"
-            android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name_reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:hint="@string/register_surname">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/surname_reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="10dp"
+
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/register_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email_reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="10dp"
+
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
             android:hint="@string/register_password"
-            android:inputType="textPassword"
-            android:minHeight="48dp" />
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password_reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="10dp"
+
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/register_phone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone_reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/buttonDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/register_birthDate" />
 
             <TextView
                 android:id="@+id/textDate"
-                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:text="" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/phone_reg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/register_phone"
-            android:inputType="phone"
-            android:minHeight="48dp" />
 
 
-        <Button
-            android:id="@+id/image_reg"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/register_image" />
+            android:orientation="horizontal"
+            >
+            <Button
 
-        <Button
-            android:id="@+id/interests"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_interests" />
+                android:id="@+id/image_reg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_image" />
+
+            <Button
+                android:layout_marginStart="20dp"
+                android:id="@+id/interests"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_interests" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/signup_reg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:text="@string/register_button" />
 

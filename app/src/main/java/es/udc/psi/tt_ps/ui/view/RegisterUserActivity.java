@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -21,6 +22,8 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseUser;
 
 
@@ -29,6 +32,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import es.udc.psi.tt_ps.R;
@@ -41,7 +45,8 @@ public class RegisterUserActivity extends AppCompatActivity {
     private ActivityRegisterUserBinding binding;
     private java.util.Date date=null;
     private Uri image=null;
-    private List<String> selectedItems=null;
+    private List<String> selectedTags=new ArrayList();;
+
     ProgressDialog progressDialog=null;
 
     @Override
@@ -66,7 +71,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                     Result<FirebaseUser, Exception> res = createUserUseCase.createUser(
                             binding.nameReg.getText().toString(), binding.emailReg.getText().toString(), binding.passwordReg.getText().toString(),
                             binding.surnameReg.getText().toString(), date, binding.phoneReg.getText().toString(),
-                            compress(), null, selectedItems, 0.0f);
+                            compress(), null, selectedTags, 0.0f);
 
 
 
@@ -90,7 +95,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         });
 
         binding.buttonDate.setOnClickListener(v -> {
-            showStartDateDialog();
+            selectDateDialog();
         });
 
         binding.imageReg.setOnClickListener(v -> {
@@ -98,55 +103,58 @@ public class RegisterUserActivity extends AppCompatActivity {
         });
 
         binding.interests.setOnClickListener(v -> {
-            selectedItems = new ArrayList();
-            mostrarDialogo();
+            showTagsChooser();
         });
 
 
     }
 
-    private void showStartDateDialog(){
-        Calendar calendar = Calendar.getInstance();
 
-        DatePickerDialog.OnDateSetListener dateSetListener=new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                date=calendar.getTime();
-                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd-MM-yyyy");
-                binding.textDate.setText(simpleDateFormat.format(date));
-                Log.d("TAG", "Fecha seleccionada: " + date.toString());
+    private void selectDateDialog() {
+        MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .build();
+        datePicker.show(getSupportFragmentManager(), "DATE_PICKER");
 
-            }
-        };
-        DatePickerDialog d = new DatePickerDialog(RegisterUserActivity.this, dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        d.show();
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+
+            String dateS = new SimpleDateFormat("dd/MM/yyyy").format(selection);
+            Log.d("TAG", "Date: " + dateS);
+            binding.textDate.setText(dateS);
+            date = new Date((Long) selection);
+
+        });
+
 
 
     }
 
-    private void mostrarDialogo(){
-        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle(R.string.dialog_interestsTitle);
+    private void showTagsChooser(){
+        MaterialAlertDialogBuilder dialogo = new MaterialAlertDialogBuilder(this);
+        dialogo.setTitle(R.string.dialog_interests_title);
         //Array con los posibles intereses
         String[] interests=getResources().getStringArray(R.array.interests_array);
+        boolean[] checkedItems = new boolean[interests.length];
+        //make position true if this item is in checkedItems
+        Log.d("_TAG", "antes " + selectedTags.toString());
+        for (int i = 0; i < interests.length; i++) {
+            checkedItems[i] = selectedTags.contains(interests[i]);
+        }
 
 
-        dialogo.setMultiChoiceItems(interests, null,
+        dialogo.setMultiChoiceItems(interests, checkedItems,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which,
                                         boolean isChecked) {
                         if (isChecked) {
-                           selectedItems.add(interests[which]);
+                            selectedTags.add(interests[which]);
 
-                        } else if (selectedItems.contains(interests[which])) {
+                        } else if (selectedTags.contains(interests[which])) {
                             // Else, if the item is already in the array, remove it
-                            selectedItems.remove(interests[which]);
+                            selectedTags.remove(interests[which]);
                         }
-                        Log.d("_TAG", selectedItems.toString());
+                        Log.d("_TAG", selectedTags.toString());
                     }
                 }
         );
@@ -155,22 +163,26 @@ public class RegisterUserActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo aceptado");
-                if(selectedItems.isEmpty()){
-                    selectedItems=null;
+                if(selectedTags.isEmpty()){
+                    selectedTags=null;
                 }
+                Log.d("_TAG", selectedTags.toString());
             }
         });
         dialogo.setNegativeButton(R.string.dialog_cancel,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo cancelado");
-                selectedItems=null;
+                selectedTags=null;
                 dialogInterface.dismiss();
             }
         });
-        AlertDialog alert = dialogo.create();
+
+        androidx.appcompat.app.AlertDialog alert = dialogo.create();
         alert.show();
     }
+
+
 
     private boolean validate(){
         return val_name() && val_surname() && val_email() && val_password() && val_date() && val_phone() && val_interests();
@@ -260,7 +272,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private boolean val_interests(){
 
-        if(selectedItems==null || selectedItems.isEmpty()){
+        if(selectedTags==null || selectedTags.isEmpty()){
             Toast.makeText(getApplicationContext(), R.string.toast_valInterests, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por no haber escogido minimo un tag");
             return false;

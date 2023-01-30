@@ -31,24 +31,41 @@
             android:textSize="20sp" />
 
 
-        <EditText
-            android:id="@+id/email"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:text="dev_m@mail.com" />
+            android:hint="@string/login_email">
 
-        <EditText
-            android:id="@+id/password"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:text="dev_m@mail.com"
+
+            />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="10dp"
+
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:text="123456" />
+            android:hint="@string/login_password"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:text="123456"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
         <Button
             android:id="@+id/logIn"

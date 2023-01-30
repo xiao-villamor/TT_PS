@@ -139,6 +139,8 @@
     <string name="snackBar_noTags">No tags selected</string>
     <string name="saveAct_admin">Admin</string>
     <string name="saveAct_assistant">Assistant</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
 
 
 </resources>
