@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.udc.psi.tt_ps.R;
 import es.udc.psi.tt_ps.data.model.ActivityModel;
 import es.udc.psi.tt_ps.data.model.QueryResult;
 import es.udc.psi.tt_ps.data.model.Result;
@@ -44,7 +45,7 @@ public class ActivityListsPres extends RecyclerView.OnScrollListener {
 
         data = getActivitiesFiltered(tags,range,location);
         if(data.data.data.size() == 0){
-            Snackbar.make(recyclerView.getRootView(), "No hay actividades que coincidan con los filtros", Snackbar.LENGTH_LONG)
+            Snackbar.make(recyclerView.getRootView(), R.string.snackBar_filterNoAct, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             adapter.setItems(new ArrayList<>());
         }else {

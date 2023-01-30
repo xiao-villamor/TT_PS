@@ -52,7 +52,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         setContentView(view);
         //image=Uri.parse("");
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Creating user");
+        progressDialog.setTitle(getString(R.string.dialog_new_user_title));
 
         binding.signupReg.setOnClickListener(v -> {
 
@@ -72,11 +72,11 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                     if(res.exception != null){
                         Log.d("TAG", res.exception.toString());
-                        Toast.makeText(getApplicationContext(), "Cannot create the user", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.toast_notUser, Toast.LENGTH_SHORT).show();
                         //progressDialog.dismiss();
                     } else{
                         Log.d("TAG", "Usuario creado correctamente");
-                        Toast.makeText(getApplicationContext(), "User created successfuly", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.toast_newUser, Toast.LENGTH_SHORT).show();
                         Intent userProfileIntent = new Intent(this, MainActivity.class);
                         startActivity(userProfileIntent);
                     }
@@ -129,7 +129,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private void mostrarDialogo(){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("Choose the interests");
+        dialogo.setTitle(R.string.dialog_interestsTitle);
         //Array con los posibles intereses
         String[] interests=getResources().getStringArray(R.array.interests_array);
 
@@ -151,7 +151,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 }
         );
 
-        dialogo.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo aceptado");
@@ -160,7 +160,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 }
             }
         });
-        dialogo.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.dialog_cancel,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo cancelado");
@@ -181,7 +181,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         String name = binding.nameReg.getText().toString();
         if(name.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valName, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por nombre no indicado");
             return false;
         }
@@ -192,7 +192,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         String surname = binding.surnameReg.getText().toString();
         if(surname.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Surname cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valSurname, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por apellido no indicado");
             return false;
         }else{
@@ -206,11 +206,11 @@ public class RegisterUserActivity extends AppCompatActivity {
         String email = binding.emailReg.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         if(email.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Email cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valEmail_empty, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por nombre no indicada ");
             return false;
         }else if(!email.matches(emailPattern)){
-            Toast.makeText(getApplicationContext(), "Email format invalid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valEmail_invalid, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por formta de email invalido");
             return false;
         }else{
@@ -222,7 +222,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         String phone = binding.phoneReg.getText().toString();
         if(phone.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Phone cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valPhone, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por telefono no indicado");
             return false;
         }else{
@@ -234,11 +234,11 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         String password = binding.passwordReg.getText().toString();
         if(password.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Password cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valPass_empty, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por contraseña no indicado");
             return false;
         }else if(password.length()<6){
-            Toast.makeText(getApplicationContext(), "Password must have min 6", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valPass_min, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por contraseña menor a 6 digitos");
             return false;
         }else{
@@ -249,7 +249,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     private boolean val_date(){
 
         if(date==null){
-            Toast.makeText(getApplicationContext(), "Date cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valDate, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por fecha no indicado");
             return false;
         }else{
@@ -261,7 +261,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     private boolean val_interests(){
 
         if(selectedItems==null || selectedItems.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Must be chosen at least one interest", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valInterests, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Cuenta no creada por no haber escogido minimo un tag");
             return false;
         }else{

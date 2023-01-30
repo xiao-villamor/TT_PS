@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
 
                     //start app
                 }else{
-                    Toast.makeText(MainActivity.this,"All or some permissions denied...",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.toast_permisionDenied,Toast.LENGTH_SHORT).show();
                     //close app
                     finish();
 
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
                 mListActivitiesAdapter.notifyDataSetChanged();
 
             } else {
-                Snackbar.make(v, "No tags selected", Snackbar.LENGTH_LONG)
+                Snackbar.make(v, R.string.snackBar_noTags, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
 

@@ -81,10 +81,10 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
                     if(res.exception!=null){
                         Log.d("TAG", res.exception.toString());
-                        Toast.makeText(getApplicationContext(), "Activity cannot be created", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.toast_notActivity, Toast.LENGTH_SHORT).show();
                     }else{
                         Log.d("TAG", "Actividad creada correctamente");
-                        Toast.makeText(getApplicationContext(), "activity created successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.toast_activityCreate, Toast.LENGTH_SHORT).show();
                         Intent userProfileIntent = new Intent(this, MainActivity.class);
                         startActivity(userProfileIntent);
                     }
@@ -273,7 +273,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
 
     private void showTagsChooser(){
         MaterialAlertDialogBuilder dialogo = new MaterialAlertDialogBuilder(this);
-        dialogo.setTitle("Choose the tags");
+        dialogo.setTitle(R.string.dialog_interests_title);
         //Array con los posibles intereses
         String[] interests=getResources().getStringArray(R.array.interests_array);
         boolean[] checkedItems = new boolean[interests.length];
@@ -301,7 +301,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                 }
         );
 
-        dialogo.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo aceptado");
@@ -311,7 +311,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
                 Log.d("_TAG", selectedTags.toString());
             }
         });
-        dialogo.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.dialog_cancel,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d("_TAG", "Dialogo cancelado");
@@ -353,7 +353,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
         Log.d("TAG", "Titulo: " + titulo);
 
         if(titulo.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valTitle, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por titulo no indicado");
             return false;
         }
@@ -363,7 +363,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private boolean val_description(){
         String description = String.valueOf(binding.activityDescription.getEditText().getText());
         if(description.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valDescription, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por description no indicada");
             return false;
         }
@@ -374,7 +374,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private boolean val_startDate(){
 
         if(startDate==null){
-            Toast.makeText(getApplicationContext(), "Start date cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valStartDate, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por fecha de inicio no indicada");
             return false;
         }else{
@@ -388,7 +388,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private boolean val_endDate(){
 
         if(endDate==null){
-            Toast.makeText(getApplicationContext(), "End date cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valEndDate, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por fecha de fin no indicada");
             return false;
         }else{
@@ -401,7 +401,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private boolean val_duration(){
 
         if(!startDate.before(endDate)){
-            Toast.makeText(getApplicationContext(), "Start date has to ve previous to the end date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valDuration, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por fechas no coherentes");
             return false;
         }else{
@@ -414,7 +414,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private boolean val_tags(){
 
         if(selectedTags==null || selectedTags.isEmpty()){
-            Toast.makeText(getApplicationContext(), "Activity has to be tagged", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valTag, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por tener tags asociados ");
             return false;
         }else{
@@ -425,7 +425,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     private boolean val_location(){
 
         if(latitude==0 && longitude==0){
-            Toast.makeText(getApplicationContext(), "Activity has to have a location", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.toast_valLocation, Toast.LENGTH_SHORT).show();
             Log.d("TAG", "Actividad no creada por no tener una localizacion asociada ");
             return false;
         }else{

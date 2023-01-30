@@ -75,7 +75,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
         Log.d("TAG", "ID: " + activitiesList.getActivityId());
         if(activitiesList.getParticipants().contains(currentUserId)){
-            binding.signup2.setText("Unsubscribe");
+            binding.signup2.setText(R.string.actDet_unsubscribe);
         }
 
         if (!(activitiesList.getAdminId().equals(currentUserId))){
@@ -86,7 +86,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         Log.d("_TAG", "ID: " + new Date());
 
         if(new Date().after(activitiesList.getEnd_date())){
-            binding.deleteButton.setText("Finalize");
+            binding.deleteButton.setText(R.string.actDet_finalize);
 
         }
 
@@ -249,9 +249,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     public void updateButtonsState(String state){
         //make switch case statement
         if(state.equals("join")){
-            binding.signup2.setText("Unsubscribe");
+            binding.signup2.setText(R.string.actDet_unsubscribe);
         }else if(state.equals("unsubscribe")){
-            binding.signup2.setText("Join");
+            binding.signup2.setText(R.string.actDet_join);
         }
 
 

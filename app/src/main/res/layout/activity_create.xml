@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Register your activity"
+        android:text="@string/actNew_title"
         android:textSize="30sp"
         android:transitionName="logo_text" />
 
@@ -19,7 +19,7 @@
         android:id="@+id/slogan_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="What do you want to do?"
+        android:text="@string/actNew_subtitle"
         android:textSize="18sp" />
 
 
@@ -30,7 +30,7 @@
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:hint="Titulo">
+            android:hint="@string/activity_title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             style="?attr/textInputOutlinedDenseStyle"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/activity_description"
             android:paddingTop="20dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -60,7 +60,7 @@
                 style="@style/Widget.Material3.Button.IconButton.Filled"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:text="Select Date" />
+                android:text="@string/actNew_startDate" />
 
         <TextView
                 android:id="@+id/activity_date"
@@ -79,7 +79,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Select tag" />
+            android:text="@string/actNew_tag" />
 
         <Button
             android:id="@+id/newActivityMap"
@@ -87,7 +87,7 @@
             android:layout_width="180dp"
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
-            android:text="Select Location" />
+            android:text="@string/actNew_location" />
 
     <Button
         android:layout_marginTop="80dp"
@@ -97,6 +97,6 @@
         android:layout_height="wrap_content"
         android:gravity="bottom|center"
         android:layout_weight="0"
-        android:text="Create" />
+        android:text="@string/actNew_button" />
 
 </LinearLayout>

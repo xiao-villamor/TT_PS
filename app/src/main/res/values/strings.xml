@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">TT_PS</string>
-
+    <string name="login_title">Log in</string>
 
     <string-array name="interests_array">
         <item>sports</item>
@@ -15,6 +15,130 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <string name="login_subtitle">Introduce your user credentials</string>
+    <string name="login_button">Log In</string>
+    <string name="login_text">Dont have an account?</string>
+    <string name="login_registerText">Sing Up</string>
+    <string name="register_title">Register</string>
+    <string name="register_subtitle">Fill the entries to create your account</string>
+    <string name="register_name">Name</string>
+    <string name="register_surname">Surname</string>
+    <string name="register_email">Email</string>
+    <string name="register_password">Password (min 6)</string>
+    <string name="register_birthDate">Birth date</string>
+    <string name="register_phone">Phone</string>
+    <string name="register_image">Select user image</string>
+    <string name="register_interests">Select interests</string>
+    <string name="register_button">Sign Up</string>
+    <string name="dialog_new_user_title">Creating user</string>
+    <string name="toast_notUser">Cannot create the user</string>
+    <string name="toast_newUser">User created successfuly</string>
+    <string name="dialog_interestsTitle">Choose the interests</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="toast_valName">Name cannot be empty</string>
+    <string name="toast_valSurname">Surname cannot be empty</string>
+    <string name="toast_valEmail_empty">Email cannot be empty</string>
+    <string name="toast_valEmail_invalid">Email format invalid</string>
+    <string name="toast_valPhone">Phone cannot be empty</string>
+    <string name="toast_valPass_empty">Password cannot be empty</string>
+    <string name="toast_valPass_min">Password must have min 6</string>
+    <string name="toast_valDate">Date cannot be empty</string>
+    <string name="toast_valInterests">Must be chosen at least one interest</string>
+    <string name="actDet_participants">Participants</string>
+    <string name="actDet_mapsButton">Go to Maps</string>
+    <string name="actDet_unsubscribe">Unsubscribe</string>
+    <string name="actDet_finalize">Finalize</string>
+    <string name="actDet_join">Join</string>
+    <string name="actNew_title">Register your activity</string>
+    <string name="actNew_subtitle">What do you want to do?</string>
+    <string name="activity_title">Titulo</string>
+    <string name="activity_description">Description</string>
+    <string name="actNew_startDate">Select Date</string>
+    <string name="actNew_tag">Select tag</string>
+    <string name="actNew_location">Select Location</string>
+    <string name="actNew_button">Create</string>
+    <string name="toast_notActivity">Activity cannot be created</string>
+    <string name="toast_activityCreate">activity created successfully</string>
+    <string name="dialog_interests_title">Choose the tags</string>
+    <string name="toast_valTitle">Title cannot be empty</string>
+    <string name="toast_valDescription">Description cannot be empty</string>
+    <string name="toast_valStartDate">Start date cannot be empty</string>
+    <string name="toast_valEndDate">End date cannot be empty</string>
+    <string name="toast_valDuration">Start date has to ve previous to the end date</string>
+    <string name="toast_valTag">Activity has to be tagged</string>
+    <string name="toast_valLocation">Activity has to have a location</string>
+    <string name="dialog_newAct_map">You must select a coordinates to submit</string>
+    <string name="dialog_cancel_msg">Do you want to undo the modifications?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_back">Back</string>
+    <string name="dialog_acept">Acept</string>
+    <string name="dialog_acept_msg">Do you want to save the modifications?</string>
+    <string name="toast_notImage">The new picture cannot be updated</string>
+    <string name="toast_notUpdateActivity">Activity cannot be updated</string>
+    <string name="toast_updateActivity">activity updated successfully</string>
+    <string name="editAct_imagButton">Select new image</string>
+    <string name="editAct_title">Title</string>
+    <string name="editAct_startdate">Start Date</string>
+    <string name="editAct_endDate">End Date</string>
+    <string name="editAct_description">Description</string>
+    <string name="editAct_location">Location</string>
+    <string name="editAct_locationButton">Select new location</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_acept">Acept</string>
+    <string name="menu_editUser">Edit User Info</string>
+    <string name="menu_logOut">LogOut</string>
+    <string name="user_description">Descricption</string>
+    <string name="user_interests">Interests</string>
+    <string name="user_recentAct">Recent activities</string>
+    <string name="editUser_image">Select new image</string>
+    <string name="user_name">Name</string>
+    <string name="user_surname">Surname</string>
+    <string name="user_phone">Phone</string>
+    <string name="editUser_interests">New interests</string>
+    <string name="editUser_pass">Update password</string>
+    <string name="dialog_newPass">New password</string>
+    <string name="dialog_repeatNewPass">Repeat password</string>
+    <string name="toast_minLengthPass">The password must have min 6</string>
+    <string name="toast_passNotMatch">The new password does not match</string>
+    <string name="toast_passNotUpdated">The new password cannot be updated</string>
+    <string name="toast_passUpdated">The password has been updated</string>
+    <string name="dialog_cancelEditUser_msg">Do you want to undo the personal information modifications?</string>
+    <string name="dialog_aceptEditUser_msg">Do you want to save this personal information?</string>
+    <string name="toast_notUpdateUser">User cannot be updated</string>
+    <string name="toast_updateUser">user updated successfully</string>
+    <string name="listAct_title1">Find New</string>
+    <string name="listAct_title2">Experiences</string>
+    <string name="snackBar_filterNoAct">No hay actividades que coincidan con los filtros</string>
+    <string name="chip_sports">Sports</string>
+    <string name="chip_walkingRoute">Walking Route</string>
+    <string name="chip_touristVisits">Tourist Visits</string>
+    <string name="chip_party">Party</string>
+    <string name="chip_culturalAndArt">Cultural and art</string>
+    <string name="chip_shopping">Shopping</string>
+    <string name="chip_barAndCoffee">Bar and Coffee</string>
+    <string name="chip_conversation">Conversation</string>
+    <string name="filter_selectDistance">Select Distance</string>
+    <string name="filter_saveButton">Save Filters</string>
+    <string name="filter_title">Filters</string>
+    <string name="saveAct_title">Your Activities</string>
+    <string name="saveAct_rol">Rol</string>
+    <string name="rating_title1">Rate the Creator of</string>
+    <string name="rating_title2">the Activity</string>
+    <string name="rating_button">Submit Rating</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_activities">Activities</string>
+    <string name="menu_profile">Profile</string>
+    <string name="findUsers_title">Find Users</string>
+    <string name="user_notDescription">User Don\'t Have Description Yet</string>
+    <string name="toast_permisionDenied">All or some permissions denied...</string>
+    <string name="snackBar_noTags">No tags selected</string>
+    <string name="saveAct_admin">Admin</string>
+    <string name="saveAct_assistant">Assistant</string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="es.udc.psi.tt_ps">
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -60,6 +61,10 @@
         <activity
             android:name=".ui.view.DetailsActivity"
             android:parentActivityName=".ui.fragments.ActivityListFragment" />
+        <activity
+            android:name=".ui.view.UserDetailsSearched"
+            android:exported="false"
+            android:parentActivityName=".ui.fragments.SearchFragment" />
         <activity
             android:name=".ui.view.LogInActivity"
             android:exported="true"

@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Select new image"/>
+                android:text="@string/editAct_imagButton"/>
 
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"
@@ -60,7 +60,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Title"
+                        android:text="@string/editAct_title"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Start Date"
+                        android:text="@string/editAct_startdate"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="End Date"
+                        android:text="@string/editAct_endDate"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Description"
+                        android:text="@string/editAct_description"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Location"
+                        android:text="@string/editAct_location"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -163,7 +163,7 @@
                         android:layout_marginBottom="10dp"
                         android:backgroundTint="#313A7095"
                         android:gravity="center"
-                        android:text="Select new location"
+                        android:text="@string/editAct_locationButton"
                         android:textColor="@color/md_theme_dark_inverseOnSurface" />
 
                     <fragment
@@ -204,7 +204,7 @@
             android:layout_marginRight="75dp"
             android:layout_gravity="center"
             android:backgroundTint="@android:color/holo_red_dark"
-            android:text="Cancel" />
+            android:text="@string/button_cancel" />
 
         <Button
             android:id="@+id/acept_edit"
@@ -212,7 +212,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="@android:color/holo_green_dark"
-            android:text="Acept" />
+            android:text="@string/button_acept" />
 
     </LinearLayout>
 

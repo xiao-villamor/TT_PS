@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginTop="5dp"
-                android:text="Select new image"/>
+                android:text="@string/editUser_image"/>
 
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"
@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Name"
+                        android:text="@string/user_name"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Surname"
+                        android:text="@string/user_surname"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Description"
+                        android:text="@string/user_description"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -129,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Phone"
+                        android:text="@string/user_phone"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -152,7 +152,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:gravity="center"
-                        android:text="Interests"
+                        android:text="@string/user_interests"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textStyle="bold" />
@@ -170,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_marginTop="5dp"
-                        android:text="New interests"/>
+                        android:text="@string/editUser_interests"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -182,7 +182,7 @@
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
-                android:text="Update password"/>
+                android:text="@string/editUser_pass"/>
 
         </LinearLayout>
 
@@ -205,7 +205,7 @@
             android:layout_marginRight="75dp"
             android:layout_gravity="center"
             android:backgroundTint="@android:color/holo_red_dark"
-            android:text="Cancel" />
+            android:text="@string/button_cancel" />
 
         <Button
             android:id="@+id/acept_edit_user"
@@ -213,7 +213,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="@android:color/holo_green_dark"
-            android:text="Acept" />
+            android:text="@string/button_acept" />
 
     </LinearLayout>
 

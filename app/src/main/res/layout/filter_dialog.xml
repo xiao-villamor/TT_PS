@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:text="Filters"/>
+        android:text="@string/filter_title"/>
 
 
     <com.google.android.material.chip.ChipGroup
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Sports"/>
+            android:text="@string/chip_sports"/>
 
         <com.google.android.material.chip.Chip
             style="@style/Widget.Material3.Chip.Filter"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Walking Route"/>
+            android:text="@string/chip_walkingRoute"/>
 
         <com.google.android.material.chip.Chip
             style="@style/Widget.Material3.Chip.Filter"
@@ -46,42 +46,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Tourist Visits"/>
+            android:text="@string/chip_touristVisits"/>
         <com.google.android.material.chip.Chip
             style="@style/Widget.Material3.Chip.Filter"
             android:id="@+id/chip4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Party"/>
+            android:text="@string/chip_party"/>
         <com.google.android.material.chip.Chip
             style="@style/Widget.Material3.Chip.Filter"
             android:id="@+id/chip5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Cultural and art"/>
+            android:text="@string/chip_culturalAndArt"/>
         <com.google.android.material.chip.Chip
             style="@style/Widget.Material3.Chip.Filter"
             android:id="@+id/chip6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Shopping"/>
+            android:text="@string/chip_shopping"/>
         <com.google.android.material.chip.Chip
             style="@style/Widget.Material3.Chip.Filter"
             android:id="@+id/chip7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Bar and Coffee"/>
+            android:text="@string/chip_barAndCoffee"/>
         <com.google.android.material.chip.Chip
             style="@style/Widget.Material3.Chip.Filter"
             android:id="@+id/chip8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.Material3.ActionBar.Subtitle"
-            android:text="Conversation"/>
+            android:text="@string/chip_conversation"/>
 
     </com.google.android.material.chip.ChipGroup>
 
@@ -90,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:text="Select Distance"/>
+        android:text="@string/filter_selectDistance"/>
 
     <com.google.android.material.slider.RangeSlider
         android:id="@+id/range_slider"
@@ -109,7 +109,7 @@
         android:id="@+id/button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Filters"/>
+        android:text="@string/filter_saveButton"/>
 
 
 

@@ -67,7 +67,7 @@ public class SavedActivitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSavedActivitiesBinding.inflate(inflater, container, false);
-        binding.filterButton.setText("Admin", false);
+        binding.filterButton.setText(getString(R.string.saveAct_admin), false);
         //detect when the user change the filter
         autoCompleteTextView = binding.filterButton;
 
@@ -134,9 +134,9 @@ public class SavedActivitiesFragment extends Fragment {
                     if (lastVisibleItem == totalItems - 1 && lastVisibleItem != 0) {
                         try {
                             if(state.equals("Admin")){
-                                presenter.updateRecycledDataByRol(recyclerView, user, "Admin");
+                                presenter.updateRecycledDataByRol(recyclerView, user, getString(R.string.saveAct_admin));
                             }else{
-                                presenter.updateRecycledDataByRol(recyclerView, user, "Assistant");
+                                presenter.updateRecycledDataByRol(recyclerView, user, getString(R.string.saveAct_assistant));
                             }
                         } catch (InterruptedException e) {
                             e.printStackTrace();

@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Log in"
+            android:text="@string/login_title"
             android:textSize="30sp" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="25dp"
-            android:text="Introduce your user credentials"
+            android:text="@string/login_subtitle"
             android:textSize="20sp" />
 
 
@@ -55,7 +55,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="Log In" />
+            android:text="@string/login_button" />
 
 
     </LinearLayout>
@@ -74,7 +74,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:clickable="true"
         android:onClick="clickTextView"
-        android:text="Dont have an account?  "
+        android:text="@string/login_text"
         android:textStyle="bold" />
 
     <TextView
@@ -85,7 +85,7 @@
 
         android:clickable="true"
         android:onClick="clickTextView"
-        android:text="Sing Up"
+        android:text="@string/login_registerText"
         android:textColor="@android:color/holo_blue_light"
         android:textStyle="bold"
         app:layout_anchor="@+id/textView"
