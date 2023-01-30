@@ -336,7 +336,7 @@ public class activityService implements activityServiceInterface {
                     .startAt(b.startHash)
                     .endAt(b.endHash)
                     .whereArrayContainsAny("tags", tags)
-                    .limit(10);
+                    .limit(5);
             tasks.add(q.get());
         }
 
@@ -389,7 +389,8 @@ public class activityService implements activityServiceInterface {
                     .endAt(b.endHash)
                     .whereArrayContainsAny("tags", tags)
                     .startAfter(prevDocSnaprec)
-                    .limit(10);
+                    .limit(5);
+
 
             tasks.add(q.get());
         }
