@@ -371,7 +371,11 @@ public class activityService implements activityServiceInterface {
             }
         });
         cursor = 3;
-        data = activities.subList(0, 3);
+        if(activities.size() > 3) {
+            data = activities.subList(0, 3);
+        }else {
+            data = activities.subList(0, activities.size());
+        }
         result.data = data;
         result.cursor = true;
         Log.d("_TAG", "Size: " + activities.size() + " cursor: " + cursor);
