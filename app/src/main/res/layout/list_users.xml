@@ -27,10 +27,9 @@
                 android:id="@+id/profile_pic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"/>
+                android:src="@drawable/ic_launcher_background"
+                app:shapeAppearanceOverlay="@style/roundedImageViewRounded" />
 
 
             <LinearLayout
@@ -50,24 +49,26 @@
                     android:layout_height="wrap_content"
                     android:text="Name"
                     android:gravity="center"
-                    android:textColor="#9C27B0"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textSize="18sp"
+                     />
                 <TextView
                     android:id="@+id/userSurname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Surname"
                     android:gravity="center"
-                    android:textColor="#9C27B0"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    android:textSize="18sp"
+                   />
 
 
                 <TextView
                     android:id="@+id/userBirthDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+
                     android:text="Fecha de cumpleaños"
                     android:gravity="center"
                     android:textSize="12sp"
@@ -75,6 +76,7 @@
 
 
                 <RatingBar
+                    android:layout_marginTop="5dp"
                     android:id="@+id/ratingUser"
                     style="@style/RatingBar"
                     android:layout_width="wrap_content"

@@ -154,15 +154,19 @@ public class userService implements userServiceInterface,FirebaseAuth.AuthStateL
         QueryResult<List<UserModel>,DocumentSnapshot> result =new QueryResult<>();
         Query ref;
         if (adminId==null) {
-            ref = db.collection("User_Info")
-                    .whereEqualTo("name",username)
-                    .limit(5);
+            //get first 5 users with username containt username not neccesary perfect match
+            ref = db.collection("User_Info").orderBy("name")
+                    .startAt(username)
+                    .endAt(username+"\uf8ff")
+                    .limit(10);
+
+
 
         }else {
             ref = db.collection("User_Info")
                     .whereEqualTo("name",username)
                     .startAfter(adminId)
-                    .limit(5);
+                    .limit(10);
         }
         Tasks.await(ref.get(), 5, TimeUnit.SECONDS).getDocuments().forEach(document -> {
             if(document != null) {

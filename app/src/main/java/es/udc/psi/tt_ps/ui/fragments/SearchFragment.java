@@ -60,6 +60,7 @@ public class SearchFragment extends Fragment {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity().getApplicationContext());
 
 
+
         binding.searchButton.setOnClickListener(v -> {
                     try {
                         initRecycledView(binding.searchUser.getText().toString());
