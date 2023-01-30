@@ -370,10 +370,11 @@ public class activityService implements activityServiceInterface {
                 e.printStackTrace();
             }
         });
-        cursor = 3;
         if(activities.size() > 3) {
+            cursor = 3;
             data = activities.subList(0, 3);
         }else {
+            cursor = activities.size();
             data = activities.subList(0, activities.size());
         }
         result.data = data;
