@@ -53,6 +53,7 @@ public class ActivityCreateActivity extends AppCompatActivity {
     String LAT_KEY = "latitud_mapa";
     String LON_KEY = "longitud_mapa";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

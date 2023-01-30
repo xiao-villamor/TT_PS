@@ -48,12 +48,57 @@ public class activityService implements activityServiceInterface {
 
     ApiClient apiClient = new ApiClient();
 
+    String spots_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fsports.jpg?alt=media&token=f3afcfa9-6081-442d-9001-577189e7d0bc";
+    String walking_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fwalking.jpg?alt=media&token=ae57731f-c7bf-40fa-8a9e-247ae4c0a097";
+    String tourist_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fturism.webp?alt=media&token=9db13e1c-5759-4559-aa32-1c0c5a57925e";
+    String party_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fparty.jpg?alt=media&token=9dedfbea-0ba0-4a19-8786-142fa90f11a5";
+    String art_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fmusseum.jpg?alt=media&token=0e1b0283-ef24-451f-91f2-c0e3a23ad7ce";
+    String shopping_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fshopping.jpg?alt=media&token=9546e0e7-93a5-4630-b908-32038cc04d09";
+    String bar_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fcafe.jpg?alt=media&token=0fcdb591-9cfa-4190-b3a7-87fca3e11b56";
+    String conv_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fconver.jpg?alt=media&token=52edaec5-822c-4417-99aa-291a5f2b98bd";
+    String other_image = "https://firebasestorage.googleapis.com/v0/b/tt-ps-f0782.appspot.com/o/activity_image%2Fother.jpg?alt=media&token=32525b4a-0a08-487b-b331-6b618575e26f";
 
+    public ActivityModel selectImage(ActivityModel activity){
+        //select one image for each activity based on the activity tags and return the activity with the image. The image should be one of the images above
+        //do it with a switch case
+        switch (activity.getTags().get(0)){
+            case "sports":
+                activity.setImg(spots_image);
+                break;
+            case "walking":
+                activity.setImg(walking_image);
+                break;
+            case "tourist":
+                activity.setImg(tourist_image);
+                break;
+            case "party":
+                activity.setImg(party_image);
+                break;
+            case "art":
+                activity.setImg(art_image);
+                break;
+            case "shopping":
+                activity.setImg(shopping_image);
+                break;
+            case "bar":
+                activity.setImg(bar_image);
+                break;
+            case "conversation":
+                activity.setImg(conv_image);
+                break;
+            default:
+                activity.setImg(other_image);
+                break;
+        }
 
-    public void createActivity(ActivityModel activity) throws ExecutionException, InterruptedException, TimeoutException {
+    return activity;
+    }
+
+    public void createActivity(ActivityModel activityrec) throws ExecutionException, InterruptedException, TimeoutException {
         //get the id of the document created
         //Tasks.await(db.collection("Activities").document().set(activity), 45, TimeUnit.SECONDS);
-        db.collection("Activities").add(activity).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        activityrec = selectImage(activityrec);
+        db.collection("Activities").add(activityrec).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("_TAG","Subscribing to activity: "+documentReference.getId());
@@ -298,7 +343,7 @@ public class activityService implements activityServiceInterface {
         tasks.forEach(task -> {
             try {
                 Tasks.await(task, 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-                    if(document != null) {
+                    if(document.exists()) {
                         GeoLocation docLocation = new GeoLocation(document.getGeoPoint("location").getLatitude(), document.getGeoPoint("location").getLongitude());
 
                         double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation,location);
@@ -352,7 +397,7 @@ public class activityService implements activityServiceInterface {
         tasks.forEach(task -> {
             try {
                 Tasks.await(task, 15, TimeUnit.SECONDS).getDocuments().forEach(document -> {
-                    if(document != null) {
+                    if(document.exists()) {
                         GeoLocation docLocation = new GeoLocation(document.getGeoPoint("location").getLatitude(), document.getGeoPoint("location").getLongitude());
 
                         double distanceInKm = GeoFireUtils.getDistanceBetween(docLocation,location);
