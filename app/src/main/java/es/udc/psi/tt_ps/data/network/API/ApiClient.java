@@ -72,7 +72,7 @@ public class ApiClient  {
         String json = gson.toJson(body);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Request request = new Request.Builder()
-                .url("http://10.0.2.2:3000/rating")
+                .url("https://ttpsfcmclient-production.up.railway.app/rating")
                 .post(requestBody)
                 .build();
         //launch the request in a new thread
