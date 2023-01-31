@@ -101,19 +101,10 @@ public class activityService implements activityServiceInterface {
         //get the id of the document created
         //Tasks.await(db.collection("Activities").document().set(activity), 45, TimeUnit.SECONDS);
         activityrec = selectImage(activityrec);
-        db.collection("Activities").add(activityrec).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("_TAG", "Subscribing to activity: " + documentReference.getId());
-                activity.setId(documentReference.getId());
-                try {
-                    updateActivity(activity, documentReference.getId());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
+        //create activity in the database and get the id of the document created
+        String id = db.collection("Activities").document().getId();
+        activityrec.setId(id);
+        updateActivity(activityrec, id);
     }
 
     public void updateActivity(ActivityModel activity, String id) throws InterruptedException {
@@ -173,9 +164,10 @@ public class activityService implements activityServiceInterface {
 
     public void finalizeActivity(String id) throws ExecutionException, InterruptedException, TimeoutException {
         QueryResult<ActivityModel, DocumentSnapshot> activity = getActivity(id);
+
         unsubscribeToActivity(id);
         db.collection("Activities").document(id).delete();
-        Log.d("_TAG", "Unsubscribing to activity: " + id);
+        Log.d("_TAG", "Unsubscribing to activity: " + activity.data.getTitle() + " and deleting it"+activity.data.getParticipants().size());
         List<String> participants = activity.data.getParticipants();
         //count number of participants in the List ussing the size of the list
         apiClient.NotifyRate(id, activity.data.getTitle(), activity.data.getAdminId(), participants.size());
