@@ -113,7 +113,7 @@ public class ListActivities implements Serializable {
         return participants;
     }
 
-    public String getParticioants(){
+    public String getParticipantsSize(){
         return ((Integer) participants.size()).toString();
     }
 

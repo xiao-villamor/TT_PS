@@ -130,7 +130,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
         binding.location.setText(cityName);
         binding.cardDescription.setText(activitiesList.getDescription());
-        binding.cardParticipants.setText(activitiesList.getParticioants());
+        binding.cardParticipants.setText(activitiesList.getParticipantsSize());
 
         showMap();
         binding.cardLocation.setOnClickListener(view1 -> {

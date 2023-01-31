@@ -109,6 +109,7 @@ public class EditActivity extends AppCompatActivity{
 
 
         binding.etTitle.setText(new_activitiesList.getTitle());
+        binding.etDescription.setText(new_activitiesList.getDescription());
         String StartDate = activitiesList.getStart_date().toString();
         String EndDate = activitiesList.getEnd_date().toString();
         //convert a String that represent a date in yyyy-MM-dd HH:mm:ss z format to String with format dd/MM/yyyy HH:mm

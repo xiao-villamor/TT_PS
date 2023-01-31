@@ -155,11 +155,14 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                Log.d("_TAG",listActivities.data.getParticipants().size()+"");
 
                 ListActivities listActivities1 = new ListActivities(listActivities.data.getId(),listActivities.data.getImage(),listActivities.data.getTitle()
                         ,listActivities.data.getLocation(),listActivities.data.getEnd_date(),listActivities.data.getDescription()
-                        ,listActivities.data.getStart_date(),listActivities.data.getCreation_date(),listActivities.data.getAdminId()
-                        ,listActivities.data.getTags(),listActivities.data.getParticipants());
+                        ,listActivities.data.getStart_date(),listActivities.data.getCreation_date(),listActivities.data.getAdminId(),
+                        listActivities.data.getParticipants(),listActivities.data.getTags());
+
+                Log.d("_TAG",listActivities1.getParticipants().size()+"");
 
                 Intent intent = new Intent(this, DetailsActivity.class);
 
