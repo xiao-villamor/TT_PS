@@ -298,11 +298,15 @@ public class MainActivity extends AppCompatActivity implements OnAuthStateChange
     }
 
     public void dataChanged(String id, ListActivities listActivities,String mode){
-        fragment.dataChanged(id,listActivities,mode);
+        if(fragmentS != null) {
+            fragment.dataChanged(id, listActivities, mode);
+        }
     }
 
     public void dataChangedSaved(String id, ListActivities listActivities,String mode){
-        fragmentS.dataChangedSaved(id,listActivities,mode);
+        if(fragmentS != null) {
+            fragmentS.dataChangedSaved(id, listActivities, mode);
+        }
     }
 
     @Override
