@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/drawable/bike_kick_push_scooter_svgrepo_com.xml" value="0.1415" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/drawable/default_img.xml" value="0.1415" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.1415" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/font-v26/roboto.xml" value="0.28020833333333334" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/font/roboto.xml" value="0.2791666666666667" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_create.xml" value="0.1" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_create_map.xml" value="0.24375" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_details.xml" value="0.264" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_edit.xml" value="0.24166666666666667" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_log_in.xml" value="0.28442028985507245" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_login.xml" value="0.33" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_rating.xml" value="0.19895833333333332" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_register_user.xml" value="0.22" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_search.xml" value="0.25" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_searchuser_details.xml" value="0.25" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_show_activities.xml" value="0.264" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_start.xml" value="0.19947916666666668" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/activity_user_info.xml" value="0.33" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/bottom_sheet_background.xml" value="0.1984375" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/dialog_new_password.xml" value="0.24583333333333332" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/filter_dialog.xml" value="0.19114583333333332" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/fragment_activity_scroll.xml" value="0.24583333333333332" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/fragment_filter.xml" value="0.25" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/fragment_home.xml" value="0.18854166666666666" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/fragment_map.xml" value="0.25" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/fragment_navigation_bar.xml" value="0.19114583333333332" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/fragment_saved_activities.xml" value="0.25" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/fragment_search.xml" value="0.33" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/list_activities.xml" value="0.1" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/list_users.xml" value="0.1" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/taglist_item.xml" value="0.46647230320699706" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/layout/user_logged.xml" value="0.25" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/menu/pop_up_menu.xml" value="0.24583333333333332" />
+        <entry key="..\:/Users/julia/AndroidStudioProjects/TT_PS/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>
